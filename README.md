@@ -1,1 +1,2 @@
+char i;
 # Stage0
