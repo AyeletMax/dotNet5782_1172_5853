@@ -1,9 +1,9 @@
 ﻿using System;
-namespace targil0
+namespace Stage0
 {
     partial class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Welcome1172();
             Welcome5853();
@@ -15,7 +15,7 @@ namespace targil0
         {
             Console.WriteLine("Enter your name: ");
             string name = Console.ReadLine();
-            Console.WriteLine($"{name}, welcome to my first console application");
+            Console.WriteLine($"{0}, welcome to my first console application",name);
         }
     }
 }
