@@ -32,9 +32,9 @@ public record Volunteer
 )
 {
     /// <summary>
-    /// Default constructor for stage 3
+    /// Default constructor
     /// </summary>
-    /// public Volunteer() : this(0) { }
+    public Volunteer() : this(0, "", "", "", "", true, null, null, null, null, null, null, DistanceType.air){ }
 }
 
 
