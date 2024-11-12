@@ -11,7 +11,6 @@
 /// <param name="MaxFinishTime">time (date and hour) that the call has to finish</param>
 public record Call
 (
-
     int ID,
     CallType MyCallType,
     string VerbalDescription,

@@ -10,6 +10,7 @@
 /// <param name="FinishCallType">the way the call ended</param>
 public record Assignment
 (
+
     int ID,
     int CallId,
     int VolunteerId,
