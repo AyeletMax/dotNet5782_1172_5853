@@ -1,4 +1,4 @@
-namespace DO;
+﻿namespace DO;
 /// <summary>
 /// Volunteer Entity represents a volunteer with all its props
 /// </summary>
@@ -15,23 +15,26 @@ namespace DO;
 /// <param name="LargestDistance">The largest distance for accepting a call</param>
 public record Volunteer
 (
- 
+
     int ID,
     string FirstName,
     string LastName,
     string Phone,
     string Email,
-    string? Password=null,
-    string? Adress = null,
-    double? Latitude = null,
-    double? Longitude=null,
-   /* enum Job;*/
     bool Active,
+    string? Password = null,
+    string? Address = null,
+    double? Latitude = null,
+    double? Longitude = null,
+    Role? MyRole = null,
+    double? LargestDistance = null,
+    DistanceType MyDistanceType = DistanceType.air
 )
 {
     /// <summary>
     /// Default constructor for stage 3
     /// </summary>
+    /// public Volunteer() : this(0) { }
 }
 
 
