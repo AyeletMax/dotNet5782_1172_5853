@@ -11,12 +11,15 @@
 public record Assignment
 (
 
+
     int ID,
     int CallId,
     int VolunteerId,
     DateTime EntranceTime,
     DateTime ExitTime,
     FinishCallType FinishCallType
+
 )
 {
+
 }

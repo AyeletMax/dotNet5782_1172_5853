@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿
+
+namespace DO;
 /// <summary>
 /// Volunteer Entity represents a volunteer with all its props
 /// </summary>
@@ -21,18 +23,18 @@ public record Volunteer
     string LastName,
     string Phone,
     string Email,
-    bool Active,
-    string? Password = null,
-    string? Address = null,
+    string? Password=null,
+    string? Adress = null,
     double? Latitude = null,
-    double? Longitude = null,
-    Role? MyRole = null,
-    double? LargestDistance = null,
-    DistanceType MyDistanceType = DistanceType.air
+    double? Longitude=null,
+   /* enum Job;*/
+    bool Active,
 )
 {
     /// <summary>
     /// Default constructor for stage 3
     /// </summary>
-    //public Volunteer() : this(0) { }
 }
+
+
+

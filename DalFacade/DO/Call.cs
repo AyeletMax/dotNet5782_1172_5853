@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿
+
+namespace DO;
 /// <summary>
 /// Call Entity
 /// </summary>
