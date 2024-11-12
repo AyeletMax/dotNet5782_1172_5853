@@ -16,8 +16,7 @@ namespace DO;
 /// <param name="Active">Indicates if the volunteer is active or not</param>
 /// <param name="LargestDistance">The largest distance for accepting a call</param>
 public record Volunteer
-(   
-    int Id,
+(
     string FirstName,
     string LastName,
     string Phone,
@@ -28,14 +27,11 @@ public record Volunteer
     double? Longitude=null,
    /* enum Job;*/
     bool Active,
-    double? LargesDistance=null
-   /* enum DistanceType;*/
 )
 {
     /// <summary>
     /// Default constructor for stage 3
     /// </summary>
-    public Volunteer() : this(0) { }
 }
 
 

@@ -11,12 +11,13 @@ namespace DO;
 /// <param name="Longitude">A number indicating how far a point on Earth is east or west of the equator.</param>
 /// <param name="OpenTime">time(date and hour) that the call has been opened</param>
 /// <param name="MaxFinishTime">time (date and hour) that the call has to finish</param>
-public record  Call
+public record Call
 (
 
-/*enum CallType,*/
-    string? VerbalDescription=null,
-    string Adress,
+    int ID,
+    CallType MyCallType,
+    string VerbalDescription,
+    string Address,
     double Latitude,
     double Longitude,
     DateTime OpenTime,
@@ -27,5 +28,5 @@ public record  Call
     /// <summary>
     /// Default constructor for stage 3
     /// </summary>
-    public Call() : this(0, "", "") { }
+    //public Call() : this(0, "", "") { }
 }

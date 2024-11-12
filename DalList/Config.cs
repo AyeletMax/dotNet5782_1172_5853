@@ -1,8 +1,9 @@
 ﻿namespace Dal;
+
 internal static class Config
 {
-    internal const int startId = 1;
-    private static int id = startId;
+    internal const int StartId = 1;
+    private static int id = StartId;
     internal static int Id { get => id++; }
     //...
 
@@ -14,6 +15,9 @@ internal static class Config
         nextCallId = startCourseId;
         Clock = DateTime.Now;
        
+        //...
+        Clock = DateTime.Now;
+        //...
     }
 }
 
