@@ -10,6 +10,10 @@ public class CallImplementation : ICall
     public void Create(Call item)
     {
         DataSource.Calls.Add(item);
+        //int id = DataSource.Cofig.NextCourseId;
+        //copy = item with { Id = id };
+        //DataSource.Assignments.Add(copy);
+
     }
 
     public void Delete(int id)
@@ -18,6 +22,10 @@ public class CallImplementation : ICall
         if (call != null)
         {
             DataSource.Calls.Remove(call);
+        }
+        else
+        {
+            throw new Exception($"Call with Id{id} was found");
         }
     }
 
@@ -35,7 +43,7 @@ public class CallImplementation : ICall
     {
         return new List<Call>(DataSource.Calls);
     }
-
+   
     public void Update(Call item)
     {
         var existingCall = Read(item.Id);
@@ -43,6 +51,11 @@ public class CallImplementation : ICall
         {
             DataSource.Calls.Remove(existingCall);
             DataSource.Calls.Add(item);
+        }
+        else
+        {
+            throw new Exception($"Could not Update Item, no Call with Id{item.Id} found");
+
         }
     }
 }

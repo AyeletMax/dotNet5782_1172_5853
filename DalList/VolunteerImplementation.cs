@@ -7,6 +7,8 @@ public class VolunteerImplementation : IVolunteer
 {
     public void Create(Volunteer item)
     {
+        if (Read(item.Id) is not null)
+            throw new Exception($"Volunteer with ID={item.Id} already exists");
         DataSource.Volunteers.Add(item);
     }
 
@@ -16,6 +18,10 @@ public class VolunteerImplementation : IVolunteer
         if (assignment != null)
         {
             DataSource.Volunteers.Remove(assignment);
+        }
+        else
+        {
+            throw new Exception($"Volunteer with Id{id} was found");
         }
     }
 
@@ -41,6 +47,11 @@ public class VolunteerImplementation : IVolunteer
         {
             DataSource.Volunteers.Remove(existingAssignment);
             DataSource.Volunteers.Add(item);
+        }
+        else
+        {
+            throw new Exception($"Could not Update Item, no Volunteer with Id{item.Id} found");
+
         }
     }
 }
