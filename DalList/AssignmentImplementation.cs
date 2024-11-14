@@ -17,6 +17,10 @@ public class AssignmentImplementation : IAssignment
         {
             DataSource.Assignments.Remove(assignment);
         }
+        else
+        {
+            throw new Exception($"Assignment with Id{id} was found");
+        }
     }
 
     public void DeleteAll()
@@ -42,6 +46,11 @@ public class AssignmentImplementation : IAssignment
             DataSource.Assignments.Remove(existingAssignment);
             DataSource.Assignments.Add(item);
         }
-      
+        else
+        {
+            throw new Exception($"Could not Update Item, no assignment with Id{item.Id} found");
+
+        }
+
     }
 }
