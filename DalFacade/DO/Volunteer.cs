@@ -2,7 +2,7 @@
 /// <summary>
 /// Volunteer Entity represents a volunteer with all its props
 /// </summary>
-/// <param name="ID">Personal unique ID of the volunteer</param>
+/// <param name="Id">Personal unique ID of the volunteer</param>
 /// <param name="FirstName">Private name of the volunteer</param>
 /// <param name="LastName">Volunteers Last Name</param>
 /// <param name="Phone">Volunteer phone number</param>
@@ -16,7 +16,7 @@
 public record Volunteer
 (
 
-    int ID,
+    int Id,
     string FirstName,
     string LastName,
     string Phone,

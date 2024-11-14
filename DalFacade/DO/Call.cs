@@ -4,7 +4,7 @@ namespace DO;
 /// <summary>
 /// Call Entity
 /// </summary>
-/// <param name="ID">unique Id that is automaticaly updated</param>
+/// <param name="Id">unique Id that is automaticaly updated</param>
 /// <param name="VerbalDescription">verble description of the call</param>
 /// <param name="Address">full address of the call</param>
 /// <param name="Latitude">A number indicating how far a point on Earth is south or north of the equator.</param>
@@ -13,7 +13,7 @@ namespace DO;
 /// <param name="MaxFinishTime">time (date and hour) that the call has to finish</param>
 public record Call
 (
-    int ID,
+    int Id,
     CallType MyCallType,
     string VerbalDescription,
     string Address,

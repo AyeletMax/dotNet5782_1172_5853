@@ -7,31 +7,41 @@ public class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {
-        throw new NotImplementedException();
+        DataSource.Assignments.Add(item);
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var assignment = Read(id);
+        if (assignment != null)
+        {
+            DataSource.Assignments.Remove(assignment);
+        }
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Assignments.Clear();
     }
 
     public Assignment? Read(int id)
     {
-        throw new NotImplementedException();
+        return DataSource.Assignments.Find(a => a.Id == id);
     }
 
     public List<Assignment> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Assignment>(DataSource.Assignments);
     }
 
     public void Update(Assignment item)
     {
-        throw new NotImplementedException();
+        var existingAssignment = Read(item.Id);
+        if (existingAssignment != null)
+        {
+            DataSource.Assignments.Remove(existingAssignment);
+            DataSource.Assignments.Add(item);
+        }
+      
     }
 }
