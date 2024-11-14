@@ -7,31 +7,40 @@ public class VolunteerImplementation : IVolunteer
 {
     public void Create(Volunteer item)
     {
-        throw new NotImplementedException();
+        DataSource.Volunteers.Add(item);
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var assignment = Read(id);
+        if (assignment != null)
+        {
+            DataSource.Volunteers.Remove(assignment);
+        }
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Volunteers.Clear();
     }
 
     public Volunteer? Read(int id)
     {
-        throw new NotImplementedException();
+        return DataSource.Volunteers.Find(a => a.Id == id);
     }
 
     public List<Volunteer> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Volunteer>(DataSource.Volunteers);
     }
 
     public void Update(Volunteer item)
     {
-        throw new NotImplementedException();
+        var existingAssignment = Read(item.Id);
+        if (existingAssignment != null)
+        {
+            DataSource.Volunteers.Remove(existingAssignment);
+            DataSource.Volunteers.Add(item);
+        }
     }
 }
