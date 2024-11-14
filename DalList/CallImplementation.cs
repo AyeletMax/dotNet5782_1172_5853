@@ -9,31 +9,40 @@ public class CallImplementation : ICall
 {
     public void Create(Call item)
     {
-        throw new NotImplementedException();
+        DataSource.Calls.Add(item);
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        var call = Read(id);
+        if (call != null)
+        {
+            DataSource.Calls.Remove(call);
+        }
     }
 
     public void DeleteAll()
     {
-        throw new NotImplementedException();
+        DataSource.Calls.Clear();
     }
 
     public Call? Read(int id)
     {
-        throw new NotImplementedException();
+        return DataSource.Calls.Find(a => a.Id == id);
     }
 
     public List<Call> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Call>(DataSource.Calls);
     }
 
     public void Update(Call item)
     {
-        throw new NotImplementedException();
+        var existingCall = Read(item.Id);
+        if (existingCall != null)
+        {
+            DataSource.Calls.Remove(existingCall);
+            DataSource.Calls.Add(item);
+        }
     }
 }
