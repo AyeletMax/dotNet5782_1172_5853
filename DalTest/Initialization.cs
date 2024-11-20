@@ -67,7 +67,7 @@ public static class Initialization
              "Late night singing after treatment",
              "Singing performance together with patients and caregivers",
              "Musical activity for children with cancer"};
-        string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel" }
+        string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel" };
 
         //כמה קריאות צריך? עשינו 15
         for (int i = 0; i < 15; i++)
@@ -83,6 +83,27 @@ public static class Initialization
             //מה עושים עם הID רץ?
             s_dalCall!.Create(new(0,MyCallType, VerbalDescription, Address, Latitude, Longitude, OpenTime, MaxFinishTime));
         }
+    }
+
+    public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
+    {
+        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalCall = dalCall ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL can not be null!");
+
+        Console.WriteLine("Reset Configuration values and List values...");
+        s_dalConfig.Reset();
+        s_dalVolunteer.DeleteAll();
+        s_dalCall.DeleteAll();
+        s_dalAssignment.DeleteAll();
+
+        Console.WriteLine("Initializing Volunteers list ...");
+        createVolunteer();
+        Console.WriteLine("Initializing Assignments list ...");
+        createAssignment();
+        Console.WriteLine("Initializing Calls list ...");
+        createCall();
     }
 };
 
