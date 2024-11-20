@@ -9,13 +9,11 @@
 /// <param name="FinishCallType">the way the call ended</param>
 public record Assignment
 (
-
     int Id,
     int VolunteerId,
     DateTime EntranceTime,
     DateTime ExitTime,
     FinishCallType FinishCallType
-
 )
 {
    
