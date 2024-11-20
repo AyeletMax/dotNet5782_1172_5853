@@ -7,24 +7,24 @@ public enum Role
 }
 public enum DistanceType
 {
-    air,
-    walk,
-    drive
+    Air,
+    Walk,
+    Drive
 }
 
 public enum CallType
 {
-    contactFamily,
-    sing,
-    playInstrument,
-    bringInstrument,
-    contactSinger,
+    ContactFamily,
+    Sing,
+    PlayInstrument,
+    BringInstrument,
+    ContactSinger,
 }
 
 public enum FinishCallType
 {
-    takenCareOf,
-    canceledByVolunteer,
-    canceledByManager,
-    expired
+    TakenCareOf,
+    CanceledByVolunteer,
+    CanceledByManager,
+    Expired
 }

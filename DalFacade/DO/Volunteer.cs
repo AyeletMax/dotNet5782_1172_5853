@@ -28,13 +28,13 @@ public record Volunteer
     double? Longitude = null,
     Role? MyRole = null,
     double? LargestDistance = null,
-    DistanceType MyDistanceType = DistanceType.air
+    DistanceType MyDistanceType = DistanceType.Air
 )
 {
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Volunteer() : this(0, "", "", "", "", true, null, null, null, null, null, null, DistanceType.air) { }
+    public Volunteer() : this(0, "", "", "", "", true, null, null, null, null, null, null, DistanceType.Air) { }
 }
 
 
