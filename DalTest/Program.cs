@@ -162,15 +162,23 @@ namespace DalTest
 
             static void CreateVolunteer()
             {
-                // קוד ליצירת מתנדב
                 Console.WriteLine("Enter Volunteer details:");
                 Console.Write("ID: ");
                 int id = int.Parse(Console.ReadLine());
-                Console.Write("Name: ");
-                string name = Console.ReadLine();
-
-                Volunteer newVolunteer = new Volunteer { Id = id, FirstName = name };
-                s_dalVolunteer.Create(newVolunteer); 
+                Console.Write("First Name: ");
+                string firstName = Console.ReadLine();
+                Console.Write("Last Name: ");
+                string lastName = Console.ReadLine();
+                Console.Write("Phone Number: ");
+                string phoneNumber = Console.ReadLine();
+                Console.Write("Email: ");
+                string email = Console.ReadLine();
+                Console.Write("Password: ");
+                string password = Console.ReadLine();
+                Console.Write("Address: ");
+                string address = Console.ReadLine();
+                bool active = true;//איך שולחים את הACTIVE?
+                s_dalVolunteer.Create(new Volunteer(id, firstName, lastName, phoneNumber, email, active, password, address));//מה צריך לשלוח בדיוק? הפרויקט הכי לא מובן במדינה!!!
                 Console.WriteLine("Volunteer created successfully!");
             }
 
@@ -200,7 +208,7 @@ namespace DalTest
                 }
             }
 
-            static void UpdateVolunteer()
+            static void UpdateVolunteer()//מה לעדכן??????? הפרויקט הכי מחריד בתבל!!פיכסס
             {
                 Console.Write("Enter Volunteer ID to update: ");
                 int id = int.Parse(Console.ReadLine());
