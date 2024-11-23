@@ -14,12 +14,13 @@ public enum DistanceType
 
 public enum CallType
 {
-    ContactFamily,
-    Sing,
-    PlayInstrument,
-    BringInstrument,
-    ContactSinger,
+    MusicPerformance,
+    MusicTherapy,
+    SingingAndEmotionalSupport,
+    GroupActivities,
+    PersonalizedMusicCare
 }
+
 
 public enum FinishCallType
 {
