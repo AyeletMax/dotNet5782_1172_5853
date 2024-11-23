@@ -13,6 +13,20 @@ public static class Initialization
     private static readonly Random s_rand = new();
     private static void createVolunteer()
     {
+        //לשנות את המשתנים שיעודכנו מהמערך הזה
+        string[] FullNames = {
+            "Avi Cohen", "Yosef Levy", "Miriam Katz", "Rivka Friedman", "David Shapiro",
+            "Sarah Goldstein", "Moshe Weiss", "Esther Kaplan", "Chaim Rosenberg", "Leah Stein",
+            "Shlomo Adler", "Rachel Baruch", "Yaakov Cohen", "Tamar Goldman", "Eli Rubin",
+            "Chaya Mizrahi", "Benjamin Klein", "Noa Cohen", "Avraham Ben-David", "Dalia Shlomo",
+            "Isaac Greenberg", "Yaara Weissman", "Ziv Tzukrel", "Sophie Abramov", "Reuven Katz",
+            "Hannah Rosen", "Yitzhak Levi", "Shira Peretz", "Nadav Shtern", "Naomi Biton",
+            "Simcha Azulay", "Daniel Rosen", "Adina Raskin", "Eliezer Yeger", "Maya Erez",
+            "Avigail Frankel", "Yitzhak Polak", "Tzafira Ben-Shimon", "Eliyahu Halimi", "Hadar Levy",
+            "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
+            "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
+            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" };
+
         string[] firstNames = { "Dani", "Eli", "Yair", "Ariela", "Dina", "Shira" };
         string[] lastNames = { "Levy", "Amar", "Cohen", "Levin", "Klein", "Israelof" };
         string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
