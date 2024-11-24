@@ -18,33 +18,25 @@ public static class Initialization
             "Avi Cohen", "Yosef Levy", "Miriam Katz", "Rivka Friedman", "David Shapiro",
             "Sarah Goldstein", "Moshe Weiss", "Esther Kaplan", "Chaim Rosenberg", "Leah Stein",
             "Shlomo Adler", "Rachel Baruch", "Yaakov Cohen", "Tamar Goldman", "Eli Rubin",
-            "Chaya Mizrahi", "Benjamin Klein", "Noa Cohen", "Avraham Ben-David", "Dalia Shlomo",
-            "Isaac Greenberg", "Yaara Weissman", "Ziv Tzukrel", "Sophie Abramov", "Reuven Katz",
-            "Hannah Rosen", "Yitzhak Levi", "Shira Peretz", "Nadav Shtern", "Naomi Biton",
-            "Simcha Azulay", "Daniel Rosen", "Adina Raskin", "Eliezer Yeger", "Maya Erez",
-            "Avigail Frankel", "Yitzhak Polak", "Tzafira Ben-Shimon", "Eliyahu Halimi", "Hadar Levy",
-            "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
-            "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
-            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" };
+        };
 
-        string[] firstNames = { "Dani", "Eli", "Yair", "Ariela", "Dina", "Shira" };
-        string[] lastNames = { "Levy", "Amar", "Cohen", "Levin", "Klein", "Israelof" };
         string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
         string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", "0504561239" };
         string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101" };
         string[] addresses = { "Tel Aviv", "Jerusalem", "Haifa", "Eilat", "Rishon Lezion", "Beer Sheva" };
 
-        for (int i = 0; i < firstNames.Length; i++)
+        for (int i = 0; i < FullNames.Length; i++)
         {
             int id;
             do
                 id = s_rand.Next(200000000, 400000000);
             while (s_dalVolunteer!.Read(id) != null);
-            string FirstName = firstNames[i];
-            string LastName = lastNames[i];
+            string[] nameParts = FullNames[i].Split(' ');
+            string firstName = nameParts[0];
+            string lastName = nameParts[1];
             string Phone = phones[i];
             string Email = emails[i];
-            bool Active = true;//האם הוא פעיל
+            bool Active = true;
             string Password = passwords[i];
             string Address = addresses[i];
             double latitude = s_rand.NextDouble() * (33.0 - 29.5) + 29.5;
@@ -52,7 +44,7 @@ public static class Initialization
             Role MyRole = (Role)s_rand.Next(0, Enum.GetValues(typeof(Role)).Length);
             double largestDistance = s_rand.Next(5, 50);
             DistanceType MyDistanceType = (DistanceType)s_rand.Next(0, Enum.GetValues(typeof(DistanceType)).Length);
-            s_dalVolunteer!.Create(new Volunteer(id, FirstName, LastName, Phone, Email, Active, Password, Address, latitude,
+            s_dalVolunteer!.Create(new Volunteer(id, firstName, lastName, Phone, Email, Active, Password, Address, latitude,
                 longitude, MyRole, largestDistance, MyDistanceType));
         }
     }
