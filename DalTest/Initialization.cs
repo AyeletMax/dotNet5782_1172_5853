@@ -18,23 +18,41 @@ public static class Initialization
             "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
             "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
             "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" ,"Avigail Frankel" };
+            "Isaac Greenberg", "Yaara Weissman", "Ziv Tzukrel", "Sophie Abramov", "Reuven Katz",
+            "Hannah Rosen", "Yitzhak Levi", "Shira Peretz", "Nadav Shtern", "Naomi Biton",
+            "Simcha Azulay", "Daniel Rosen", "Adina Raskin", "Eliezer Yeger", "Maya Erez",
+            "Avigail Frankel", "Yitzhak Polak", "Tzafira Ben-Shimon", "Eliyahu Halimi", "Hadar Levy",
+            "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
+            "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
+            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" };
 
-        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", 
-            "0504561239","0548551329","0548425138","0583282450","0583232333","0548482197",
-            "0583265120","0548533173","0583292455","0583262639" };
-        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101",
-            "123asd","a1b2c3","hello123","AaBbCc112233","abc123!@#","meMyselfAndI","ayelet@@@234","951A","HiHello!!" };
-        //להוסיף עוד כתובות מדויקות
+        string[] firstNames = { "Dani", "Eli", "Yair", "Ariela", "Dina", "Shira" };
+        string[] lastNames = { "Levy", "Amar", "Cohen", "Levin", "Klein", "Israelof" };
+        string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
+        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", "0504561239" };
+        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101" };
         string[] addresses = { "Tel Aviv", "Jerusalem", "Haifa", "Eilat", "Rishon Lezion", "Beer Sheva" };
-        //להוסיף מערכים של קוי אורך ורוחב
-        double[] latitudes = {};
-        double[] longitudes = {};
-        s_dalVolunteer!.Create(new(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager,"chen!123","Zhbotinski 15",32.1,32.8,10));
-        for (int i = 0; i < FullNames.Length; i++)
+
+        for (int i = 0; i < firstNames.Length; i++)
         {
-            string[] nameParts = FullNames[i].Split(' ');
-            s_dalVolunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
-                latitudes[i], longitudes[i], s_rand.Next(0, 8)));
+            int id;
+            do
+                id = s_rand.Next(200000000, 400000000);
+            while (s_dalVolunteer!.Read(id) != null);
+            string FirstName = firstNames[i];
+            string LastName = lastNames[i];
+            string Phone = phones[i];
+            string Email = emails[i];
+            bool Active = true;//האם הוא פעיל
+            string Password = passwords[i];
+            string Address = addresses[i];
+            double latitude = s_rand.NextDouble() * (33.0 - 29.5) + 29.5;
+            double longitude = s_rand.NextDouble() * (35.9 - 34.2) + 34.2;
+            Role MyRole = (Role)s_rand.Next(0, Enum.GetValues(typeof(Role)).Length);
+            double largestDistance = s_rand.Next(5, 50);
+            DistanceType MyDistanceType = (DistanceType)s_rand.Next(0, Enum.GetValues(typeof(DistanceType)).Length);
+            s_dalVolunteer!.Create(new Volunteer(id, FirstName, LastName, Phone, Email, Active, Password, Address, latitude,
+                longitude, MyRole, largestDistance, MyDistanceType));
         }
     }
 

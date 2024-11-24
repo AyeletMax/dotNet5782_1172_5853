@@ -65,7 +65,7 @@ internal class Program
                         crudMenu("Call", s_dalCall);
                         break;
                     case MainMenuChoice.Config:
-                        configMenu();
+                        ShowConfigMenu(s_dalConfig);
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -166,11 +166,11 @@ internal class Program
             if (entity != null)
             {
                 Console.WriteLine($"Current {entityName}: {entity}");
+                Console.Write("Enter new ID: ");
                 Console.Write("Enter new name: ");
-                string newName = Console.ReadLine();
-                var updateEntity = entity with { FirstName = newName };
+                 string newName = Console.ReadLine();
+                 var updatedVolunteer = entity with { FirstName = newName };
 
-                dal.Update(updateEntity);
                 Console.WriteLine($"{entityName} updated successfully!");
             }
             else
@@ -178,6 +178,75 @@ internal class Program
                 Console.WriteLine($"{entityName} not found.");
             }
         }
+        static void ShowConfigMenu(IConfig config)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Config Menu");
+                Console.WriteLine("1. Exit Submenu");
+                Console.WriteLine("2. Advance System Clock by 1 Minute");
+                Console.WriteLine("3. Advance System Clock by 1 Hour");
+                Console.WriteLine("4. Display Current System Clock Value");
+                Console.WriteLine("5. Set New Value for a Config Variable");
+                Console.WriteLine("6. Display Current Value for a Config Variable");
+                Console.WriteLine("7. Reset All Config Variables");
+                Console.Write("Choose an action: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        return; 
+
+                    case "2":
+                        config.Clock = config.Clock.AddMinutes(1); 
+                        Console.WriteLine("System clock advanced by 1 minute.");
+                        break;
+
+                    case "3":
+                        config.Clock = config.Clock.AddHours(1); 
+                        Console.WriteLine("System clock advanced by 1 hour.");
+                        break;
+
+                    case "4":
+                        Console.WriteLine($"Current system clock value: {config.Clock}");
+                        break;
+
+                    case "5":
+                        Console.Write("Enter a new value for the system clock (format: yyyy-MM-dd HH:mm:ss): ");
+                        if (DateTime.TryParse(Console.ReadLine(), out DateTime newTime))
+                        {
+                            config.Clock = newTime;
+                            Console.WriteLine("New value set successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid format. Please try again.");
+                        }
+                        break;
+
+                    case "6":
+                        Console.WriteLine($"Current clock value: {config.Clock}");
+                        break;
+
+                    case "7":
+                        config.Reset();
+                        Console.WriteLine("Config values reset to default.");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice. Please try again.");
+                        break;
+                }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
+            }
+        }
+
+
+
+
 
         static void DeleteEntity(string entityName, dynamic dal)
         {
@@ -212,7 +281,7 @@ internal class Program
         Console.Write("Address: ");
         string address = Console.ReadLine();
         bool active = true;//איך שולחים את הACTIVE?
-        s_dalVolunteer.Create(new Volunteer(id, firstName, lastName, phoneNumber, email, active, password, address));//מה צריך לשלוח בדיוק? הפרויקט הכי לא מובן במדינה!!!
+        s_dalVolunteer.Create(new (id, firstName, lastName, phoneNumber, email, active, password, address));//מה צריך לשלוח בדיוק? הפרויקט הכי לא מובן במדינה!!!
         Console.WriteLine("Volunteer created successfully!");
     }
     static void CreateAssignment()
@@ -375,5 +444,26 @@ internal class Program
 //            s_dalVolunteer!.DeleteAll();
 //            Console.WriteLine("All Volunteers deleted successfully!");
 //        }
+//    }
+//}
+///static void UpdateVolunteer()//מה לעדכן??????? הפרויקט הכי מחריד בתבל!!פיכסס
+//{
+//    Console.Write("Enter Volunteer ID to update: ");
+//    int id = int.Parse(Console.ReadLine());
+
+//    var volunteer = s_dalVolunteer!.Read(id);
+//    if (volunteer != null)
+//    {
+//        Console.WriteLine($"Current Volunteer: {volunteer}");
+//        Console.Write("Enter new name: ");
+//        string newName = Console.ReadLine();
+//        var updatedVolunteer = volunteer with { FirstName = newName };
+
+//        s_dalVolunteer.Update(updatedVolunteer);
+//        Console.WriteLine("Volunteer updated successfully!");
+//    }
+//    else
+//    {
+//        Console.WriteLine("Volunteer not found.");
 //    }
 //}
