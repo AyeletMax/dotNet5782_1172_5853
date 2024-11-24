@@ -130,6 +130,55 @@ internal class Program
             else
                 CreateAssignment();
         }
+        static void CreateVolunteer()
+        {
+            Console.WriteLine("Enter Volunteer details:");
+            Console.Write("ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Console.Write("First Name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Last Name: ");
+            string lastName = Console.ReadLine();
+            Console.Write("Phone Number: ");
+            string phoneNumber = Console.ReadLine();
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+            Console.Write("IsActive? ");
+            bool active = bool.Parse(Console.ReadLine());
+            Console.WriteLine("Invalid role. Please enter 'Manager' or 'Volunteer'.");
+            Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine());
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+            Console.Write("Address: ");
+            string address = Console.ReadLine();
+            Console.WriteLine("Enter location details:");
+            Console.Write("Latitude: ");
+            double latitude = double.Parse(Console.ReadLine());
+            Console.Write("Longitude: ");
+            double longitude = double.Parse(Console.ReadLine());
+            Console.Write("Largest Distance: ");
+            double largestDistance = double.Parse(Console.ReadLine());
+            Console.Write("Distance Type (Air or Land): ");
+            DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine(), true);
+            s_dalVolunteer.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
+            Console.WriteLine("Volunteer created successfully!");
+        }
+        static void CreateAssignment()
+        {
+            Console.WriteLine("Enter Assignment details:");
+           
+            s_dalAssignment.Create(new Assignment());//מה בדיוק שולחים ועבור אילו שדות יוצרים?
+            Console.WriteLine("Assignment created successfully!");
+        }
+        static void CreateCall()
+        {
+            Console.WriteLine("Enter Assignment details:");
+            Console.Write("ID: ");
+            int Id = int.Parse(Console.ReadLine());
+            s_dalCall.Create(new Call(Id));//מה בדיוק שולחים ועבור אילו שדות יוצרים?
+            Console.WriteLine("Assignment created successfully!");
+
+        }
 
         static void ReadEntityById(string entityName, dynamic dal)
         {
@@ -263,44 +312,7 @@ internal class Program
         }
 
     }
-    static void CreateVolunteer()
-    {
-        Console.WriteLine("Enter Volunteer details:");
-        Console.Write("ID: ");
-        int id = int.Parse(Console.ReadLine());
-        Console.Write("First Name: ");
-        string firstName = Console.ReadLine();
-        Console.Write("Last Name: ");
-        string lastName = Console.ReadLine();
-        Console.Write("Phone Number: ");
-        string phoneNumber = Console.ReadLine();
-        Console.Write("Email: ");
-        string email = Console.ReadLine();
-        Console.Write("Password: ");
-        string password = Console.ReadLine();
-        Console.Write("Address: ");
-        string address = Console.ReadLine();
-        bool active = true;//איך שולחים את הACTIVE?
-        s_dalVolunteer.Create(new (id, firstName, lastName, phoneNumber, email, active, password, address));//מה צריך לשלוח בדיוק? הפרויקט הכי לא מובן במדינה!!!
-        Console.WriteLine("Volunteer created successfully!");
-    }
-    static void CreateAssignment()
-    {
-        Console.WriteLine("Enter Assignment details:");
-        Console.Write("ID: ");
-        int Id = int.Parse(Console.ReadLine());
-        s_dalAssignment.Create(new Assignment(Id));//מה בדיוק שולחים ועבור אילו שדות יוצרים?
-        Console.WriteLine("Assignment created successfully!");
-    }
-    static void CreateCall()
-    {
-        Console.WriteLine("Enter Assignment details:");
-        Console.Write("ID: ");
-        int Id = int.Parse(Console.ReadLine());
-        s_dalCall.Create(new Call(Id));//מה בדיוק שולחים ועבור אילו שדות יוצרים?
-        Console.WriteLine("Assignment created successfully!");
-
-    }
+    
 
 }
 

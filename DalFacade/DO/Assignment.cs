@@ -9,18 +9,19 @@
 /// <param name="FinishCallType">the way the call ended</param>
 public record Assignment
 (
-    int Id,
-    int VolunteerId,
+   
     DateTime EntranceTime,
     DateTime? ExitTime=null,
     FinishCallType? FinishCallType = null 
 )
 {
-   
+    public int Id { get; set; }
+    public int CallId { get; set; }
+    public int VolunteerId { get; set; }
     /// <summary>
     ///  Default constructor
     /// </summary>
-    public Assignment() : this(0, 0, DateTime.MinValue, DateTime.MinValue, default(FinishCallType)) { }
+    public Assignment() : this(DateTime.MinValue, DateTime.MinValue, default(FinishCallType)) { }
 
 }
 
