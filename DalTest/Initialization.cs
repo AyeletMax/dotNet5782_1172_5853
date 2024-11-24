@@ -17,7 +17,7 @@ public static class Initialization
         string[] FullNames = {
             "Avi Cohen", "Yosef Levy", "Miriam Katz", "Rivka Friedman", "David Shapiro",
             "Sarah Goldstein", "Moshe Weiss", "Esther Kaplan", "Chaim Rosenberg", "Leah Stein",
-            "Shlomo Adler", "Rachel Baruch", "Yaakov Cohen", "Tamar Goldman", "Eli Rubin",
+            "Shlomo Adler", "Rachel Baruch", "Ayelet Cohen", "Tamar Goldman", "Eli Rubin",
         };
 
         string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
