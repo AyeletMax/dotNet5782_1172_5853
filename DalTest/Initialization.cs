@@ -13,55 +13,50 @@ public static class Initialization
     private static readonly Random s_rand = new();
     private static void createVolunteer()
     {
-        //לשנות את המשתנים שיעודכנו מהמערך הזה
         string[] FullNames = {
             "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
             "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
-            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" ,"Avigail Frankel" };
-            "Isaac Greenberg", "Yaara Weissman", "Ziv Tzukrel", "Sophie Abramov", "Reuven Katz",
-            "Hannah Rosen", "Yitzhak Levi", "Shira Peretz", "Nadav Shtern", "Naomi Biton",
-            "Simcha Azulay", "Daniel Rosen", "Adina Raskin", "Eliezer Yeger", "Maya Erez",
-            "Avigail Frankel", "Yitzhak Polak", "Tzafira Ben-Shimon", "Eliyahu Halimi", "Hadar Levy",
-            "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
-            "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
-            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" };
-
-        string[] firstNames = { "Dani", "Eli", "Yair", "Ariela", "Dina", "Shira" };
-        string[] lastNames = { "Levy", "Amar", "Cohen", "Levin", "Klein", "Israelof" };
-        string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
-        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", "0504561239" };
-        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101" };
-        string[] addresses = { "Tel Aviv", "Jerusalem", "Haifa", "Eilat", "Rishon Lezion", "Beer Sheva" };
-
-        for (int i = 0; i < firstNames.Length; i++)
+            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" ,"Avigail Frankel"
+        };
+        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654",
+            "0504561239","0548551329","0548425138","0583282450","0583232333","0548482197",
+            "0583265120","0548533173","0583292455","0583262639" 
+        };
+        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101",
+            "123asd","a1b2c3","hello123","AaBbCc112233","abc123!@#","meMyselfAndI","ayelet@@@234","951A","HiHello!!" 
+        }; 
+        string[] addresses = {
+                "9 Weizman St, Tel Aviv, Israel", "40 Jabotinsky St, Petah Tikva, Israel", "Ein Kerem 5, Jerusalem, Israel", 
+                "Tel Hashomer 6, Ramat Gan, Israel", "20 Yirmiyahu St, Jerusalem, Israel","128 Kaplan St, Tel Aviv, Israel", 
+                "65 Jabotinsky St, Kfar Saba, Israel","Barzilai 6, Ashkelon, Israel", "Ziv 6, Safed, Israel", "11 Beilinson St, Tel Aviv, Israel", 
+                "13 Azrieli St, Netanya, Israel", "2 Kalay St, Haifa, Israel", "11 Wolfson St, Holon, Israel",
+                 "12 Bialik St, Ashdod, Israel", "17 Heichal Shlomo St, Haifa, Israel"
+        };
+        double[] longitudes = {
+               34.7800, 34.8778, 35.2037, 34.8011, 35.1804, 34.7707,
+               34.8999, 34.5675, 35.4884, 34.7746, 34.8446, 34.9796,
+               34.7673, 34.6414, 34.9762
+        };
+        double[] latitudes = {
+               32.1094, 32.0850, 31.7732, 32.0735, 31.7683, 32.0810,
+               32.1820, 31.6700, 32.9674, 32.0840, 32.3143, 32.7872,
+               32.0167, 31.8015, 32.7682
+        };
+        s_dalVolunteer!.Create(new(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
+        for (int i = 0; i < FullNames.Length; i++)
         {
-            int id;
-            do
-                id = s_rand.Next(200000000, 400000000);
-            while (s_dalVolunteer!.Read(id) != null);
-            string FirstName = firstNames[i];
-            string LastName = lastNames[i];
-            string Phone = phones[i];
-            string Email = emails[i];
-            bool Active = true;//האם הוא פעיל
-            string Password = passwords[i];
-            string Address = addresses[i];
-            double latitude = s_rand.NextDouble() * (33.0 - 29.5) + 29.5;
-            double longitude = s_rand.NextDouble() * (35.9 - 34.2) + 34.2;
-            Role MyRole = (Role)s_rand.Next(0, Enum.GetValues(typeof(Role)).Length);
-            double largestDistance = s_rand.Next(5, 50);
-            DistanceType MyDistanceType = (DistanceType)s_rand.Next(0, Enum.GetValues(typeof(DistanceType)).Length);
-            s_dalVolunteer!.Create(new Volunteer(id, FirstName, LastName, Phone, Email, Active, Password, Address, latitude,
-                longitude, MyRole, largestDistance, MyDistanceType));
+            string[] nameParts = FullNames[i].Split(' ');
+            s_dalVolunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
+                latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
     }
 
     //חובה להבין!!!!
     private static void createAssignment()
     {
-        List<Volunteer>? volunteers= s_dalVolunteer!.ReadAll();  
-        List<Call>? calls= s_dalCall!.ReadAll();
-        DateTime startTime=new DateTime(s_dalConfig.Clock.Year,s_dalConfig.Clock.Month,s_dalConfig.Clock.Day,s_dalConfig.Clock.Hour-5,0,0);
+        List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
+        List<Call>? calls = s_dalCall!.ReadAll();
+        DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
         //כמה קריאות צריך עשינו 15
         for (int i = 0; i < 50; i++)
         {
@@ -94,16 +89,16 @@ public static class Initialization
         };
         CallType[] callTypes =
         {
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
+             CallType.MusicPerformance,
+             CallType.MusicTherapy,
+             CallType.SingingAndEmotionalSupport,
+             CallType.GroupActivities,
+             CallType.PersonalizedMusicCare,
+             CallType.MusicPerformance,
+             CallType.MusicTherapy,
+             CallType.SingingAndEmotionalSupport,
+             CallType.GroupActivities,
+             CallType.PersonalizedMusicCare,
         };
         double[] longitudes = {
             34.7867, 34.8045, 34.8067, 34.7895, 34.7960,
@@ -115,7 +110,8 @@ public static class Initialization
             34.7365, 34.7809, 34.7989, 34.7588, 34.7545,
             34.7916, 34.7919, 34.7970, 34.8047, 34.8061,
             34.8118, 34.8051, 34.7744, 34.8147, 34.7823,
-            34.7469, 34.7776, 34.7995, 34.7627, 34.8148 };
+            34.7469, 34.7776, 34.7995, 34.7627, 34.8148 
+        };
         double[] latitudes = {
             32.1098, 32.0869, 32.0727, 32.0715, 32.0968,
             32.0805, 32.1027, 32.0972, 32.0783, 32.1019,
@@ -126,18 +122,18 @@ public static class Initialization
             32.0875, 32.0785, 32.0891, 32.0978, 32.0842,
             32.1015, 32.0994, 32.0950, 32.0840, 32.0909,
             32.0920, 32.0955, 32.0803, 32.0877, 32.0774,
-            32.0979, 32.0905, 32.0856, 32.0912, 32.1074  };
+            32.0979, 32.0905, 32.0856, 32.0912, 32.1074  
+        };
         string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel" };
         DateTime begin = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
-        int range=(int)(s_dalConfig.Clock- begin).TotalMinutes;
+        int range = (int)(s_dalConfig.Clock - begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
-            int startTime=s_rand.Next(range);
-            int randIndex=s_rand.Next(verbalDescriptions.Length);
-            s_dalCall!.Create(new Call(callTypes[randIndex], addresses[i], latitudes[i], longitudes[i],begin.AddMinutes(startTime), begin.AddMinutes(startTime+s_rand.Next(30,360)), verbalDescriptions[randIndex]));
+            int startTime = s_rand.Next(range);
+            int randIndex = s_rand.Next(verbalDescriptions.Length);
+            s_dalCall!.Create(new Call(callTypes[randIndex], addresses[i], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
         }
     }
-
     public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
     {
         s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL can not be null!");
