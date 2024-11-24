@@ -4,7 +4,6 @@ namespace DO;
 /// <summary>
 /// Call Entity
 /// </summary>
-/// <param name="Id">unique Id that is automaticaly updated</param>
 /// <param name="VerbalDescription">verble description of the call</param>
 /// <param name="Address">full address of the call</param>
 /// <param name="Latitude">A number indicating how far a point on Earth is south or north of the equator.</param>
@@ -13,20 +12,19 @@ namespace DO;
 /// <param name="MaxFinishTime">time (date and hour) that the call has to finish</param>
 public record Call
 (
-    int Id,
+    //int Id,
     CallType MyCallType,
-    string VerbalDescription,
     string Address,
     double Latitude,
     double Longitude,
     DateTime OpenTime,
-    DateTime? MaxFinishTime = null
+    DateTime? MaxFinishTime = null,
+    string? VerbalDescription=null
 )
 {
-   
-
+   public int Id {  get; init; }
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Call() : this(0, default(CallType), "", "", 0.0, 0.0, DateTime.MinValue, null) { }
+    public Call() : this( default(CallType), "", 0, 0, DateTime.MinValue) { }
 }

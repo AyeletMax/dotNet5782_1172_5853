@@ -15,73 +15,53 @@ public static class Initialization
     {
         //לשנות את המשתנים שיעודכנו מהמערך הזה
         string[] FullNames = {
-            "Avi Cohen", "Yosef Levy", "Miriam Katz", "Rivka Friedman", "David Shapiro",
-            "Sarah Goldstein", "Moshe Weiss", "Esther Kaplan", "Chaim Rosenberg", "Leah Stein",
-            "Shlomo Adler", "Rachel Baruch", "Yaakov Cohen", "Tamar Goldman", "Eli Rubin",
-            "Chaya Mizrahi", "Benjamin Klein", "Noa Cohen", "Avraham Ben-David", "Dalia Shlomo",
-            "Isaac Greenberg", "Yaara Weissman", "Ziv Tzukrel", "Sophie Abramov", "Reuven Katz",
-            "Hannah Rosen", "Yitzhak Levi", "Shira Peretz", "Nadav Shtern", "Naomi Biton",
-            "Simcha Azulay", "Daniel Rosen", "Adina Raskin", "Eliezer Yeger", "Maya Erez",
-            "Avigail Frankel", "Yitzhak Polak", "Tzafira Ben-Shimon", "Eliyahu Halimi", "Hadar Levy",
             "Lior Ben-David", "Batya Hirsch", "Shimon Farkash", "Tzvi Berkovitz", "Meir Goldfarb",
             "Bat-Chen Shalom", "Yonatan Spector", "Erez Gur", "Gal Zohar", "Rachel Nachman",
-            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" };
+            "Yarden Levy", "Doron Klein", "Yulia Shaked", "Hila Shulman" ,"Avigail Frankel" };
 
-        string[] firstNames = { "Dani", "Eli", "Yair", "Ariela", "Dina", "Shira" };
-        string[] lastNames = { "Levy", "Amar", "Cohen", "Levin", "Klein", "Israelof" };
-        string[] emails = { "dani@gmail.com", "eli@gmail.com", "yair@gmail.com", "ariela@gmail.com", "dina@gmail.com", "shira@gmail.com" };
-        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", "0504561239" };
-        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101" };
+        string[] phones = { "0501234567", "0529876543", "0541239876", "0559871234", "0533217654", 
+            "0504561239","0548551329","0548425138","0583282450","0583232333","0548482197",
+            "0583265120","0548533173","0583292455","0583262639" };
+        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101",
+            "123asd","a1b2c3","hello123","AaBbCc112233","abc123!@#","meMyselfAndI","ayelet@@@234","951A","HiHello!!" };
+        //להוסיף עוד כתובות מדויקות
         string[] addresses = { "Tel Aviv", "Jerusalem", "Haifa", "Eilat", "Rishon Lezion", "Beer Sheva" };
-
-        for (int i = 0; i < firstNames.Length; i++)
+        //להוסיף מערכים של קוי אורך ורוחב
+        double[] latitudes = {};
+        double[] longitudes = {};
+        s_dalVolunteer!.Create(new(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager,"chen!123","Zhbotinski 15",32.1,32.8,10));
+        for (int i = 0; i < FullNames.Length; i++)
         {
-            int id;
-            do
-                id = s_rand.Next(200000000, 400000000);
-            while (s_dalVolunteer!.Read(id) != null);
-            string FirstName = firstNames[i];
-            string LastName = lastNames[i];
-            string Phone = phones[i];
-            string Email = emails[i];
-            bool Active = true;//האם הוא פעיל
-            string Password = passwords[i];
-            string Address = addresses[i];
-            double latitude = s_rand.NextDouble() * (33.0 - 29.5) + 29.5;
-            double longitude = s_rand.NextDouble() * (35.9 - 34.2) + 34.2;
-            Role MyRole = (Role)s_rand.Next(0, Enum.GetValues(typeof(Role)).Length);
-            double largestDistance = s_rand.Next(5, 50);
-            DistanceType MyDistanceType = (DistanceType)s_rand.Next(0, Enum.GetValues(typeof(DistanceType)).Length);
-            s_dalVolunteer!.Create(new Volunteer(id, FirstName, LastName, Phone, Email, Active, Password, Address, latitude,
-                longitude, MyRole, largestDistance, MyDistanceType));
+            string[] nameParts = FullNames[i].Split(' ');
+            s_dalVolunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
+                latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
     }
+
+    //חובה להבין!!!!
     private static void createAssignment()
     {
-        var volunteers = s_dalVolunteer!.ReadAll();  
+        List<Volunteer>? volunteers= s_dalVolunteer!.ReadAll();  
+        List<Call>? calls= s_dalCall!.ReadAll();
+        DateTime startTime=new DateTime(s_dalConfig.Clock.Year,s_dalConfig.Clock.Month,s_dalConfig.Clock.Day,s_dalConfig.Clock.Hour-5,0,0);
         //כמה קריאות צריך עשינו 15
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 50; i++)
         {
-            int VolunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
-            DateTime EntranceTime=new DateTime(s_dalConfig.Clock.Year - 2, 1, 1);
-            DateTime ExitTime= EntranceTime.AddDays(s_rand.Next((s_dalConfig.Clock - EntranceTime).Days));
-            FinishCallType FinishCallType=(FinishCallType)s_rand.Next(0, Enum.GetValues(typeof(FinishCallType)).Length);
-            //לא יודעות איך לשלוח את הID רץ
-            s_dalAssignment!.Create(new(0, VolunteerId, EntranceTime, ExitTime, FinishCallType));
+            DateTime minTime = calls[i].OpenTime;
+            DateTime maxTime = (DateTime)calls[i].MaxFinishTime!;
+            TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
+            DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)difference.TotalMinutes));
+
+            s_dalAssignment!.Create(new Assignment(
+                calls[i].Id,
+                volunteers[s_rand.Next(calls.Count)].Id,
+                randomTime,
+                randomTime.AddHours(2),
+                (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }
     private static void createCall()
     {
-        //string[] verbalDescriptions = {
-        //     "Singing for a patient in the internal medicine department",
-        //     "Guitar playing for a patient in isolation",
-        //     "Singing and emotional activity for a bedridden patient",
-        //     "Live performance for patients in the day care department",
-        //     "Tea break and singing with patients in the rehabilitation department",
-        //     "Soothing music for a patient after surgery",
-        //     "Late night singing after treatment",
-        //     "Singing performance together with patients and caregivers",
-        //     "Musical activity for children with cancer"};
         string[] verbalDescriptions = {
         "Live performance for patients in the day care department",
         "Soothing music for a patient after surgery",
@@ -93,47 +73,9 @@ public static class Initialization
         "Singing and reminiscence activity for seniors in a care home",
         "Community sing-along event for patients and families",
         "Songwriting therapy session for patients dealing with grief",
-        "Live concert for patients in the oncology unit",
-        "Therapeutic music session for elderly patients with dementia",
-        "Singing and relaxation activity for patients with chronic pain",
-        "Group drumming and singing for patients in group therapy",
-        "Music therapy to reduce anxiety for patients undergoing chemo",
-        "Guitar playing for a patient in isolation",
-        "Interactive music therapy for mental health patients",
-        "Singing circle for elderly patients with Alzheimer's disease",
-        "Singing circle with patients and staff in the pediatric ward",
-        "Music and mindfulness session for patients with insomnia",
-        "Singing for a patient in the internal medicine department",
-        "Relaxing harp music for patients in the surgical recovery area",
-        "Singing and emotional support for caregivers in the ICU",
-        "Evening music session for patients in the rehabilitation center",
-        "Guided music meditation for patients experiencing pain",
-        "Acoustic guitar session for patients in the psychiatric ward",
-        "Soothing instrumental music for intensive care unit patients",
-        "Singing and yoga session for post-surgery patients",
-        "Dance and sing-along activity for patients in long-term care",
-        "Songwriting therapy for children with chronic illness",
-        "Late night singing after treatment",
-        "Music therapy for patients with traumatic brain injury",
-        "Singing for children in the oncology ward",
-        "Group choir performance for patients in the hospice care unit",
-        "Personalized musical support for physical therapy patients",
-        "Piano performance to calm patients during emergency treatments",
-        "Therapeutic drumming circle for cancer patients",
-        "Singing and art therapy for children with chronic illness",
-        "Interactive sing-along for patients in the hospice care unit",
-        "Songs and emotional support for caregivers in the ICU",
-        "Singing performance for patients in the cardiac care unit",
-        "Interactive vocal exercises for patients with breathing problems",
-        "Singing for patients in the outpatient care unit",
-        "Choir performance for patients in the rehabilitation department"};
+        };
         CallType[] callTypes =
         {
-            CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
                CallType.MusicPerformance,
                CallType.MusicTherapy,
                CallType.SingingAndEmotionalSupport,
@@ -144,41 +86,6 @@ public static class Initialization
                CallType.SingingAndEmotionalSupport,
                CallType.GroupActivities,
                CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare,
-               CallType.MusicPerformance,
-               CallType.MusicTherapy,
-               CallType.SingingAndEmotionalSupport,
-               CallType.GroupActivities,
-               CallType.PersonalizedMusicCare
         };
         double[] longitudes = {
             34.7867, 34.8045, 34.8067, 34.7895, 34.7960,
@@ -203,20 +110,13 @@ public static class Initialization
             32.0920, 32.0955, 32.0803, 32.0877, 32.0774,
             32.0979, 32.0905, 32.0856, 32.0912, 32.1074  };
         string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel" };
-
+        DateTime begin = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
+        int range=(int)(s_dalConfig.Clock- begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
-            CallType MyCallType = callTypes[i];
-            //CallType MyCallType = (CallType)s_rand.Next(0, Enum.GetValues(typeof(CallType)).Length);
-            string VerbalDescription = verbalDescriptions[i];
-            string Address = addresses[i];
-            double latitude = latitudes[i];
-            double longitude = longitudes[i];
-            //עשינו את שעת פתיחה טוב?
-            DateTime OpenTime = new DateTime(s_dalConfig.Clock.Year - 2, 1, 1);
-            DateTime MaxFinishTime = OpenTime.AddDays(s_rand.Next((s_dalConfig.Clock - OpenTime).Days));
-            //מה עושים עם הID רץ?
-            s_dalCall!.Create(new(0, MyCallType, VerbalDescription, Address, latitude, longitude, OpenTime, MaxFinishTime));
+            int startTime=s_rand.Next(range);
+            int randIndex=s_rand.Next(verbalDescriptions.Length);
+            s_dalCall!.Create(new Call(callTypes[randIndex], addresses[i], latitudes[i], longitudes[i],begin.AddMinutes(startTime), begin.AddMinutes(startTime+s_rand.Next(30,360)), verbalDescriptions[randIndex]));
         }
     }
 

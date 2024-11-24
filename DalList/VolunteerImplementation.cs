@@ -1,7 +1,6 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
-//using System.Collections.Generic;
 
 public class VolunteerImplementation : IVolunteer
 {
@@ -14,10 +13,10 @@ public class VolunteerImplementation : IVolunteer
 
     public void Delete(int id)
     {
-        var assignment = Read(id);
-        if (assignment != null)
+        Volunteer? volunteer = Read(id);
+        if (volunteer != null)
         {
-            DataSource.Volunteers.Remove(assignment);
+            DataSource.Volunteers.Remove(volunteer);
         }
         else
         {
@@ -42,10 +41,10 @@ public class VolunteerImplementation : IVolunteer
 
     public void Update(Volunteer item)
     {
-        var existingAssignment = Read(item.Id);
-        if (existingAssignment != null)
+        Volunteer? volunteer = Read(item.Id);
+        if (volunteer != null)
         {
-            DataSource.Volunteers.Remove(existingAssignment);
+            DataSource.Volunteers.Remove(volunteer);
             DataSource.Volunteers.Add(item);
         }
         else

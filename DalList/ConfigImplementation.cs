@@ -13,5 +13,9 @@ public class ConfigImplementation : IConfig
     {
         Config.Reset();
     }
-
+    public TimeSpan RiskRange
+    {
+        get=> Config.RiskRange;
+        set => Config.RiskRange = value;
+    }
 }

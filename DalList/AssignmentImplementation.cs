@@ -7,12 +7,14 @@ public class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {
+        int newId = Config.NextAssignmentId;
+        Assignment newAssignment = item with { Id=newId};
         DataSource.Assignments.Add(item);
     }
 
     public void Delete(int id)
     {
-        var assignment = Read(id);
+        Assignment? assignment = Read(id);
         if (assignment != null)
         {
             DataSource.Assignments.Remove(assignment);
@@ -30,7 +32,8 @@ public class AssignmentImplementation : IAssignment
 
     public Assignment? Read(int id)
     {
-        return DataSource.Assignments.Find(a => a.Id == id);
+        Assignment? assignment = DataSource.Assignments.Find(assignment => assignment.Id == id);
+        return assignment;
     }
 
     public List<Assignment> ReadAll()
@@ -40,7 +43,7 @@ public class AssignmentImplementation : IAssignment
 
     public void Update(Assignment item)
     {
-        var existingAssignment = Read(item.Id);
+        Assignment? existingAssignment = Read(item.Id);
         if (existingAssignment != null)
         {
             DataSource.Assignments.Remove(existingAssignment);
