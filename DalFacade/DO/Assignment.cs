@@ -9,7 +9,6 @@
 /// <param name="FinishCallType">the way the call ended</param>
 public record Assignment
 (
-   
     DateTime EntranceTime,
     DateTime? ExitTime=null,
     FinishCallType? FinishCallType = null 

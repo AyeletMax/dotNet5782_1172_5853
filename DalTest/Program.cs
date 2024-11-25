@@ -2,101 +2,111 @@
 using DalApi;
 using DO;
 
-namespace DalTest;
-
-enum MainMenuChoice
+namespace DalTest
 {
-    Exit, Volunteer, Assignments, Calls, Config
-}
-//, InitializeData, ResetData
-enum CrudChoice
-{
-    Exit, Create, Read, ReadAll, Update, Delete, DeleteAll
-}
-enum ConfigChoice
-{
-    Exit, AdvanceClockMinute, AdvanceClockHour, ShowCurrentClock, SetConfigValue, ResetConfig
-}
-internal class Program
-{
-//Initialization.Do(s_dalAssignment, s_dalCall, s_dalConfig, s_dalVolunteer);
-  
-    private static IAssignment? s_dalAssignment = new AssignmentImplementation();
-    private static ICall? s_dalCall = new CallImplementation();
-    private static IConfig? s_dalConfig = new ConfigImplementation();
-    private static IVolunteer? s_dalVolunteer = new VolunteerImplementation();
-    static void Main(string[] args)
+    internal class Program
     {
-        try
+        private static IAssignment? s_dalAssignment = new AssignmentImplementation();
+        private static ICall? s_dalCall = new CallImplementation();
+        private static IConfig? s_dalConfig = new ConfigImplementation();
+        private static IVolunteer? s_dalVolunteer = new VolunteerImplementation();
+        enum MainMenuChoice
         {
-            mainMenu();
+            Exit, Volunteer, Assignments, Calls, Config, InitializeData, ResetDatabase, DisplayAllData
         }
-        catch (Exception ex)
+        enum CrudChoice
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Exit, Create, Read, ReadAll, Update, Delete, DeleteAll
+        }
+        enum ConfigChoice
+        {
+            Exit, AdvanceClockMinute, AdvanceClockHour, AdvanceClockByDay, AdvanceClockByMonth, AdvanceClockByYear, ShowCurrentClock, ChangeClock, ResetConfig
+        }
+        static void Main(string[] args)
+        {
+            try
+            {
+                mainMenu();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         static void mainMenu()
         {
-            bool running = true;
-            while (running)
+            Console.WriteLine("Enter a number:");
+            foreach (MainMenuChoice choice in Enum.GetValues(typeof(MainMenuChoice)))
             {
-                Console.WriteLine("Main Menu");
-                Console.WriteLine("1. Volunteer CRUD Menu");
-                Console.WriteLine("2. Assignment CRUD Menu");
-                Console.WriteLine("3. Call CRUD Menu");
-                Console.WriteLine("3. Config CRUD Menu");
-                Console.WriteLine("0. Exit");
-                int mainChoice = int.Parse(Console.ReadLine());
-
-                MainMenuChoice mainMenuChoice = (MainMenuChoice)mainChoice;
+                Console.WriteLine($"{(int)choice}. {choice}");
+            }
+            MainMenuChoice mainMenuChoice;
+            Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
+            while (mainMenuChoice is not MainMenuChoice.Exit)
+            {
                 switch (mainMenuChoice)
                 {
-                    case MainMenuChoice.Exit:
-                        running = false;
-                        break;
                     case MainMenuChoice.Volunteer:
-                        crudMenu("Volunteer", s_dalVolunteer);
+                        CrudMenu("Volunteer", s_dalVolunteer);
                         break;
                     case MainMenuChoice.Assignments:
-                        crudMenu("Assignment", s_dalAssignment);
+                        CrudMenu("Assignment", s_dalAssignment);
                         break;
                     case MainMenuChoice.Calls:
-                        crudMenu("Call", s_dalCall);
+                        CrudMenu("Call", s_dalCall);
                         break;
                     case MainMenuChoice.Config:
-                        ShowConfigMenu(s_dalConfig);
+                        ShowConfigMenu();
+                        break;
+                    case MainMenuChoice.InitializeData:
+                        Initialization.DO(s_dalAssignment, s_dalCall, s_dalConfig, s_dalVolunteer);
+                        break;
+                    case MainMenuChoice.DisplayAllData:
+                        DisplayAllData();
+                        break;
+                    case MainMenuChoice.ResetDatabase:
+                        ResetDatabase();
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
                         break;
-
                 }
+                Console.WriteLine("Enter a number:");
+                Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
+
             }
         }
-        static void crudMenu(string entityName, dynamic dal)
+        private static void ResetDatabase()
         {
-            bool running = true;
-            while (running)
+            s_dalConfig!.Reset();
+            s_dalVolunteer!.DeleteAll();
+            s_dalCall!.DeleteAll();
+            s_dalAssignment!.DeleteAll();
+        }
+        private static void DisplayAllData()
+        {
+            foreach (var volunteer in s_dalVolunteer!.ReadAll())
             {
-                Console.Clear();
-                Console.WriteLine($"{entityName} CRUD Menu");
-                Console.WriteLine("1. Create");
-                Console.WriteLine("2. Read by ID");
-                Console.WriteLine("3. Read All");
-                Console.WriteLine("4. Update");
-                Console.WriteLine("5. Delete");
-                Console.WriteLine("6. Delete All");
-                Console.WriteLine("0. Back to Main Menu");
+                Console.WriteLine(volunteer);
+            }
+            Console.WriteLine(s_dalCall!.ReadAll());
+            Console.WriteLine(s_dalAssignment!.ReadAll());
+        }
 
-                int option = int.Parse(Console.ReadLine());
-                CrudChoice crudChoice = (CrudChoice)option;
-
-                switch (crudChoice)
+        static void CrudMenu(string entityName, dynamic dal)
+        {
+            Console.WriteLine("Enter a number:");
+            foreach (CrudChoice option in Enum.GetValues(typeof(CrudChoice)))
+            {
+                Console.WriteLine($"{(int)option}. {option}");
+            }
+            CrudChoice choice;
+            Enum.TryParse(Console.ReadLine(), out choice);
+            while (choice is not CrudChoice.Exit)
+            {
+                switch (choice)
                 {
-                    case CrudChoice.Exit:
-                        running = false;
-                        break;
                     case CrudChoice.Create:
                         CreateEntity(entityName, dal);
                         break;
@@ -119,6 +129,8 @@ internal class Program
                         Console.WriteLine("Invalid option, please try again.");
                         break;
                 }
+                Console.WriteLine("Enter a number:");
+                Enum.TryParse(Console.ReadLine(), out choice);
             }
         }
         static void CreateEntity(string entityName, dynamic dal)
@@ -136,21 +148,21 @@ internal class Program
             Console.Write("ID: ");
             int id = int.Parse(Console.ReadLine());
             Console.Write("First Name: ");
-            string firstName = Console.ReadLine();
+            string? firstName = Console.ReadLine();
             Console.Write("Last Name: ");
-            string lastName = Console.ReadLine();
+            string? lastName = Console.ReadLine();
             Console.Write("Phone Number: ");
-            string phoneNumber = Console.ReadLine();
+            string? phoneNumber = Console.ReadLine();
             Console.Write("Email: ");
-            string email = Console.ReadLine();
+            string? email = Console.ReadLine();
             Console.Write("IsActive? ");
             bool active = bool.Parse(Console.ReadLine());
             Console.WriteLine("Invalid role. Please enter 'Manager' or 'Volunteer'.");
             Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine());
             Console.Write("Password: ");
-            string password = Console.ReadLine();
+            string? password = Console.ReadLine();
             Console.Write("Address: ");
-            string address = Console.ReadLine();
+            string? address = Console.ReadLine();
             Console.WriteLine("Enter location details:");
             Console.Write("Latitude: ");
             double latitude = double.Parse(Console.ReadLine());
@@ -160,40 +172,47 @@ internal class Program
             double largestDistance = double.Parse(Console.ReadLine());
             Console.Write("Distance Type (Air or Land): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine(), true);
-            s_dalVolunteer.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
+            s_dalVolunteer!.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
         static void CreateAssignment()
         {
             Console.WriteLine("Enter Assignment details:");
-           
-            s_dalAssignment.Create(new Assignment());//מה בדיוק שולחים ועבור אילו שדות יוצרים?
+            Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
+            DateTime entranceTime = DateTime.Parse(Console.ReadLine());
+            Console.Write("Exit Time (yyyy-MM-dd HH:mm:ss): ");
+            DateTime exitTime = DateTime.Parse(Console.ReadLine());
+            Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
+            FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine(), true);
+            s_dalAssignment!.Create(new Assignment(entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
         static void CreateCall()
         {
-            Console.WriteLine("Enter Assignment details:");
-            Console.Write("ID: ");
-            int Id = int.Parse(Console.ReadLine());
-            s_dalCall.Create(new Call(Id));//מה בדיוק שולחים ועבור אילו שדות יוצרים?
-            Console.WriteLine("Assignment created successfully!");
-
+            Console.WriteLine("Enter call details:");
+            Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
+            CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine(), true);
+            Console.Write("Address: ");
+            string? address = Console.ReadLine();
+            Console.Write("Latitude: ");
+            double latitude = double.Parse(Console.ReadLine());
+            Console.Write("Longitude: ");
+            double longitude = double.Parse(Console.ReadLine());
+            Console.Write("Open Time (yyyy-MM-dd HH:mm:ss): ");
+            DateTime openTime = DateTime.Parse(Console.ReadLine());
+            Console.Write("Max Finish Time (yyyy-MM-dd HH:mm:ss): ");
+            DateTime maxFinishTime = DateTime.Parse(Console.ReadLine());
+            Console.Write("Verbal Description: ");
+            string? verbalDescription = Console.ReadLine();
+            s_dalCall!.Create(new Call(myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
+            Console.WriteLine("Call created successfully!");
         }
 
         static void ReadEntityById(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to read: ");
             int id = int.Parse(Console.ReadLine());
-
             var entityId = dal.Read(id);
-            if (entityId != null)
-            {
-                Console.WriteLine($"{entityName} Found: {entityId}");
-            }
-            else
-            {
-                Console.WriteLine($"{entityName} not found.");
-            }
         }
 
         static void ReadAllEntities(string entityName, dynamic dal)
@@ -209,94 +228,24 @@ internal class Program
         static void UpdateEntity(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to update: ");
-            int id = int.Parse(Console.ReadLine());
+            //int id = int.Parse(Console.ReadLine());
 
-            var entity = dal!.Read(id);
-            if (entity != null)
-            {
-                Console.WriteLine($"Current {entityName}: {entity}");
-                Console.Write("Enter new ID: ");
-                Console.Write("Enter new name: ");
-                 string newName = Console.ReadLine();
-                 var updatedVolunteer = entity with { FirstName = newName };
+            //var entity = dal!.Read(id);
+            //if (entity != null)
+            //{
+            //    Console.WriteLine($"Current {entityName}: {entity}");
+            //    Console.Write("Enter new ID: ");
+            //    Console.Write("Enter new name: ");
+            //    string newName = Console.ReadLine();
+            //    var updatedVolunteer = entity with { FirstName = newName };
 
-                Console.WriteLine($"{entityName} updated successfully!");
-            }
-            else
-            {
-                Console.WriteLine($"{entityName} not found.");
-            }
+            //    Console.WriteLine($"{entityName} updated successfully!");
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"{entityName} not found.");
+            //}
         }
-        static void ShowConfigMenu(IConfig config)
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("Config Menu");
-                Console.WriteLine("1. Exit Submenu");
-                Console.WriteLine("2. Advance System Clock by 1 Minute");
-                Console.WriteLine("3. Advance System Clock by 1 Hour");
-                Console.WriteLine("4. Display Current System Clock Value");
-                Console.WriteLine("5. Set New Value for a Config Variable");
-                Console.WriteLine("6. Display Current Value for a Config Variable");
-                Console.WriteLine("7. Reset All Config Variables");
-                Console.Write("Choose an action: ");
-                string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1":
-                        return; 
-
-                    case "2":
-                        config.Clock = config.Clock.AddMinutes(1); 
-                        Console.WriteLine("System clock advanced by 1 minute.");
-                        break;
-
-                    case "3":
-                        config.Clock = config.Clock.AddHours(1); 
-                        Console.WriteLine("System clock advanced by 1 hour.");
-                        break;
-
-                    case "4":
-                        Console.WriteLine($"Current system clock value: {config.Clock}");
-                        break;
-
-                    case "5":
-                        Console.Write("Enter a new value for the system clock (format: yyyy-MM-dd HH:mm:ss): ");
-                        if (DateTime.TryParse(Console.ReadLine(), out DateTime newTime))
-                        {
-                            config.Clock = newTime;
-                            Console.WriteLine("New value set successfully.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid format. Please try again.");
-                        }
-                        break;
-
-                    case "6":
-                        Console.WriteLine($"Current clock value: {config.Clock}");
-                        break;
-
-                    case "7":
-                        config.Reset();
-                        Console.WriteLine("Config values reset to default.");
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
-                }
-                Console.WriteLine("\nPress Enter to continue...");
-                Console.ReadLine();
-            }
-        }
-
-
-
-
-
         static void DeleteEntity(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to delete: ");
@@ -310,172 +259,73 @@ internal class Program
             Console.WriteLine($"Deleting all entities of type: {entityName}");
             dal.DeleteAll();
         }
+        static void ShowConfigMenu()
+        {
+            Console.Write("Choose an action: ");
+            foreach (ConfigChoice option in Enum.GetValues(typeof(ConfigChoice)))
+            {
+                Console.WriteLine($"{(int)option}. {option}");
+            }
+            ConfigChoice choice;
+            Enum.TryParse(Console.ReadLine(), out choice);
+            while (choice is not ConfigChoice.Exit)
+            {
+                switch (choice)
+                {
+                    case ConfigChoice.Exit:
+                        return;
+                    case ConfigChoice.AdvanceClockMinute:
+                        s_dalConfig!.Clock = s_dalConfig.Clock.AddMinutes(1);
+                        Console.WriteLine("System clock advanced by 1 minute.");
+                        break;
+                    case ConfigChoice.AdvanceClockHour:
+                        s_dalConfig!.Clock = s_dalConfig.Clock.AddHours(1);
+                        Console.WriteLine("System clock advanced by 1 hour.");
+                        break;
+                    case ConfigChoice.AdvanceClockByDay:
+                        s_dalConfig!.Clock = s_dalConfig.Clock.AddDays(1);
+                        break;
+                    case ConfigChoice.AdvanceClockByMonth:
+                        s_dalConfig!.Clock = s_dalConfig.Clock.AddMonths(1);
+                        break;
+                    case ConfigChoice.AdvanceClockByYear:
+                        s_dalConfig!.Clock = s_dalConfig.Clock.AddYears(1);
+                        break;
+                    case ConfigChoice.ShowCurrentClock:
+                        Console.WriteLine($"Current system clock value: {s_dalConfig!.Clock}");
+                        break;
+                    case ConfigChoice.ChangeClock:
+                        Console.Write("Enter a new value for the system clock : ");
+                        string times = Console.ReadLine()!;
+                        string[] timesArray = times.Split(',');
+                        int year = int.Parse(timesArray[0]);
+                        int month = int.Parse(timesArray[1]);
+                        int day = int.Parse(timesArray[2]);
+                        int hour = int.Parse(timesArray[3]);
+                        int minute = int.Parse(timesArray[4]);
+                        int second = int.Parse(timesArray[5]);
+                        s_dalConfig!.Clock = new DateTime(year, month, day, hour, minute, second);
+                        break;
+                    case ConfigChoice.ResetConfig:
+                        s_dalConfig!.Reset();
+                        Console.WriteLine("Config values reset to default.");
+                        break;
 
+                    default:
+                        Console.WriteLine("Invalid choice. Please try again.");
+                        break;
+                }
+                Console.WriteLine("Enter a number:");
+                Enum.TryParse(Console.ReadLine(), out choice);
+                //Console.WriteLine("\nPress Enter to continue...");
+                //Console.ReadLine();
+            }
+        }
     }
-    
-
 }
 
-//        static void VolunteerCrudMenu()
-//        {
-//            bool running = true;
-//            while (running)
-//            {
-//                Console.Clear();
-//                Console.WriteLine("=== Volunteer CRUD Menu ===");
 
-//                Console.WriteLine("1. Create Volunteer");
-//                Console.WriteLine("2. Read Volunteer by ID");
-//                Console.WriteLine("3. Read All Volunteers");
-//                Console.WriteLine("4. Update Volunteer");
-//                Console.WriteLine("5. Delete Volunteer");
-//                Console.WriteLine("6. Delete All Volunteers");
-//                Console.WriteLine("0. Back to Main Menu");
-//                Console.Write("Select an option: ");
+    
 
-//                int option = int.Parse(Console.ReadLine());
 
-//                switch (option)
-//                {
-//                    case 1:
-//                        CreateVolunteer();
-//                        break;
 
-//                    case 2:
-//                        ReadVolunteerById();
-//                        break;
-
-//                    case 3:
-//                        ReadAllVolunteers();
-//                        break;
-
-//                    case 4:
-//                        UpdateVolunteer();
-//                        break;
-
-//                    case 5:
-//                        DeleteVolunteer();
-//                        break;
-
-//                    case 6:
-//                        DeleteAllVolunteers();
-//                        break;
-
-//                    case 0:
-//                        running = false;
-//                        break;
-
-//                    default:
-//                        Console.WriteLine("Invalid option, please try again.");
-//                        break;
-//                }
-//            }
-//        }
-
-//        static void CreateVolunteer()
-//        {
-//            Console.WriteLine("Enter Volunteer details:");
-//            Console.Write("ID: ");
-//            int id = int.Parse(Console.ReadLine());
-//            Console.Write("First Name: ");
-//            string firstName = Console.ReadLine();
-//            Console.Write("Last Name: ");
-//            string lastName = Console.ReadLine();
-//            Console.Write("Phone Number: ");
-//            string phoneNumber = Console.ReadLine();
-//            Console.Write("Email: ");
-//            string email = Console.ReadLine();
-//            Console.Write("Password: ");
-//            string password = Console.ReadLine();
-//            Console.Write("Address: ");
-//            string address = Console.ReadLine();
-//            bool active = true;//איך שולחים את הACTIVE?
-//            s_dalVolunteer.Create(new Volunteer(id, firstName, lastName, phoneNumber, email, active, password, address));//מה צריך לשלוח בדיוק? הפרויקט הכי לא מובן במדינה!!!
-//            Console.WriteLine("Volunteer created successfully!");
-//        }
-
-//        static void ReadVolunteerById()
-//        {
-//            Console.Write("Enter Volunteer ID to read: ");
-//            int id = int.Parse(Console.ReadLine());
-
-//            var volunteer = s_dalVolunteer.Read(id);
-//            if (volunteer != null)
-//            {
-//                Console.WriteLine($"Volunteer Found: {volunteer}");
-//            }
-//            else
-//            {
-//                Console.WriteLine("Volunteer not found.");
-//            }
-//        }
-
-//        static void ReadAllVolunteers()
-//        {
-//            var volunteers = s_dalVolunteer!.ReadAll();
-//            Console.WriteLine("All Volunteers:");
-//            foreach (var volunteer in volunteers)
-//            {
-//                Console.WriteLine(volunteer);
-//            }
-//        }
-
-//static void UpdateVolunteer()//מה לעדכן??????? הפרויקט הכי מחריד בתבל!!פיכסס
-//{
-//    Console.Write("Enter Volunteer ID to update: ");
-//    int id = int.Parse(Console.ReadLine());
-
-//    var volunteer = s_dalVolunteer!.Read(id);
-//    if (volunteer != null)
-//    {
-//        Console.WriteLine($"Current Volunteer: {volunteer}");
-//        Console.Write("Enter new name: ");
-//        string newName = Console.ReadLine();
-//        var updatedVolunteer = volunteer with { FirstName = newName };
-
-//        s_dalVolunteer.Update(updatedVolunteer);
-//        Console.WriteLine("Volunteer updated successfully!");
-//    }
-//    else
-//    {
-//        Console.WriteLine("Volunteer not found.");
-//    }
-//}
-
-//        static void DeleteVolunteer()
-//        {
-//            Console.Write("Enter Volunteer ID to delete: ");
-//            int id = int.Parse(Console.ReadLine());
-
-//            s_dalVolunteer!.Delete(id);
-//            Console.WriteLine("Volunteer deleted successfully!");
-//        }
-
-//        static void DeleteAllVolunteers()
-//        {
-//            s_dalVolunteer!.DeleteAll();
-//            Console.WriteLine("All Volunteers deleted successfully!");
-//        }
-//    }
-//}
-///static void UpdateVolunteer()//מה לעדכן??????? הפרויקט הכי מחריד בתבל!!פיכסס
-//{
-//    Console.Write("Enter Volunteer ID to update: ");
-//    int id = int.Parse(Console.ReadLine());
-
-//    var volunteer = s_dalVolunteer!.Read(id);
-//    if (volunteer != null)
-//    {
-//        Console.WriteLine($"Current Volunteer: {volunteer}");
-//        Console.Write("Enter new name: ");
-//        string newName = Console.ReadLine();
-//        var updatedVolunteer = volunteer with { FirstName = newName };
-
-//        s_dalVolunteer.Update(updatedVolunteer);
-//        Console.WriteLine("Volunteer updated successfully!");
-//    }
-//    else
-//    {
-//        Console.WriteLine("Volunteer not found.");
-//    }
-//}

@@ -65,12 +65,8 @@ public static class Initialization
             TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)difference.TotalMinutes));
 
-            s_dalAssignment!.Create(new Assignment(
-                calls[i].Id,
-                volunteers[s_rand.Next(calls.Count)].Id,
-                randomTime,
-                randomTime.AddHours(2),
-                (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
+            s_dalAssignment!.Create(new Assignment(randomTime, randomTime.AddHours(2),
+             (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }
     private static void createCall()
