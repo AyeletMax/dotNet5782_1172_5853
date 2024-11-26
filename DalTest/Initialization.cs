@@ -115,12 +115,14 @@ public static class Initialization
     }
     private static void createAssignment()
     {
-       // List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
+        List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
         List<Call>? calls = s_dalCall!.ReadAll();
         //DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
         //כמה קריאות צריך עשינו 15
         for (int i = 0; i < 50; i++)
         {
+            int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
+            int callId = calls[s_rand.Next(calls.Count)].Id;
             DateTime minTime = calls[i].OpenTime;
             DateTime maxTime = (DateTime)calls[i].MaxFinishTime!;
             TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
@@ -128,7 +130,8 @@ public static class Initialization
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
 
             s_dalAssignment!.Create(new Assignment(randomTime, randomTime.AddHours(2),
-             (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
+                (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
+     
         }
     }
     public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)

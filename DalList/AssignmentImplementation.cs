@@ -1,6 +1,8 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+using System;
+
 //using System.Collections.Generic;
 
 public class AssignmentImplementation : IAssignment
@@ -9,7 +11,7 @@ public class AssignmentImplementation : IAssignment
     {
         int newId = Config.NextAssignmentId;
         Assignment newAssignment = item with { Id=newId};
-        DataSource.Assignments.Add(item);
+        DataSource.Assignments.Add(newAssignment);
     }
 
     public void Delete(int id)
@@ -29,11 +31,9 @@ public class AssignmentImplementation : IAssignment
     {
         DataSource.Assignments.Clear();
     }
-
     public Assignment? Read(int id)
     {
-        Assignment? assignment = DataSource.Assignments.Find(assignment => assignment.Id == id);
-        return assignment;
+        return DataSource.Assignments.Find(a => a.Id == id);
     }
 
     public List<Assignment> ReadAll()

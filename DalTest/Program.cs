@@ -45,32 +45,95 @@ namespace DalTest
             Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
             while (mainMenuChoice is not MainMenuChoice.Exit)
             {
-                switch (mainMenuChoice)
+                try
                 {
-                    case MainMenuChoice.Volunteer:
-                        CrudMenu("Volunteer", s_dalVolunteer);
-                        break;
-                    case MainMenuChoice.Assignments:
-                        CrudMenu("Assignment", s_dalAssignment);
-                        break;
-                    case MainMenuChoice.Calls:
-                        CrudMenu("Call", s_dalCall);
-                        break;
-                    case MainMenuChoice.Config:
-                        ShowConfigMenu();
-                        break;
-                    case MainMenuChoice.InitializeData:
-                        Initialization.DO(s_dalAssignment, s_dalCall, s_dalConfig, s_dalVolunteer);
-                        break;
-                    case MainMenuChoice.DisplayAllData:
-                        DisplayAllData();
-                        break;
-                    case MainMenuChoice.ResetDatabase:
-                        ResetDatabase();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                    switch (mainMenuChoice)
+                    {
+                        case MainMenuChoice.Volunteer:
+                            try
+                            {
+                                CrudMenu("Volunteer", s_dalVolunteer);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error in Volunteer menu: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.Assignments:
+                            try
+                            {
+                                CrudMenu("Assignment", s_dalAssignment);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error in Assignments menu: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.Calls:
+                            try
+                            {
+                                CrudMenu("Call", s_dalCall);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error in Calls menu: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.Config:
+                            try
+                            {
+                                ShowConfigMenu();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error in Config menu: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.InitializeData:
+                            try
+                            {
+                                Initialization.DO(s_dalAssignment, s_dalCall, s_dalConfig, s_dalVolunteer);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error initializing data: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.DisplayAllData:
+                            try
+                            {
+                                DisplayAllData();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error displaying all data: {ex.Message}");
+                            }
+                            break;
+
+                        case MainMenuChoice.ResetDatabase:
+                            try
+                            {
+                                ResetDatabase();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error resetting database: {ex.Message}");
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
                 }
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
@@ -92,11 +155,11 @@ namespace DalTest
             }
             foreach (var call in s_dalCall!.ReadAll())
             {
-                Console.WriteLine(call); 
+                Console.WriteLine(call);
             }
             foreach (var assignment in s_dalAssignment!.ReadAll())
             {
-                Console.WriteLine(assignment); 
+                Console.WriteLine(assignment);
             }
         }
 
@@ -111,29 +174,78 @@ namespace DalTest
             Enum.TryParse(Console.ReadLine(), out choice);
             while (choice is not CrudChoice.Exit)
             {
-                switch (choice)
+                try
                 {
-                    case CrudChoice.Create:
-                        CreateEntity(entityName, dal);
-                        break;
-                    case CrudChoice.Read:
-                        ReadEntityById(entityName, dal);
-                        break;
-                    case CrudChoice.ReadAll:
-                        ReadAllEntities(entityName, dal);
-                        break;
-                    case CrudChoice.Update:
-                        UpdateEntity(entityName, dal);
-                        break;
-                    case CrudChoice.Delete:
-                        DeleteEntity(entityName, dal);
-                        break;
-                    case CrudChoice.DeleteAll:
-                        DeleteAllEntities(entityName, dal);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option, please try again.");
-                        break;
+                    switch (choice)
+                    {
+                        case CrudChoice.Create:
+                            try
+                            {
+                                CreateEntity(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while creating entity: {ex.Message}");
+                            }
+                            break;
+                        case CrudChoice.Read:
+                            try
+                            {
+                                ReadEntityById(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while reading entity: {ex.Message}");
+                            }
+                            break;
+                        case CrudChoice.ReadAll:
+                            try
+                            {
+                                ReadAllEntities(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while reading all entities: {ex.Message}");
+                            }
+                            break;
+                        case CrudChoice.Update:
+                            try
+                            {
+                                UpdateEntity(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while updating entity: {ex.Message}");
+                            }
+                            break;
+                        case CrudChoice.Delete:
+                            try
+                            {
+                                DeleteEntity(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while deleting entity: {ex.Message}");
+                            }
+                            break;
+                        case CrudChoice.DeleteAll:
+                            try
+                            {
+                                DeleteAllEntities(entityName, dal);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error while deleting all entities: {ex.Message}");
+                            }
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option, please try again.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
                 }
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out choice);
@@ -183,6 +295,7 @@ namespace DalTest
         }
         static void CreateAssignment()
         {
+            Random s_rand = new();
             Console.WriteLine("Enter Assignment details:");
             Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
             DateTime entranceTime = DateTime.Parse(Console.ReadLine());
@@ -190,6 +303,10 @@ namespace DalTest
             DateTime exitTime = DateTime.Parse(Console.ReadLine());
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
             FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine(), true);
+            List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
+            List<Call>? calls = s_dalCall!.ReadAll();
+            int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
+            int callId = calls[s_rand.Next(calls.Count)].Id;
             s_dalAssignment!.Create(new Assignment(entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
@@ -219,7 +336,9 @@ namespace DalTest
             Console.Write($"Enter {entityName} ID to read: ");
             int id = int.Parse(Console.ReadLine());
             var entityId = dal.Read(id);
-            Console.WriteLine(entityId);
+            if (entityId == null)
+            { Console.WriteLine("No such ID found"); }
+            else { Console.WriteLine(entityId); }
         }
 
         static void ReadAllEntities(string entityName, dynamic dal)
@@ -231,7 +350,6 @@ namespace DalTest
                 Console.WriteLine(entity);
             }
         }
-        //מה בדיוק צריך לעדכן?
         static void UpdateEntity(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to update: ");
@@ -278,50 +396,68 @@ namespace DalTest
             Enum.TryParse(Console.ReadLine(), out choice);
             while (choice is not ConfigChoice.Exit)
             {
-                switch (choice)
+                try
                 {
-                    case ConfigChoice.Exit:
-                        return;
-                    case ConfigChoice.AdvanceClockMinute:
-                        s_dalConfig!.Clock = s_dalConfig.Clock.AddMinutes(1);
-                        Console.WriteLine("System clock advanced by 1 minute.");
-                        break;
-                    case ConfigChoice.AdvanceClockHour:
-                        s_dalConfig!.Clock = s_dalConfig.Clock.AddHours(1);
-                        Console.WriteLine("System clock advanced by 1 hour.");
-                        break;
-                    case ConfigChoice.AdvanceClockByDay:
-                        s_dalConfig!.Clock = s_dalConfig.Clock.AddDays(1);
-                        break;
-                    case ConfigChoice.AdvanceClockByMonth:
-                        s_dalConfig!.Clock = s_dalConfig.Clock.AddMonths(1);
-                        break;
-                    case ConfigChoice.AdvanceClockByYear:
-                        s_dalConfig!.Clock = s_dalConfig.Clock.AddYears(1);
-                        break;
-                    case ConfigChoice.ShowCurrentClock:
-                        Console.WriteLine($"Current system clock value: {s_dalConfig!.Clock}");
-                        break;
-                    case ConfigChoice.ChangeClock:
-                        Console.Write("Enter a new value for the system clock in format YY MM DD HH MM SS: ");
-                        string times = Console.ReadLine()!;
-                        string[] timesArray = times.Split(' ');
-                        int year = int.Parse(timesArray[0]);
-                        int month = int.Parse(timesArray[1]);
-                        int day = int.Parse(timesArray[2]);
-                        int hour = int.Parse(timesArray[3]);
-                        int minute = int.Parse(timesArray[4]);
-                        int second = int.Parse(timesArray[5]);
-                        s_dalConfig!.Clock = new DateTime(year, month, day, hour, minute, second);
-                        break;
-                    case ConfigChoice.ResetConfig:
-                        s_dalConfig!.Reset();
-                        Console.WriteLine("Config values reset to default.");
-                        break;
+                    switch (choice)
+                    {
+                        case ConfigChoice.Exit:
+                            return;
+                        case ConfigChoice.AdvanceClockMinute:
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMinutes(1);
+                            Console.WriteLine("System clock advanced by 1 minute.");
+                            break;
+                        case ConfigChoice.AdvanceClockHour:
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddHours(1);
+                            Console.WriteLine("System clock advanced by 1 hour.");
+                            break;
+                        case ConfigChoice.AdvanceClockByDay:
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddDays(1);
+                            break;
+                        case ConfigChoice.AdvanceClockByMonth:
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMonths(1);
+                            break;
+                        case ConfigChoice.AdvanceClockByYear:
+                            s_dalConfig!.Clock = s_dalConfig.Clock.AddYears(1);
+                            break;
+                        case ConfigChoice.ShowCurrentClock:
+                            Console.WriteLine($"Current system clock value: {s_dalConfig!.Clock}");
+                            break;
+                        case ConfigChoice.ChangeClock:
+                            Console.Write("Enter a new value for the system clock in format YY MM DD HH MM SS: ");
+                            string times = Console.ReadLine()!;
+                            string[] timesArray = times.Split(' ');
+                            try
+                            {
+                                int year = int.Parse(timesArray[0]);
+                                int month = int.Parse(timesArray[1]);
+                                int day = int.Parse(timesArray[2]);
+                                int hour = int.Parse(timesArray[3]);
+                                int minute = int.Parse(timesArray[4]);
+                                int second = int.Parse(timesArray[5]);
+                                s_dalConfig!.Clock = new DateTime(year, month, day, hour, minute, second);
+                            }
+                            catch (FormatException ex)
+                            {
+                                Console.WriteLine("Error: Invalid date format. Please ensure you enter the values correctly (YY MM DD HH MM SS).");
+                            }
+                            catch (ArgumentOutOfRangeException ex)
+                            {
+                                Console.WriteLine("Error: One or more values are out of range. Please check the values you entered.");
+                            }
+                            break;
+                        case ConfigChoice.ResetConfig:
+                            s_dalConfig!.Reset();
+                            Console.WriteLine("Config values reset to default.");
+                            break;
 
-                    default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                        default:
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 }
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out choice);
@@ -333,7 +469,7 @@ namespace DalTest
 }
 
 
-    
+
 
 
 
