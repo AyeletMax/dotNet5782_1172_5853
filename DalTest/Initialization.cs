@@ -50,25 +50,7 @@ public static class Initialization
                 latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
     }
-
-    //חובה להבין!!!!
-    private static void createAssignment()
-    {
-        List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
-        List<Call>? calls = s_dalCall!.ReadAll();
-        DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
-        //כמה קריאות צריך עשינו 15
-        for (int i = 0; i < 50; i++)
-        {
-            DateTime minTime = calls[i].OpenTime;
-            DateTime maxTime = (DateTime)calls[i].MaxFinishTime!;
-            TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
-            DateTime randomTime = minTime.AddMinutes(s_rand.Next((int)difference.TotalMinutes));
-
-            s_dalAssignment!.Create(new Assignment(randomTime, randomTime.AddHours(2),
-             (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
-        }
-    }
+    
     private static void createCall()
     {
         string[] verbalDescriptions = {
@@ -120,14 +102,33 @@ public static class Initialization
             32.0920, 32.0955, 32.0803, 32.0877, 32.0774,
             32.0979, 32.0905, 32.0856, 32.0912, 32.1074  
         };
-        string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel" };
+        string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel",
+            "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel"};
         DateTime begin = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
         int range = (int)(s_dalConfig.Clock - begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
             int startTime = s_rand.Next(range);
             int randIndex = s_rand.Next(verbalDescriptions.Length);
-            s_dalCall!.Create(new Call(callTypes[randIndex], addresses[i], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+            s_dalCall!.Create(new Call(callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+        }
+    }
+    private static void createAssignment()
+    {
+       // List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
+        List<Call>? calls = s_dalCall!.ReadAll();
+        //DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
+        //כמה קריאות צריך עשינו 15
+        for (int i = 0; i < 50; i++)
+        {
+            DateTime minTime = calls[i].OpenTime;
+            DateTime maxTime = (DateTime)calls[i].MaxFinishTime!;
+            TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
+            int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
+            DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
+
+            s_dalAssignment!.Create(new Assignment(randomTime, randomTime.AddHours(2),
+             (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }
     public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
@@ -145,9 +146,9 @@ public static class Initialization
 
         Console.WriteLine("Initializing Volunteers list ...");
         createVolunteer();
-        Console.WriteLine("Initializing Assignments list ...");
-        createAssignment();
         Console.WriteLine("Initializing Calls list ...");
         createCall();
+        Console.WriteLine("Initializing Assignments list ...");
+        createAssignment();
     }
 }

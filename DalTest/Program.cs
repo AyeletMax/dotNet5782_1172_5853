@@ -90,8 +90,14 @@ namespace DalTest
             {
                 Console.WriteLine(volunteer);
             }
-            Console.WriteLine(s_dalCall!.ReadAll());
-            Console.WriteLine(s_dalAssignment!.ReadAll());
+            foreach (var call in s_dalCall!.ReadAll())
+            {
+                Console.WriteLine(call); 
+            }
+            foreach (var assignment in s_dalAssignment!.ReadAll())
+            {
+                Console.WriteLine(assignment); 
+            }
         }
 
         static void CrudMenu(string entityName, dynamic dal)
@@ -157,7 +163,7 @@ namespace DalTest
             string? email = Console.ReadLine();
             Console.Write("IsActive? ");
             bool active = bool.Parse(Console.ReadLine());
-            Console.WriteLine("Invalid role. Please enter 'Manager' or 'Volunteer'.");
+            Console.WriteLine("Please enter Role: 'Manager' or 'Volunteer'.");
             Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine());
             Console.Write("Password: ");
             string? password = Console.ReadLine();
@@ -170,7 +176,7 @@ namespace DalTest
             double longitude = double.Parse(Console.ReadLine());
             Console.Write("Largest Distance: ");
             double largestDistance = double.Parse(Console.ReadLine());
-            Console.Write("Distance Type (Air or Land): ");
+            Console.Write("Distance Type (Air or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine(), true);
             s_dalVolunteer!.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
@@ -213,6 +219,7 @@ namespace DalTest
             Console.Write($"Enter {entityName} ID to read: ");
             int id = int.Parse(Console.ReadLine());
             var entityId = dal.Read(id);
+            Console.WriteLine(entityId);
         }
 
         static void ReadAllEntities(string entityName, dynamic dal)
@@ -221,7 +228,7 @@ namespace DalTest
             Console.WriteLine($"All {entityName}s:");
             foreach (var entity in dals)
             {
-                Console.WriteLine(dals);
+                Console.WriteLine(entity);
             }
         }
         //מה בדיוק צריך לעדכן?
@@ -262,6 +269,7 @@ namespace DalTest
         static void ShowConfigMenu()
         {
             Console.Write("Choose an action: ");
+
             foreach (ConfigChoice option in Enum.GetValues(typeof(ConfigChoice)))
             {
                 Console.WriteLine($"{(int)option}. {option}");
@@ -295,9 +303,9 @@ namespace DalTest
                         Console.WriteLine($"Current system clock value: {s_dalConfig!.Clock}");
                         break;
                     case ConfigChoice.ChangeClock:
-                        Console.Write("Enter a new value for the system clock : ");
+                        Console.Write("Enter a new value for the system clock in format YY MM DD HH MM SS: ");
                         string times = Console.ReadLine()!;
-                        string[] timesArray = times.Split(',');
+                        string[] timesArray = times.Split(' ');
                         int year = int.Parse(timesArray[0]);
                         int month = int.Parse(timesArray[1]);
                         int day = int.Parse(timesArray[2]);
