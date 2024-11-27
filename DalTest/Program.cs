@@ -52,7 +52,7 @@ namespace DalTest
                         case MainMenuChoice.Volunteer:
                             try
                             {
-                                CrudMenu("Volunteer", s_dalVolunteer);
+                                CrudMenu("Volunteer", s_dalVolunteer!);
                             }
                             catch (Exception ex)
                             {
@@ -63,7 +63,7 @@ namespace DalTest
                         case MainMenuChoice.Assignments:
                             try
                             {
-                                CrudMenu("Assignment", s_dalAssignment);
+                                CrudMenu("Assignment", s_dalAssignment!);
                             }
                             catch (Exception ex)
                             {
@@ -264,32 +264,32 @@ namespace DalTest
         {
             Console.WriteLine("Enter Volunteer details:");
             Console.Write("ID: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine()!);
             Console.Write("First Name: ");
-            string? firstName = Console.ReadLine();
+            string? firstName = Console.ReadLine()!;
             Console.Write("Last Name: ");
-            string? lastName = Console.ReadLine();
+            string? lastName = Console.ReadLine()!;
             Console.Write("Phone Number: ");
-            string? phoneNumber = Console.ReadLine();
+            string? phoneNumber = Console.ReadLine()!;
             Console.Write("Email: ");
-            string? email = Console.ReadLine();
+            string? email = Console.ReadLine()!;
             Console.Write("IsActive? ");
-            bool active = bool.Parse(Console.ReadLine());
+            bool active = bool.Parse(Console.ReadLine()!);
             Console.WriteLine("Please enter Role: 'Manager' or 'Volunteer'.");
-            Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine());
+            Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine()!);
             Console.Write("Password: ");
             string? password = Console.ReadLine();
             Console.Write("Address: ");
             string? address = Console.ReadLine();
             Console.WriteLine("Enter location details:");
             Console.Write("Latitude: ");
-            double latitude = double.Parse(Console.ReadLine());
+            double latitude = double.Parse(Console.ReadLine()!);
             Console.Write("Longitude: ");
-            double longitude = double.Parse(Console.ReadLine());
+            double longitude = double.Parse(Console.ReadLine()!);
             Console.Write("Largest Distance: ");
-            double largestDistance = double.Parse(Console.ReadLine());
+            double largestDistance = double.Parse(Console.ReadLine()!);
             Console.Write("Distance Type (Air or Walk): ");
-            DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine(), true);
+            DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
             s_dalVolunteer!.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
@@ -298,43 +298,45 @@ namespace DalTest
             Random s_rand = new();
             Console.WriteLine("Enter Assignment details:");
             Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime entranceTime = DateTime.Parse(Console.ReadLine());
+            DateTime entranceTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Exit Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime exitTime = DateTime.Parse(Console.ReadLine());
+            DateTime exitTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
-            FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine(), true);
+            FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine()!);
             List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
             List<Call>? calls = s_dalCall!.ReadAll();
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
             int callId = calls[s_rand.Next(calls.Count)].Id;
-            s_dalAssignment!.Create(new Assignment(entranceTime, exitTime, finishCallType));
+            int id = s_dalConfig!.NextAssignmentId;
+            s_dalAssignment!.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
         static void CreateCall()
         {
             Console.WriteLine("Enter call details:");
+            int id = s_dalConfig!.NextCallId;
             Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
-            CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine(), true);
+            CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()!, true);
             Console.Write("Address: ");
-            string? address = Console.ReadLine();
+            string? address = Console.ReadLine()!;
             Console.Write("Latitude: ");
-            double latitude = double.Parse(Console.ReadLine());
+            double latitude = double.Parse(Console.ReadLine()!);
             Console.Write("Longitude: ");
-            double longitude = double.Parse(Console.ReadLine());
+            double longitude = double.Parse(Console.ReadLine()!);
             Console.Write("Open Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime openTime = DateTime.Parse(Console.ReadLine());
+            DateTime openTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Max Finish Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime maxFinishTime = DateTime.Parse(Console.ReadLine());
+            DateTime maxFinishTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Verbal Description: ");
-            string? verbalDescription = Console.ReadLine();
-            s_dalCall!.Create(new Call(myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
+            string? verbalDescription = Console.ReadLine()!;
+            s_dalCall!.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
             Console.WriteLine("Call created successfully!");
         }
 
         static void ReadEntityById(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to read: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine()!);
             var entityId = dal.Read(id);
             if (entityId == null)
             { Console.WriteLine("No such ID found"); }
@@ -433,13 +435,15 @@ namespace DalTest
             DateTime? maxTime = string.IsNullOrEmpty(maxTimeInput) || !DateTime.TryParse(maxTimeInput, out DateTime mt) ? existingCall.MaxFinishTime : mt; Console.Write("Verbal Description: ");
             Console.Write("Verbal Description: ");
             string? description = string.IsNullOrEmpty(Console.ReadLine()) ? existingCall.VerbalDescription : Console.ReadLine();
-            return new Call(myCallType, address, latitude, longitude, openingTime, maxTime, description)
-            {
-                Id = existingCall.Id
-            };
+            int id = existingCall.Id;
+            return new Call(id, myCallType, address, latitude, longitude, openingTime, maxTime, description);
+            
         }
         static Assignment UpdateAssignment(Assignment existingAssignment)
         {
+            int Id = existingAssignment.Id;
+            int CallId = existingAssignment.CallId;
+            int VolunteerId = existingAssignment.VolunteerId;
             Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
             string entryTimeStr = Console.ReadLine()!;
             DateTime entryTime = string.IsNullOrEmpty(entryTimeStr) || !DateTime.TryParse(entryTimeStr, out DateTime ent) ? existingAssignment.EntranceTime : ent;
@@ -449,12 +453,8 @@ namespace DalTest
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
             string endingTimeTypeInput = Console.ReadLine()!;
             FinishCallType? endingTimeType = string.IsNullOrEmpty(endingTimeTypeInput) ? existingAssignment.FinishCallType : (FinishCallType?)int.Parse(endingTimeTypeInput);
-            return new Assignment(entryTime, endingTime, endingTimeType)
-            {
-                Id = existingAssignment.Id,
-                CallId = existingAssignment.CallId,
-                VolunteerId = existingAssignment.VolunteerId
-            };
+            return new Assignment(Id, CallId, VolunteerId, entryTime, endingTime, endingTimeType);
+            
         }
         static void DeleteEntity(string entityName, dynamic dal)
         {

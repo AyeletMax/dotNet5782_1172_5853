@@ -13,6 +13,8 @@ public class ConfigImplementation : IConfig
     {
         Config.Reset();
     }
+    public int NextAssignmentId { get => Config.NextAssignmentId; }
+    public int NextCallId { get => Config.NextCallId; }
     public TimeSpan RiskRange
     {
         get=> Config.RiskRange;
