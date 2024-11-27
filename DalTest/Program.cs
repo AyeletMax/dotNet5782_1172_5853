@@ -52,7 +52,7 @@ namespace DalTest
                         case MainMenuChoice.Volunteer:
                             try
                             {
-                                CrudMenu("Volunteer", s_dalVolunteer);
+                                CrudMenu("Volunteer", s_dalVolunteer!);
                             }
                             catch (Exception ex)
                             {
@@ -63,7 +63,7 @@ namespace DalTest
                         case MainMenuChoice.Assignments:
                             try
                             {
-                                CrudMenu("Assignment", s_dalAssignment);
+                                CrudMenu("Assignment", s_dalAssignment!);
                             }
                             catch (Exception ex)
                             {
@@ -264,32 +264,32 @@ namespace DalTest
         {
             Console.WriteLine("Enter Volunteer details:");
             Console.Write("ID: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine()!);
             Console.Write("First Name: ");
-            string? firstName = Console.ReadLine();
+            string? firstName = Console.ReadLine()!;
             Console.Write("Last Name: ");
-            string? lastName = Console.ReadLine();
+            string? lastName = Console.ReadLine()!;
             Console.Write("Phone Number: ");
-            string? phoneNumber = Console.ReadLine();
+            string? phoneNumber = Console.ReadLine()!;
             Console.Write("Email: ");
-            string? email = Console.ReadLine();
+            string? email = Console.ReadLine()!;
             Console.Write("IsActive? ");
-            bool active = bool.Parse(Console.ReadLine());
+            bool active = bool.Parse(Console.ReadLine()!);
             Console.WriteLine("Please enter Role: 'Manager' or 'Volunteer'.");
-            Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine());
+            Role role = (Role)Enum.Parse(typeof(Role), Console.ReadLine()!);
             Console.Write("Password: ");
             string? password = Console.ReadLine();
             Console.Write("Address: ");
             string? address = Console.ReadLine();
             Console.WriteLine("Enter location details:");
             Console.Write("Latitude: ");
-            double latitude = double.Parse(Console.ReadLine());
+            double latitude = double.Parse(Console.ReadLine()!);
             Console.Write("Longitude: ");
-            double longitude = double.Parse(Console.ReadLine());
+            double longitude = double.Parse(Console.ReadLine()!);
             Console.Write("Largest Distance: ");
-            double largestDistance = double.Parse(Console.ReadLine());
+            double largestDistance = double.Parse(Console.ReadLine()!);
             Console.Write("Distance Type (Air or Walk): ");
-            DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine(), true);
+            DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
             s_dalVolunteer!.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
@@ -298,43 +298,45 @@ namespace DalTest
             Random s_rand = new();
             Console.WriteLine("Enter Assignment details:");
             Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime entranceTime = DateTime.Parse(Console.ReadLine());
+            DateTime entranceTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Exit Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime exitTime = DateTime.Parse(Console.ReadLine());
+            DateTime exitTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
-            FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine(), true);
+            FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine()!);
             List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
             List<Call>? calls = s_dalCall!.ReadAll();
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
             int callId = calls[s_rand.Next(calls.Count)].Id;
-            s_dalAssignment!.Create(new Assignment(entranceTime, exitTime, finishCallType));
+            int id = s_dalConfig!.NextAssignmentId;
+            s_dalAssignment!.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
         static void CreateCall()
         {
             Console.WriteLine("Enter call details:");
+            int id = s_dalConfig!.NextCallId;
             Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
-            CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine(), true);
+            CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()!, true);
             Console.Write("Address: ");
-            string? address = Console.ReadLine();
+            string? address = Console.ReadLine()!;
             Console.Write("Latitude: ");
-            double latitude = double.Parse(Console.ReadLine());
+            double latitude = double.Parse(Console.ReadLine()!);
             Console.Write("Longitude: ");
-            double longitude = double.Parse(Console.ReadLine());
+            double longitude = double.Parse(Console.ReadLine()!);
             Console.Write("Open Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime openTime = DateTime.Parse(Console.ReadLine());
+            DateTime openTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Max Finish Time (yyyy-MM-dd HH:mm:ss): ");
-            DateTime maxFinishTime = DateTime.Parse(Console.ReadLine());
+            DateTime maxFinishTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Verbal Description: ");
-            string? verbalDescription = Console.ReadLine();
-            s_dalCall!.Create(new Call(myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
+            string? verbalDescription = Console.ReadLine()!;
+            s_dalCall!.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
             Console.WriteLine("Call created successfully!");
         }
 
         static void ReadEntityById(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to read: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine()!);
             var entityId = dal.Read(id);
             if (entityId == null)
             { Console.WriteLine("No such ID found"); }
@@ -353,28 +355,111 @@ namespace DalTest
         static void UpdateEntity(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to update: ");
-            //int id = int.Parse(Console.ReadLine());
-
-            //var entity = dal!.Read(id);
-            //if (entity != null)
-            //{
-            //    Console.WriteLine($"Current {entityName}: {entity}");
-            //    Console.Write("Enter new ID: ");
-            //    Console.Write("Enter new name: ");
-            //    string newName = Console.ReadLine();
-            //    var updatedVolunteer = entity with { FirstName = newName };
-
-            //    Console.WriteLine($"{entityName} updated successfully!");
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"{entityName} not found.");
-            //}
+            int id = int.Parse(Console.ReadLine()!);
+            var existingEntity = dal?.Read(id);
+            Console.WriteLine(existingEntity);
+            dynamic updateEntity;
+            if (entityName == "Volunteer")
+            {
+                updateEntity = UpdateVolunteer(existingEntity);
+            }
+            else if (entityName == "Call")
+            {
+                updateEntity = UpdateCall(existingEntity);
+            }
+            else
+            {
+                updateEntity = UpdateAssignment(existingEntity);
+            }
+            dal?.Update(updateEntity);
+        }
+        static Volunteer UpdateVolunteer(Volunteer existingVolunteer)
+        {
+            Console.Write("First Name: ");
+            string? firstName = Console.ReadLine();
+            firstName = string.IsNullOrEmpty(firstName) ? existingVolunteer.FirstName : firstName;
+            Console.Write("Last Name: ");
+            string? lastName = Console.ReadLine();
+            lastName = string.IsNullOrEmpty(lastName) ? existingVolunteer.LastName : lastName;
+            Console.Write("Phone Number: ");
+            string? phoneNumber = Console.ReadLine();
+            phoneNumber = string.IsNullOrEmpty(phoneNumber) ? existingVolunteer.Phone : phoneNumber;
+            Console.Write("Email: ");
+            string? email = Console.ReadLine();
+            email = string.IsNullOrEmpty(email) ? existingVolunteer.Email : email;
+            Console.Write("IsActive? ");
+            string active = Console.ReadLine()!;
+            bool isActive = string.IsNullOrEmpty(active) ? existingVolunteer.Active : bool.Parse(active);
+            Console.WriteLine("Please enter Role: 'Manager' or 'Volunteer'.");
+            string roleInputString = Console.ReadLine()!;
+            Role role = string.IsNullOrEmpty(roleInputString) ? existingVolunteer.MyRole : (Role)Enum.Parse(typeof(Role), roleInputString);
+            Console.Write("Password: ");
+            string? password = Console.ReadLine();
+            password = string.IsNullOrEmpty(password) ? existingVolunteer.Password : password;
+            Console.Write("Address: ");
+            string? address = Console.ReadLine();
+            address = string.IsNullOrEmpty(address) ? existingVolunteer.Address : address;
+            Console.WriteLine("Enter location details:");
+            Console.Write("Latitude: ");
+            string latitudeInput = Console.ReadLine()!;
+            double latitude = string.IsNullOrEmpty(latitudeInput) ? existingVolunteer.Latitude.GetValueOrDefault() : double.Parse(latitudeInput);
+            Console.Write("Longitude: ");
+            string longitudeInput = Console.ReadLine()!;
+            double longitude = string.IsNullOrEmpty(longitudeInput) ? existingVolunteer.Longitude.GetValueOrDefault() : double.Parse(longitudeInput);
+            Console.Write("Largest Distance: ");
+            string largestDistance = Console.ReadLine()!;
+            double maxDistance = string.IsNullOrEmpty(largestDistance) ? existingVolunteer.LargestDistance.GetValueOrDefault() : double.Parse(largestDistance);
+            Console.Write("Distance Type (Air or Walk): ");
+            string myDistanceType = Console.ReadLine()!;
+            DistanceType distanceType = string.IsNullOrEmpty(myDistanceType) ? existingVolunteer.MyDistanceType : (DistanceType)Enum.Parse(typeof(DistanceType), myDistanceType);
+            return new Volunteer(existingVolunteer.Id, firstName, lastName, phoneNumber, email, isActive, role, password, address, latitude, longitude, maxDistance, distanceType);
+        }
+        static Call UpdateCall(Call existingCall)
+        {
+            Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
+            string myCallTypeInput = Console.ReadLine()!;
+            CallType myCallType = string.IsNullOrEmpty(myCallTypeInput) ? existingCall.MyCallType : (CallType)Enum.Parse(typeof(CallType), myCallTypeInput);
+            Console.Write("Address: ");
+            string address = string.IsNullOrEmpty(Console.ReadLine()) ? existingCall.Address : Console.ReadLine()!;
+            Console.Write("Latitude: ");
+            string latitudeInput = Console.ReadLine()!;
+            double latitude = string.IsNullOrEmpty(latitudeInput) ? existingCall.Latitude : double.Parse(latitudeInput);
+            Console.Write("Longitude: ");
+            string longitudeInput = Console.ReadLine()!;
+            double longitude = string.IsNullOrEmpty(longitudeInput) ? existingCall.Longitude : double.Parse(longitudeInput);
+            Console.Write("Open Time (yyyy-MM-dd HH:mm:ss): ");
+            string openingTimeInput = Console.ReadLine()!;
+            DateTime openingTime = string.IsNullOrEmpty(openingTimeInput) || !DateTime.TryParse(openingTimeInput, out DateTime ot) ? existingCall.OpenTime : ot;
+            Console.Write("Max Finish Time (yyyy-MM-dd HH:mm:ss): ");
+            string maxTimeInput = Console.ReadLine()!;
+            DateTime? maxTime = string.IsNullOrEmpty(maxTimeInput) || !DateTime.TryParse(maxTimeInput, out DateTime mt) ? existingCall.MaxFinishTime : mt; Console.Write("Verbal Description: ");
+            Console.Write("Verbal Description: ");
+            string? description = string.IsNullOrEmpty(Console.ReadLine()) ? existingCall.VerbalDescription : Console.ReadLine();
+            int id = existingCall.Id;
+            return new Call(id, myCallType, address, latitude, longitude, openingTime, maxTime, description);
+            
+        }
+        static Assignment UpdateAssignment(Assignment existingAssignment)
+        {
+            int Id = existingAssignment.Id;
+            int CallId = existingAssignment.CallId;
+            int VolunteerId = existingAssignment.VolunteerId;
+            Console.Write("Entrance Time (yyyy-MM-dd HH:mm:ss): ");
+            string entryTimeStr = Console.ReadLine()!;
+            DateTime entryTime = string.IsNullOrEmpty(entryTimeStr) || !DateTime.TryParse(entryTimeStr, out DateTime ent) ? existingAssignment.EntranceTime : ent;
+            Console.Write("Exit Time (yyyy-MM-dd HH:mm:ss): ");
+            string endingTimeStr = Console.ReadLine()!;
+            DateTime? endingTime = string.IsNullOrEmpty(endingTimeStr) || !DateTime.TryParse(endingTimeStr, out DateTime end) ? existingAssignment.ExitTime : end;
+            Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
+            string endingTimeTypeInput = Console.ReadLine()!;
+            FinishCallType? endingTimeType = string.IsNullOrEmpty(endingTimeTypeInput) ? existingAssignment.FinishCallType : (FinishCallType?)int.Parse(endingTimeTypeInput);
+            return new Assignment(Id, CallId, VolunteerId, entryTime, endingTime, endingTimeType);
+            
         }
         static void DeleteEntity(string entityName, dynamic dal)
         {
             Console.Write($"Enter {entityName} ID to delete: ");
-            int id = int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine()!);
             dal!.Delete(id);
             Console.WriteLine($"{entityName} deleted successfully!");
         }
@@ -461,8 +546,6 @@ namespace DalTest
                 }
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out choice);
-                //Console.WriteLine("\nPress Enter to continue...");
-                //Console.ReadLine();
             }
         }
     }
