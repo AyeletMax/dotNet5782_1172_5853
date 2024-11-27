@@ -109,10 +109,10 @@ public static class Initialization
         int range = (int)(s_dalConfig.Clock - begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
-            int id = s_dalConfig!.NextCallId;
+            
             int startTime = s_rand.Next(range);
             int randIndex = s_rand.Next(verbalDescriptions.Length);
-            s_dalCall!.Create(new Call(id,callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+            s_dalCall!.Create(new Call(0,callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
         }
     }
     private static void createAssignment()
