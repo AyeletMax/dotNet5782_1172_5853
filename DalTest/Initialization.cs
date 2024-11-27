@@ -123,7 +123,7 @@ public static class Initialization
         //כמה קריאות צריך עשינו 15
         for (int i = 0; i < 50; i++)
         {
-            int id = s_dalConfig!.NextAssignmentId;
+            
             int callId = calls[i].Id;
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
       
@@ -134,7 +134,7 @@ public static class Initialization
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
 
-            s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, randomTime, randomTime.AddHours(2),
+            s_dalAssignment!.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
      
         }
