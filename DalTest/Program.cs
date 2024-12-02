@@ -6,10 +6,11 @@ namespace DalTest
 {
     internal class Program
     {
-        private static IAssignment? s_dalAssignment = new AssignmentImplementation();
-        private static ICall? s_dalCall = new CallImplementation();
-        private static IConfig? s_dalConfig = new ConfigImplementation();
-        private static IVolunteer? s_dalVolunteer = new VolunteerImplementation();
+        //private static IAssignment? s_dalAssignment = new AssignmentImplementation();
+        //private static ICall? s_dalCall = new CallImplementation();
+        //private static IConfig? s_dalConfig = new ConfigImplementation();
+        //private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); 
+        static readonly IDal s_dal = new Dal.DalList(); //stage 2
         enum MainMenuChoice
         {
             Exit, Volunteer, Assignments, Calls, Config, InitializeData, ResetDatabase, DisplayAllData
@@ -52,7 +53,7 @@ namespace DalTest
                         case MainMenuChoice.Volunteer:
                             try
                             {
-                                CrudMenu("Volunteer", s_dalVolunteer!);
+                                CrudMenu("Volunteer", s_dal.Volunteer);
                             }
                             catch (Exception ex)
                             {
@@ -63,7 +64,7 @@ namespace DalTest
                         case MainMenuChoice.Assignments:
                             try
                             {
-                                CrudMenu("Assignment", s_dalAssignment!);
+                                CrudMenu("Assignment", s_dal.Assignment);
                             }
                             catch (Exception ex)
                             {
@@ -74,7 +75,7 @@ namespace DalTest
                         case MainMenuChoice.Calls:
                             try
                             {
-                                CrudMenu("Call", s_dalCall);
+                                CrudMenu("Call", s_dal.Call);
                             }
                             catch (Exception ex)
                             {
@@ -96,7 +97,7 @@ namespace DalTest
                         case MainMenuChoice.InitializeData:
                             try
                             {
-                                Initialization.DO(s_dalAssignment, s_dalCall, s_dalConfig, s_dalVolunteer);
+                                Initialization.DO(s_dal);
                             }
                             catch (Exception ex)
                             {
@@ -142,22 +143,22 @@ namespace DalTest
         }
         private static void ResetDatabase()
         {
-            s_dalConfig!.Reset();
-            s_dalVolunteer!.DeleteAll();
-            s_dalCall!.DeleteAll();
-            s_dalAssignment!.DeleteAll();
+            s_dal.Config.Reset();
+            s_dal.Volunteer.DeleteAll();
+            s_dal.Call.DeleteAll();
+            s_dal.Assignment.DeleteAll();
         }
         private static void DisplayAllData()
         {
-            foreach (var volunteer in s_dalVolunteer!.ReadAll())
+            foreach (var volunteer in s_dal.Volunteer.ReadAll())
             {
                 Console.WriteLine(volunteer);
             }
-            foreach (var call in s_dalCall!.ReadAll())
+            foreach (var call in s_dal.Call.ReadAll())
             {
                 Console.WriteLine(call);
             }
-            foreach (var assignment in s_dalAssignment!.ReadAll())
+            foreach (var assignment in s_dal.Assignment.ReadAll())
             {
                 Console.WriteLine(assignment);
             }
@@ -290,7 +291,7 @@ namespace DalTest
             double largestDistance = double.Parse(Console.ReadLine()!);
             Console.Write("Distance Type (Air or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
-            s_dalVolunteer!.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
+            s_dal!.Volunteer.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
         static void CreateAssignment()
@@ -303,18 +304,18 @@ namespace DalTest
             DateTime exitTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
             FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine()!);
-            List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
-            List<Call>? calls = s_dalCall!.ReadAll();
+            List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll();
+            List<Call>? calls = s_dal!.Call.ReadAll();
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
             int callId = calls[s_rand.Next(calls.Count)].Id;
-            int id = s_dalConfig!.NextAssignmentId;
-            s_dalAssignment!.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
+            int id = s_dal!.Config.NextAssignmentId;
+            s_dal.Assignment.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
         static void CreateCall()
         {
             Console.WriteLine("Enter call details:");
-            int id = s_dalConfig!.NextCallId;
+            int id = s_dal!.Config.NextCallId;
             Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
             CallType myCallType = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()!, true);
             Console.Write("Address: ");
@@ -329,7 +330,7 @@ namespace DalTest
             DateTime maxFinishTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Verbal Description: ");
             string? verbalDescription = Console.ReadLine()!;
-            s_dalCall!.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
+            s_dal.Call.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
             Console.WriteLine("Call created successfully!");
         }
 
@@ -488,24 +489,24 @@ namespace DalTest
                         case ConfigChoice.Exit:
                             return;
                         case ConfigChoice.AdvanceClockMinute:
-                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMinutes(1);
+                            s_dal!.Config.Clock = s_dal.Config.Clock.AddMinutes(1);
                             Console.WriteLine("System clock advanced by 1 minute.");
                             break;
                         case ConfigChoice.AdvanceClockHour:
-                            s_dalConfig!.Clock = s_dalConfig.Clock.AddHours(1);
+                            s_dal!.Config.Clock = s_dal.Config.Clock.AddHours(1);
                             Console.WriteLine("System clock advanced by 1 hour.");
                             break;
                         case ConfigChoice.AdvanceClockByDay:
-                            s_dalConfig!.Clock = s_dalConfig.Clock.AddDays(1);
+                            s_dal!.Config.Clock = s_dal.Config.Clock.AddDays(1);
                             break;
                         case ConfigChoice.AdvanceClockByMonth:
-                            s_dalConfig!.Clock = s_dalConfig.Clock.AddMonths(1);
+                            s_dal!.Config.Clock = s_dal.Config.Clock.AddMonths(1);
                             break;
                         case ConfigChoice.AdvanceClockByYear:
-                            s_dalConfig!.Clock = s_dalConfig.Clock.AddYears(1);
+                            s_dal!.Config.Clock = s_dal.Config.Clock.AddYears(1);
                             break;
                         case ConfigChoice.ShowCurrentClock:
-                            Console.WriteLine($"Current system clock value: {s_dalConfig!.Clock}");
+                            Console.WriteLine($"Current system clock value: {s_dal!.Config.Clock}");
                             break;
                         case ConfigChoice.ChangeClock:
                             Console.Write("Enter a new value for the system clock in format YY MM DD HH MM SS: ");
@@ -519,7 +520,7 @@ namespace DalTest
                                 int hour = int.Parse(timesArray[3]);
                                 int minute = int.Parse(timesArray[4]);
                                 int second = int.Parse(timesArray[5]);
-                                s_dalConfig!.Clock = new DateTime(year, month, day, hour, minute, second);
+                                s_dal.Config.Clock = new DateTime(year, month, day, hour, minute, second);
                             }
                             catch (FormatException ex)
                             {
@@ -531,7 +532,7 @@ namespace DalTest
                             }
                             break;
                         case ConfigChoice.ResetConfig:
-                            s_dalConfig!.Reset();
+                            s_dal.Config.Reset();
                             Console.WriteLine("Config values reset to default.");
                             break;
 

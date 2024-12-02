@@ -5,10 +5,11 @@ using System.Data;
 
 public static class Initialization
 {
-    private static IAssignment? s_dalAssignment;
-    private static ICall? s_dalCall;
-    private static IConfig? s_dalConfig;
-    private static IVolunteer? s_dalVolunteer;
+    private static IDal? s_dal;
+    //private static IAssignment? s_dalAssignment;
+    //private static ICall? s_dalCall;
+    //private static IConfig? s_dalConfig;
+    //private static IVolunteer? s_dalVolunteer;
 
     private static readonly Random s_rand = new();
     private static void createVolunteer()
@@ -42,11 +43,11 @@ public static class Initialization
                32.1820, 31.6700, 32.9674, 32.0840, 32.3143, 32.7872,
                32.0167, 31.8015, 32.7682
         };
-        s_dalVolunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
+        s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
         for (int i = 0; i < FullNames.Length; i++)
         {
             string[] nameParts = FullNames[i].Split(' ');
-            s_dalVolunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
+            s_dal!.Volunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
                 latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
     }
@@ -104,21 +105,23 @@ public static class Initialization
         };
         string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel",
             "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel"};
-        DateTime begin = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
+        DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, s_dal.Config.Clock.Hour - 5, 0, 0);
 
-        int range = (int)(s_dalConfig.Clock - begin).TotalMinutes;
+        int range = (int)(s_dal.Config.Clock - begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
             
             int startTime = s_rand.Next(range);
             int randIndex = s_rand.Next(verbalDescriptions.Length);
-            s_dalCall!.Create(new Call(0,callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+            s_dal!.Call.Create(new Call(0,callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
         }
     }
     private static void createAssignment()
     {
-        List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();
-        List<Call>? calls = s_dalCall!.ReadAll();
+        //List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();//שלב1
+        //List<Call>? calls = s_dalCall!.ReadAll();//שלב1
+        List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll();
+        List<Call>? calls = s_dal!.Call.ReadAll();
         //DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
         //כמה קריאות צריך עשינו 15
         for (int i = 0; i < 50; i++)
@@ -134,23 +137,27 @@ public static class Initialization
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
 
-            s_dalAssignment!.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
+            //s_dalAssignment!.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),//שלב1
+            //    (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
+            s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
-     
+
         }
     }
-    public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
+    //public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
+    public static void DO(IDal dal)
     {
-        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalCall = dalCall ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL can not be null!");
-
+        //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL can not be null!");//שלב1
+        //s_dalCall = dalCall ?? throw new NullReferenceException("DAL can not be null!");//שלב1
+        //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL can not be null!");//שלב1
+        //s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL can not be null!");//שלב1
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
         Console.WriteLine("Reset Configuration values and List values...");
-        s_dalConfig.Reset();
-        s_dalVolunteer.DeleteAll();
-        s_dalCall.DeleteAll();
-        s_dalAssignment.DeleteAll();
+        //s_dalConfig.Reset();
+        //s_dalVolunteer.DeleteAll();
+        //s_dalCall.DeleteAll();
+        //s_dalAssignment.DeleteAll();
+        s_dal.ResetDB();
 
         Console.WriteLine("Initializing Volunteers list ...");
         createVolunteer();
