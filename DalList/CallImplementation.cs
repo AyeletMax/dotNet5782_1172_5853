@@ -23,7 +23,7 @@ internal class CallImplementation : ICall
         }
         else
         {
-            throw new DalDeletionImpossible($"Call with Id{id} was not found");
+            throw new DalDoesNotExistException($"Call with Id{id} was not found");
 
         }
     }

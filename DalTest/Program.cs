@@ -51,60 +51,20 @@ namespace DalTest
                     switch (mainMenuChoice)
                     {
                         case MainMenuChoice.Volunteer:
-                            try
-                            {
-                                CrudMenu("Volunteer", s_dal.Volunteer);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error in Volunteer menu: {ex.Message}");
-                            }
+                            CrudMenu("Volunteer", s_dal.Volunteer);
                             break;
-
                         case MainMenuChoice.Assignments:
-                            try
-                            {
-                                CrudMenu("Assignment", s_dal.Assignment);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error in Assignments menu: {ex.Message}");
-                            }
+                            CrudMenu("Assignment", s_dal.Assignment);
                             break;
-
                         case MainMenuChoice.Calls:
-                            try
-                            {
-                                CrudMenu("Call", s_dal.Call);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error in Calls menu: {ex.Message}");
-                            }
+                            CrudMenu("Call", s_dal.Call);
                             break;
-
                         case MainMenuChoice.Config:
-                            try
-                            {
-                                ShowConfigMenu();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error in Config menu: {ex.Message}");
-                            }
+                            ShowConfigMenu();
                             break;
-
                         case MainMenuChoice.InitializeData:
-                            try
-                            {
-                                Initialization.DO(s_dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error initializing data: {ex.Message}");
-                            }
+                            Initialization.DO(s_dal);
                             break;
-
                         case MainMenuChoice.DisplayAllData:
                             try
                             {
@@ -180,64 +140,22 @@ namespace DalTest
                     switch (choice)
                     {
                         case CrudChoice.Create:
-                            try
-                            {
-                                CreateEntity(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while creating entity: {ex.Message}");
-                            }
+                            CreateEntity(entityName, dal);
                             break;
                         case CrudChoice.Read:
-                            try
-                            {
-                                ReadEntityById(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while reading entity: {ex.Message}");
-                            }
+                            ReadEntityById(entityName, dal);
                             break;
                         case CrudChoice.ReadAll:
-                            try
-                            {
-                                ReadAllEntities(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while reading all entities: {ex.Message}");
-                            }
+                            ReadAllEntities(entityName, dal);
                             break;
                         case CrudChoice.Update:
-                            try
-                            {
-                                UpdateEntity(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while updating entity: {ex.Message}");
-                            }
+                            UpdateEntity(entityName, dal);
                             break;
                         case CrudChoice.Delete:
-                            try
-                            {
-                                DeleteEntity(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while deleting entity: {ex.Message}");
-                            }
+                            DeleteEntity(entityName, dal);
                             break;
                         case CrudChoice.DeleteAll:
-                            try
-                            {
-                                DeleteAllEntities(entityName, dal);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error while deleting all entities: {ex.Message}");
-                            }
+                            DeleteAllEntities(entityName, dal);
                             break;
                         default:
                             Console.WriteLine("Invalid option, please try again.");

@@ -20,7 +20,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         else
         {
-            throw new DalDeletionImpossible($"Volunteer with Id {id} was not found");
+            throw new DalDoesNotExistException($"Volunteer with Id {id} was not found");
 
         }
     }

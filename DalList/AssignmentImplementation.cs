@@ -24,7 +24,7 @@ internal class AssignmentImplementation : IAssignment
         }
         else
         {
-            throw new DalDeletionImpossible($"Assignment with Id{id} was found");
+            throw new DalDoesNotExistException($"Assignment with Id{id} was found");
         }
     }
 
