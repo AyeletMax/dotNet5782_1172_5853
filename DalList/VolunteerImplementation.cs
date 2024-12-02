@@ -7,7 +7,7 @@ internal class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
         if (Read(item.Id) is not null)
-            throw new Exception($"Volunteer with ID={item.Id} already exists");
+            throw new DalAlreadyExistsException($"Volunteer with ID={item.Id} already exists");
         DataSource.Volunteers.Add(item);
     }
 
@@ -20,7 +20,8 @@ internal class VolunteerImplementation : IVolunteer
         }
         else
         {
-            throw new Exception($"Volunteer with Id{id} was found");
+            throw new DalDeletionImpossible($"Volunteer with Id {id} was not found");
+
         }
     }
 
@@ -31,13 +32,17 @@ internal class VolunteerImplementation : IVolunteer
 
     public Volunteer? Read(int id)
     {
-        return DataSource.Volunteers.Find(a => a.Id == id);
+        return DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
     }
 
-    public List<Volunteer> ReadAll()
-    {
-        return new List<Volunteer>(DataSource.Volunteers);
-    }
+
+    public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null) 
+     => filter == null
+         ? DataSource.Volunteers.Select(item => item)
+         : DataSource.Volunteers.Where(filter);
+
+  
+
 
     public void Update(Volunteer item)
     {
@@ -49,8 +54,12 @@ internal class VolunteerImplementation : IVolunteer
         }
         else
         {
-            throw new Exception($"Could not Update Item, no Volunteer with Id{item.Id} found");
+            throw new DalDoesNotExistException($"Could not Update Item, no Volunteer with Id{item.Id} found");
 
         }
+    }
+    public Volunteer? Read(Func<Volunteer, bool> filter)
+    {
+        return DataSource.Volunteers.FirstOrDefault(filter);
     }
 }

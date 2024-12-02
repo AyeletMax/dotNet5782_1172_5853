@@ -304,8 +304,8 @@ namespace DalTest
             DateTime exitTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
             FinishCallType finishCallType = (FinishCallType)Enum.Parse(typeof(FinishCallType), Console.ReadLine()!);
-            List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll();
-            List<Call>? calls = s_dal!.Call.ReadAll();
+            List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll().ToList(); ;
+            List<Call>? calls = s_dal!.Call.ReadAll().ToList(); ;
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
             int callId = calls[s_rand.Next(calls.Count)].Id;
             int id = s_dal!.Config.NextAssignmentId;

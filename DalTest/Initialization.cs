@@ -120,8 +120,8 @@ public static class Initialization
     {
         //List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();//שלב1
         //List<Call>? calls = s_dalCall!.ReadAll();//שלב1
-        List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll();
-        List<Call>? calls = s_dal!.Call.ReadAll();
+        List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll().ToList(); ;
+        List<Call>? calls = s_dal!.Call.ReadAll().ToList(); ;
         //DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
         //כמה קריאות צריך עשינו 15
         for (int i = 0; i < 50; i++)

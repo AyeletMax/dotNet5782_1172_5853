@@ -23,7 +23,8 @@ internal class CallImplementation : ICall
         }
         else
         {
-            throw new Exception($"Call with Id{id} was found");
+            throw new DalDeletionImpossible($"Call with Id{id} was not found");
+
         }
     }
 
@@ -34,14 +35,14 @@ internal class CallImplementation : ICall
 
     public Call? Read(int id)
     {
-        return DataSource.Calls.Find(a => a.Id == id);
+        return DataSource.Calls.FirstOrDefault(item => item.Id == id);
     }
 
-    public List<Call> ReadAll()
-    {
-        return new List<Call>(DataSource.Calls);
-    }
-   
+    public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
+   => filter == null
+       ? DataSource.Calls.Select(item => item)
+       : DataSource.Calls.Where(filter);
+
     public void Update(Call item)
     {
         Call? existingCall = Read(item.Id);
@@ -52,7 +53,11 @@ internal class CallImplementation : ICall
         }
         else
         {
-            throw new Exception($"Could not Update Item, no Call with Id{item.Id} found");
+            throw new DalDoesNotExistException($"Could not Update Item, no Call with Id{item.Id} found");
         }
+    }
+    public Call? Read(Func<Call, bool> filter)
+    {
+        return DataSource.Calls.FirstOrDefault(filter);
     }
 }
