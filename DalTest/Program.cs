@@ -6,11 +6,8 @@ namespace DalTest
 {
     internal class Program
     {
-        //private static IAssignment? s_dalAssignment = new AssignmentImplementation();
-        //private static ICall? s_dalCall = new CallImplementation();
-        //private static IConfig? s_dalConfig = new ConfigImplementation();
-        //private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); 
-        static readonly IDal s_dal = new Dal.DalList(); //stage 2
+       
+        static readonly IDal s_dal = new Dal.DalList(); 
         enum MainMenuChoice
         {
             Exit, Volunteer, Assignments, Calls, Config, InitializeData, ResetDatabase, DisplayAllData

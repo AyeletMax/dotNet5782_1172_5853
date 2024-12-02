@@ -22,7 +22,7 @@ public record Call
     string? VerbalDescription=null
 )
 {
-   //public int Id {  get; init; }
+  
     /// <summary>
     /// Default constructor
     /// </summary>

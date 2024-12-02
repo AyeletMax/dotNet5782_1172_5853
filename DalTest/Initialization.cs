@@ -118,12 +118,10 @@ public static class Initialization
     }
     private static void createAssignment()
     {
-        //List<Volunteer>? volunteers = s_dalVolunteer!.ReadAll();//שלב1
-        //List<Call>? calls = s_dalCall!.ReadAll();//שלב1
+
         List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll().ToList(); ;
         List<Call>? calls = s_dal!.Call.ReadAll().ToList(); ;
-        //DateTime startTime = new DateTime(s_dalConfig.Clock.Year, s_dalConfig.Clock.Month, s_dalConfig.Clock.Day, s_dalConfig.Clock.Hour - 5, 0, 0);
-        //כמה קריאות צריך עשינו 15
+        
         for (int i = 0; i < 50; i++)
         {
             
@@ -137,26 +135,18 @@ public static class Initialization
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
 
-            //s_dalAssignment!.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),//שלב1
-            //    (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
+      
             s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
 
         }
     }
-    //public static void DO(IAssignment? dalAssignment, ICall? dalCall, IConfig? dalConfig, IVolunteer? dalVolunteer)
     public static void DO(IDal dal)
     {
-        //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL can not be null!");//שלב1
-        //s_dalCall = dalCall ?? throw new NullReferenceException("DAL can not be null!");//שלב1
-        //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL can not be null!");//שלב1
-        //s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL can not be null!");//שלב1
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+       
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); 
         Console.WriteLine("Reset Configuration values and List values...");
-        //s_dalConfig.Reset();
-        //s_dalVolunteer.DeleteAll();
-        //s_dalCall.DeleteAll();
-        //s_dalAssignment.DeleteAll();
+       
         s_dal.ResetDB();
 
         Console.WriteLine("Initializing Volunteers list ...");
