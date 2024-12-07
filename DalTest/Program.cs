@@ -48,13 +48,13 @@ namespace DalTest
                     switch (mainMenuChoice)
                     {
                         case MainMenuChoice.Volunteer:
-                            CrudMenu("Volunteer", s_dal.Volunteer);
+                            CrudMenu("Volunteer");
                             break;
                         case MainMenuChoice.Assignments:
-                            CrudMenu("Assignment", s_dal.Assignment);
+                            CrudMenu("Assignment");
                             break;
                         case MainMenuChoice.Calls:
-                            CrudMenu("Call", s_dal.Call);
+                            CrudMenu("Call");
                             break;
                         case MainMenuChoice.Config:
                             ShowConfigMenu();
@@ -121,7 +121,7 @@ namespace DalTest
             }
         }
 
-        static void CrudMenu(string entityName, dynamic dal)
+        static void CrudMenu(string entityName)
         {
             Console.WriteLine("Enter a number:");
             foreach (CrudChoice option in Enum.GetValues(typeof(CrudChoice)))
@@ -137,22 +137,22 @@ namespace DalTest
                     switch (choice)
                     {
                         case CrudChoice.Create:
-                            CreateEntity(entityName, dal);
+                            CreateEntity(entityName);
                             break;
                         case CrudChoice.Read:
-                            ReadEntityById(entityName, dal);
+                            ReadEntityById(entityName);
                             break;
                         case CrudChoice.ReadAll:
-                            ReadAllEntities(entityName, dal);
+                            ReadAllEntities(entityName);
                             break;
                         case CrudChoice.Update:
-                            UpdateEntity(entityName, dal);
+                            UpdateEntity(entityName);
                             break;
                         case CrudChoice.Delete:
-                            DeleteEntity(entityName, dal);
+                            DeleteEntity(entityName);
                             break;
                         case CrudChoice.DeleteAll:
-                            DeleteAllEntities(entityName, dal);
+                            DeleteAllEntities(entityName);
                             break;
                         default:
                             Console.WriteLine("Invalid option, please try again.");
@@ -167,7 +167,7 @@ namespace DalTest
                 Enum.TryParse(Console.ReadLine(), out choice);
             }
         }
-        static void CreateEntity(string entityName, dynamic dal)
+        static void CreateEntity(string entityName)
         {
             if (entityName == "Volunteer")
                 CreateVolunteer();
@@ -249,17 +249,23 @@ namespace DalTest
             Console.WriteLine("Call created successfully!");
         }
 
-        static void ReadEntityById(string entityName, dynamic dal)
+        static void ReadEntityById(string entityName)
         {
             Console.Write($"Enter {entityName} ID to read: ");
             int id = int.Parse(Console.ReadLine()!);
-            var entityId = dal.Read(id);
+            dynamic entityId;
+            if (entityName == "Volunteer")
+                entityId = s_dal.Volunteer.Read(id)!;
+            else if (entityName == "Assignment")
+                entityId = s_dal.Assignment.Read(id)!;
+            else
+                entityId = s_dal.Call.Read(id)!;
             if (entityId == null)
             { Console.WriteLine("No such ID found"); }
             else { Console.WriteLine(entityId); }
         }
 
-        static void ReadAllEntities(string entityName, dynamic dal)
+        static void ReadAllEntities(string entityName)
         {
             if (entityName == "Volunteer")
             {
@@ -268,14 +274,14 @@ namespace DalTest
                     Console.WriteLine(volunteer);
                 }
             }
-            if (entityName == "Assignment")
+            else if (entityName == "Assignment")
             {
                 foreach (var assignment in s_dal.Assignment.ReadAll())
                 {
                     Console.WriteLine(assignment);
                 }
             }
-            if (entityName == "Call")
+            else
             {
                 foreach (var call in s_dal.Call.ReadAll())
                 {
@@ -283,26 +289,33 @@ namespace DalTest
                 }
             }
         }
-        static void UpdateEntity(string entityName, dynamic dal)
+        static void UpdateEntity(string entityName)
         {
             Console.Write($"Enter {entityName} ID to update: ");
             int id = int.Parse(Console.ReadLine()!);
-            var existingEntity = dal?.Read(id);
-            Console.WriteLine(existingEntity);
             dynamic updateEntity;
             if (entityName == "Volunteer")
             {
+                var existingEntity = s_dal.Volunteer?.Read(id);
+                Console.WriteLine(existingEntity);
                 updateEntity = UpdateVolunteer(existingEntity);
+                s_dal.Volunteer?.Update(updateEntity);
             }
             else if (entityName == "Call")
             {
+                var existingEntity = s_dal.Call?.Read(id);
+                Console.WriteLine(existingEntity);
                 updateEntity = UpdateCall(existingEntity);
+                s_dal.Call?.Update(updateEntity);
             }
             else
             {
+                var existingEntity = s_dal.Assignment?.Read(id);
+                Console.WriteLine(existingEntity);
                 updateEntity = UpdateAssignment(existingEntity);
+                s_dal.Assignment?.Update(updateEntity);
             }
-            dal?.Update(updateEntity);
+           
         }
         static Volunteer UpdateVolunteer(Volunteer existingVolunteer)
         {
@@ -387,18 +400,28 @@ namespace DalTest
             return new Assignment(Id, CallId, VolunteerId, entryTime, endingTime, endingTimeType);
             
         }
-        static void DeleteEntity(string entityName, dynamic dal)
+        static void DeleteEntity(string entityName)
         {
             Console.Write($"Enter {entityName} ID to delete: ");
             int id = int.Parse(Console.ReadLine()!);
-            dal!.Delete(id);
+            if (entityName == "Volunteer")
+                s_dal.Volunteer!.Delete(id);
+            else if(entityName=="Call")
+                s_dal.Call!.Delete(id);
+            else
+                s_dal.Assignment!.Delete(id);
             Console.WriteLine($"{entityName} deleted successfully!");
         }
 
-        static void DeleteAllEntities(string entityName, dynamic dal)
+        static void DeleteAllEntities(string entityName)
         {
             Console.WriteLine($"Deleting all entities of type: {entityName}");
-            dal.DeleteAll();
+            if (entityName == "Volunteer")
+                s_dal.Volunteer.DeleteAll(); 
+            else if (entityName == "Call")
+                s_dal.Call.DeleteAll(); 
+            else
+                s_dal.Assignment.DeleteAll(); 
         }
         static void ShowConfigMenu()
         {
