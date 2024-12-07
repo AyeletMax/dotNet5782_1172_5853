@@ -18,9 +18,7 @@ public record Assignment
     
 )
 {
-    //public int Id { get; init; }
-    //public int CallId { get; init; }
-    //public int VolunteerId { get; init; }
+   
     /// <summary>
     ///  Default constructor
     /// </summary>

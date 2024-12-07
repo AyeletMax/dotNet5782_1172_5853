@@ -22,7 +22,7 @@ public record Call
     string? VerbalDescription=null
 )
 {
-   
+  
     /// <summary>
     /// Default constructor
     /// </summary>

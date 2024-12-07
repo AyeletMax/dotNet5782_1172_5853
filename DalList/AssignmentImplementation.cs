@@ -2,15 +2,16 @@
 using DalApi;
 using DO;
 using System;
+using System.Linq;
 
 //using System.Collections.Generic;
 
-public class AssignmentImplementation : IAssignment
+internal class AssignmentImplementation : IAssignment
 {
     public void Create(Assignment item)
     {
         int newId = Config.NextAssignmentId;
-        Assignment newAssignment = item with { Id=newId};
+        Assignment newAssignment = item with { Id = newId };
         DataSource.Assignments.Add(newAssignment);
     }
 
@@ -23,7 +24,7 @@ public class AssignmentImplementation : IAssignment
         }
         else
         {
-            throw new Exception($"Assignment with Id{id} was found");
+            throw new DalDoesNotExistException($"Assignment with Id{id} was found");
         }
     }
 
@@ -33,13 +34,13 @@ public class AssignmentImplementation : IAssignment
     }
     public Assignment? Read(int id)
     {
-        return DataSource.Assignments.Find(a => a.Id == id);
+        return DataSource.Assignments.FirstOrDefault(item => item.Id == id);
     }
 
-    public List<Assignment> ReadAll()
-    {
-        return new List<Assignment>(DataSource.Assignments);
-    }
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
+  => filter == null
+      ? DataSource.Assignments.Select(item => item)
+      : DataSource.Assignments.Where(filter);
 
     public void Update(Assignment item)
     {
@@ -51,9 +52,13 @@ public class AssignmentImplementation : IAssignment
         }
         else
         {
-            throw new Exception($"Could not Update Item, no assignment with Id{item.Id} found");
+            throw new DalDoesNotExistException($"Could not Update Item, no assignment with Id{item.Id} found");
 
         }
 
+    }
+    public Assignment? Read(Func<Assignment, bool> filter)
+    {
+        return DataSource.Assignments.FirstOrDefault(filter);
     }
 }
