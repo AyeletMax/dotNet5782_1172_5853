@@ -3,8 +3,9 @@ using DalApi;
 using DO;
 using System;
 using System.Linq;
-
-//using System.Collections.Generic;
+/// <summary>
+/// all CRUD functions for Assignment
+/// </summary>
 
 internal class AssignmentImplementation : IAssignment
 {
