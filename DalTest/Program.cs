@@ -261,11 +261,26 @@ namespace DalTest
 
         static void ReadAllEntities(string entityName, dynamic dal)
         {
-            var dals = dal!.ReadAll();
-            Console.WriteLine($"All {entityName}s:");
-            foreach (var entity in dals)
+            if (entityName == "Volunteer")
             {
-                Console.WriteLine(entity);
+                foreach (var volunteer in s_dal.Volunteer.ReadAll())
+                {
+                    Console.WriteLine(volunteer);
+                }
+            }
+            if (entityName == "Assignment")
+            {
+                foreach (var assignment in s_dal.Assignment.ReadAll())
+                {
+                    Console.WriteLine(assignment);
+                }
+            }
+            if (entityName == "Call")
+            {
+                foreach (var call in s_dal.Call.ReadAll())
+                {
+                    Console.WriteLine(call);
+                }
             }
         }
         static void UpdateEntity(string entityName, dynamic dal)

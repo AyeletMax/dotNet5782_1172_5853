@@ -1,7 +1,9 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
-
+/// <summary>
+/// all CRUD functions for Volunteer
+/// </summary>
 internal class VolunteerImplementation : IVolunteer
 {
     public void Create(Volunteer item)

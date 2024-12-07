@@ -3,7 +3,9 @@
 namespace Dal;
 using DalApi;
 using DO;
-//using System.Collections.Generic;
+/// <summary>
+/// all CRUD functions for Call
+/// </summary>
 
 internal class CallImplementation : ICall
 {
