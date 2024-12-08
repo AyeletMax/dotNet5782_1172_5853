@@ -409,7 +409,7 @@ namespace DalTest
             else if(entityName=="Call")
                 s_dal.Call!.Delete(id);
             else
-                throw new DalDeletionImpossible("Assignments cannot be deleted.");
+                s_dal.Assignment!.Delete(id);
             Console.WriteLine($"{entityName} deleted successfully!");
         }
 
@@ -418,7 +418,7 @@ namespace DalTest
             Console.WriteLine($"Deleting all entities of type: {entityName}");
             s_dal.Volunteer.DeleteAll(); 
             s_dal.Call.DeleteAll();
-            throw new DalDeletionImpossible("Assignments cannot be deleted.");
+            s_dal.Assignment.DeleteAll();
         }
         static void ShowConfigMenu()
         {
