@@ -24,7 +24,6 @@ sealed public class DalList : IDal
    /// Resets the entire database, clearing all assignments, calls, volunteers, and configurations.
     public void ResetDB()
     {
-        Assignment.DeleteAll();
         Call.DeleteAll();
         Volunteer.DeleteAll();
         Config.Reset();
