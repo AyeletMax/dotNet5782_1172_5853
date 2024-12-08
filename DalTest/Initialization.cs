@@ -6,10 +6,7 @@ using System.Data;
 public static class Initialization
 {
     private static IDal? s_dal;
-    //private static IAssignment? s_dalAssignment;
-    //private static ICall? s_dalCall;
-    //private static IConfig? s_dalConfig;
-    //private static IVolunteer? s_dalVolunteer;
+  
 
     private static readonly Random s_rand = new();
     private static void createVolunteer()
@@ -105,9 +102,12 @@ public static class Initialization
         };
         string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel",
             "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel"};
-        DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, s_dal.Config.Clock.Hour - 5, 0, 0);
+        int hour = Math.Max(0, s_dal.Config.Clock.Hour - 5);
+        DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, hour, 0, 0);
+        int range = Math.Max(0, (int)(s_dal.Config.Clock - begin).TotalMinutes);
+        //DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, s_dal.Config.Clock.Hour - 5, 0, 0);
 
-        int range = (int)(s_dal.Config.Clock - begin).TotalMinutes;
+        //int range = (int)(s_dal.Config.Clock - begin).TotalMinutes;
         for (int i = 0; i < 50; i++)
         {
             
