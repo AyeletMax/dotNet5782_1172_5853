@@ -5,13 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Dal;
 using DalApi;
+
+/// Provides an implementation of the IDal interface for managing data access operations.
 sealed public class DalList : IDal
 {
-    public IAssignment Assignment { get; }=new AssignmentImplementation();
+    /// Provides access to assignment data operations.
+    public IAssignment Assignment { get; } = new AssignmentImplementation();
+
+    /// Provides access to call data operations.
     public ICall Call { get; } = new CallImplementation();
+
+    /// Provides access to volunteer data operations.
     public IVolunteer Volunteer { get; } = new VolunteerImplementation();
+
+    /// Provides access to configuration settings.
     public IConfig Config { get; } = new ConfigImplementation();
 
+   /// Resets the entire database, clearing all assignments, calls, volunteers, and configurations.
     public void ResetDB()
     {
         Assignment.DeleteAll();
@@ -19,5 +29,4 @@ sealed public class DalList : IDal
         Volunteer.DeleteAll();
         Config.Reset();
     }
-
 }
