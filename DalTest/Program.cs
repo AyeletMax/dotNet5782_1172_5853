@@ -31,20 +31,28 @@ namespace DalTest
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
+        /// <summary>
+        /// Displays the main menu, handles user input, and navigates to different menu options.
+        /// Executes actions based on the user's choice (e.g., CRUD operations, configuration, database reset).
+        /// Loops until the user selects the "Exit" option.
+        /// </summary>
         static void mainMenu()
         {
+            // Displays menu choices and prompts for user input.
             Console.WriteLine("Enter a number:");
             foreach (MainMenuChoice choice in Enum.GetValues(typeof(MainMenuChoice)))
             {
                 Console.WriteLine($"{(int)choice}. {choice}");
             }
+            // Reads user input and processes menu actions.
             MainMenuChoice mainMenuChoice;
             Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
+            // Loops until "Exit" is selected.
             while (mainMenuChoice is not MainMenuChoice.Exit)
             {
                 try
                 {
+                    // Switches to corresponding action based on user choice.
                     switch (mainMenuChoice)
                     {
                         case MainMenuChoice.Volunteer:
@@ -93,11 +101,15 @@ namespace DalTest
                 {
                     Console.WriteLine($"Unexpected error: {ex.Message}");
                 }
+                // Prompts for user input again.
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out mainMenuChoice);
 
             }
         }
+        /// <summary>
+        /// Resets the database by clearing all data and resetting configurations.
+        /// </summary>
         private static void ResetDatabase()
         {
             s_dal.Config.Reset();
@@ -105,6 +117,9 @@ namespace DalTest
             s_dal.Call.DeleteAll();
             s_dal.Assignment.DeleteAll();
         }
+        /// <summary>
+        /// Displays all records from the database (volunteers, calls, and assignments).
+        /// </summary>
         private static void DisplayAllData()
         {
             foreach (var volunteer in s_dal.Volunteer.ReadAll())
@@ -120,9 +135,15 @@ namespace DalTest
                 Console.WriteLine(assignment);
             }
         }
-
+        /// <summary>
+        /// Displays a CRUD menu for the specified entity (e.g., Volunteer, Assignment, Call) 
+        /// and executes the corresponding CRUD operation based on user choice.
+        /// Loops until the user selects the "Exit" option.
+        /// </summary>
+        /// <param name="entityName">The name of the entity (e.g., "Volunteer", "Assignment", etc.) for which CRUD operations are performed.</param>
         static void CrudMenu(string entityName)
         {
+            // Displays the CRUD menu and prompts for user input.
             Console.WriteLine("Enter a number:");
             foreach (CrudChoice option in Enum.GetValues(typeof(CrudChoice)))
             {
@@ -134,6 +155,7 @@ namespace DalTest
             {
                 try
                 {
+                    // Switches to corresponding CRUD action based on user choice.
                     switch (choice)
                     {
                         case CrudChoice.Create:
@@ -163,10 +185,15 @@ namespace DalTest
                 {
                     Console.WriteLine($"Unexpected error: {ex.Message}");
                 }
+                // Prompts for input again.
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out choice);
             }
         }
+        /// <summary>
+        /// Calls the specific creation method for each entity type.
+        /// </summary>
+        /// <param name="entityName">The name of the entity to create (e.g., "Volunteer", "Call", "Assignment").</param>
         static void CreateEntity(string entityName)
         {
             if (entityName == "Volunteer")
@@ -176,6 +203,9 @@ namespace DalTest
             else
                 CreateAssignment();
         }
+        /// <summary>
+        /// Prompts the user to enter details for a new Volunteer and creates the Volunteer entity.
+        /// </summary>
         static void CreateVolunteer()
         {
             Console.WriteLine("Enter Volunteer details:");
@@ -206,9 +236,13 @@ namespace DalTest
             double largestDistance = double.Parse(Console.ReadLine()!);
             Console.Write("Distance Type (Air or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
+            // Creates the Volunteer using provided details.
             s_dal!.Volunteer.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
+        /// <summary>
+        /// Prompts the user for details and creates a new Assignment entity with random volunteer and call IDs.
+        /// </summary>
         static void CreateAssignment()
         {
             Random s_rand = new();
@@ -227,6 +261,9 @@ namespace DalTest
             s_dal.Assignment.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
+        /// <summary>
+        /// Prompts the user for details and creates a new Call entity.
+        /// </summary>
         static void CreateCall()
         {
             Console.WriteLine("Enter call details:");
@@ -248,7 +285,10 @@ namespace DalTest
             s_dal.Call.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
             Console.WriteLine("Call created successfully!");
         }
-
+        /// <summary>
+        /// Prompts the user for an ID and retrieves an entity by its ID (Volunteer, Assignment, or Call).
+        /// </summary>
+        /// <param name="entityName">The name of the entity to retrieve (e.g., "Volunteer", "Assignment", "Call").</param>
         static void ReadEntityById(string entityName)
         {
             Console.Write($"Enter {entityName} ID to read: ");
@@ -260,11 +300,15 @@ namespace DalTest
                 entityId = s_dal.Assignment.Read(id)!;
             else
                 entityId = s_dal.Call.Read(id)!;
+            // Displays the entity or shows an error message if not found.
             if (entityId == null)
             { Console.WriteLine("No such ID found"); }
             else { Console.WriteLine(entityId); }
         }
-
+        /// <summary>
+        /// Reads and displays all entities of the specified type (Volunteer, Assignment, or Call).
+        /// </summary>
+        /// <param name="entityName">The name of the entity to read ("Volunteer", "Assignment", or "Call").</param>
         static void ReadAllEntities(string entityName)
         {
             if (entityName == "Volunteer")
@@ -289,6 +333,10 @@ namespace DalTest
                 }
             }
         }
+        /// <summary>
+        /// Prompts the user to update an existing entity (Volunteer, Assignment, or Call) by ID.
+        /// </summary>
+        /// <param name="entityName">The name of the entity to update ("Volunteer", "Assignment", or "Call").</param>
         static void UpdateEntity(string entityName)
         {
             Console.Write($"Enter {entityName} ID to update: ");
@@ -317,6 +365,11 @@ namespace DalTest
             }
            
         }
+        /// <summary>
+        /// Prompts the user to update details of an existing Volunteer entity.
+        /// </summary>
+        /// <param name="existingVolunteer">The existing Volunteer entity to update.</param>
+        /// <returns>A new Volunteer entity with updated details.</returns>
         static Volunteer UpdateVolunteer(Volunteer existingVolunteer)
         {
             Console.Write("First Name: ");
@@ -358,6 +411,11 @@ namespace DalTest
             DistanceType distanceType = string.IsNullOrEmpty(myDistanceType) ? existingVolunteer.MyDistanceType : (DistanceType)Enum.Parse(typeof(DistanceType), myDistanceType);
             return new Volunteer(existingVolunteer.Id, firstName, lastName, phoneNumber, email, isActive, role, password, address, latitude, longitude, maxDistance, distanceType);
         }
+        /// <summary>
+        /// Prompts the user to update details of an existing Call entity.
+        /// </summary>
+        /// <param name="existingCall">The existing Call entity to update.</param>
+        /// <returns>A new Call entity with updated details.</returns>
         static Call UpdateCall(Call existingCall)
         {
             Console.Write("Call Type (MusicPerformance, MusicTherapy, SingingAndEmotionalSupport, GroupActivities, PersonalizedMusicCare): ");
@@ -383,6 +441,11 @@ namespace DalTest
             return new Call(id, myCallType, address, latitude, longitude, openingTime, maxTime, description);
             
         }
+        /// <summary>
+        /// Prompts the user to update an existing Assignment entity's details.
+        /// </summary>
+        /// <param name="existingAssignment">The existing Assignment entity to update.</param>
+        /// <returns>A new Assignment entity with updated details.</returns>
         static Assignment UpdateAssignment(Assignment existingAssignment)
         {
             int Id = existingAssignment.Id;
@@ -400,6 +463,10 @@ namespace DalTest
             return new Assignment(Id, CallId, VolunteerId, entryTime, endingTime, endingTimeType);
             
         }
+        /// <summary>
+        /// Deletes an entity (Volunteer, Call, or Assignment) by ID.
+        /// </summary>
+        /// <param name="entityName">The name of the entity to delete ("Volunteer", "Call", or "Assignment").</param>
         static void DeleteEntity(string entityName)
         {
             Console.Write($"Enter {entityName} ID to delete: ");
@@ -412,7 +479,10 @@ namespace DalTest
                 s_dal.Assignment!.Delete(id);
             Console.WriteLine($"{entityName} deleted successfully!");
         }
-
+        /// <summary>
+        /// Deletes all entities of the specified type (Volunteer, Call, or Assignment).
+        /// </summary>
+        /// <param name="entityName">The name of the entity to delete ("Volunteer", "Call", or "Assignment").</param>
         static void DeleteAllEntities(string entityName)
         {
             Console.WriteLine($"Deleting all entities of type: {entityName}");
@@ -420,20 +490,26 @@ namespace DalTest
             s_dal.Call.DeleteAll();
             s_dal.Assignment.DeleteAll();
         }
+        /// <summary>
+        /// Displays the configuration menu, allowing the user to perform various clock-related actions.
+        /// </summary>
         static void ShowConfigMenu()
         {
             Console.Write("Choose an action: ");
-
+            // Display available configuration choices.
             foreach (ConfigChoice option in Enum.GetValues(typeof(ConfigChoice)))
             {
                 Console.WriteLine($"{(int)option}. {option}");
             }
+            // Read user input for menu selection.
             ConfigChoice choice;
             Enum.TryParse(Console.ReadLine(), out choice);
+            // Read user input for menu selection.
             while (choice is not ConfigChoice.Exit)
             {
                 try
                 {
+                    // Handle each choice case.
                     switch (choice)
                     {
                         case ConfigChoice.Exit:
@@ -495,6 +571,7 @@ namespace DalTest
                 {
                     Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 }
+                // Prompt for the next action.
                 Console.WriteLine("Enter a number:");
                 Enum.TryParse(Console.ReadLine(), out choice);
             }
