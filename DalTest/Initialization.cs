@@ -102,7 +102,7 @@ public static class Initialization
         };
         string[] addresses = { "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel", "Rishon Lezion, Israel", "Beer Sheva, Israel",
             "Tel Aviv, Israel", "Jerusalem, Israel", "Haifa, Israel", "Eilat, Israel"};
-        int hour = Math.Max(0, s_dal.Config.Clock.Hour - 5);
+        int hour = Math.Max(0, s_dal!.Config.Clock.Hour - 5);
         DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, hour, 0, 0);
         int range = Math.Max(0, (int)(s_dal.Config.Clock - begin).TotalMinutes);
         //DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, s_dal.Config.Clock.Hour - 5, 0, 0);
