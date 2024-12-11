@@ -6,8 +6,6 @@ using System.Data;
 public static class Initialization
 {
     private static IDal? s_dal;
-  
-
     private static readonly Random s_rand = new();
     private static void createVolunteer()
     {
@@ -47,8 +45,7 @@ public static class Initialization
             s_dal!.Volunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
                 latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
-    }
-    
+    }  
     private static void createCall()
     {
         string[] verbalDescriptions = {
@@ -105,9 +102,7 @@ public static class Initialization
         int hour = Math.Max(0, s_dal!.Config.Clock.Hour - 5);
         DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, hour, 0, 0);
         int range = Math.Max(0, (int)(s_dal.Config.Clock - begin).TotalMinutes);
-        //DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, s_dal.Config.Clock.Hour - 5, 0, 0);
-
-        //int range = (int)(s_dal.Config.Clock - begin).TotalMinutes;
+      
         for (int i = 0; i < 50; i++)
         {
             
@@ -118,27 +113,19 @@ public static class Initialization
     }
     private static void createAssignment()
     {
-
         List<Volunteer>? volunteers = s_dal!.Volunteer.ReadAll().ToList(); ;
         List<Call>? calls = s_dal!.Call.ReadAll().ToList(); ;
-        
         for (int i = 0; i < 50; i++)
         {
-            
             int callId = calls[i].Id;
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
-      
-           
             DateTime minTime = calls[i].OpenTime;
             DateTime maxTime = (DateTime)calls[i].MaxFinishTime!;
             TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
-
-      
             s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
-
         }
     }
     public static void DO(IDal dal)
@@ -146,9 +133,7 @@ public static class Initialization
        
         s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); 
         Console.WriteLine("Reset Configuration values and List values...");
-       
         s_dal.ResetDB();
-
         Console.WriteLine("Initializing Volunteers list ...");
         createVolunteer();
         Console.WriteLine("Initializing Calls list ...");
