@@ -8,7 +8,11 @@ internal class CallImplementation : ICall
 {
     public void Create(Call item)
     {
-        throw new NotImplementedException();
+        int newId = Config.NextAssignmentId;
+        List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        Call newAssignment = item with { Id = newId };
+        calls.Add(newAssignment);
+        XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml); ;
     }
 
     public void Delete(int id)
@@ -23,7 +27,9 @@ internal class CallImplementation : ICall
 
     public Call? Read(int id)
     {
-        throw new NotImplementedException();
+        List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+
+        return assignments.FirstOrDefault(item => item.Id == id);
     }
 
     public Call? Read(Func<Call, bool> filter)
