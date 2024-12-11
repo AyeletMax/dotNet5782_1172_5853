@@ -53,6 +53,7 @@ internal class AssignmentImplementation : IAssignment
             throw new DalDoesNotExistException($"Could not Update Item, no assignment with Id{item.Id} found");
         }
     }
+
     /// <summary>Reads the first Assignment that matches a filter.</summary>
     public Assignment? Read(Func<Assignment, bool> filter)
     {
