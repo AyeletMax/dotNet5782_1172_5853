@@ -18,11 +18,15 @@ internal class AssignmentImplementation : IAssignment
     //צריך לשאול מישהי על הזריקות פה
     public void Delete(int id)
     {
-    
+        List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
+        if (Assignments.RemoveAll(it => it.Id == id) == 0)
+            throw new DalDoesNotExistException($"Assignment with ID={id} does Not exist");
+        XMLTools.SaveListToXMLSerializer(Assignments, Config.s_assignments_xml);
     }
 
     public void DeleteAll()
     {
+        XMLTools.SaveListToXMLSerializer(new List<Assignment>(), Config.s_assignments_xml);
 
     }
 
