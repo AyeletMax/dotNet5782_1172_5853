@@ -1,13 +1,15 @@
-﻿using Dal;
+﻿
 using DalApi;
 using DO;
-
+using Dal;
+//למה הוא לא מזהה את DAL
 namespace DalTest
 {
     internal class Program
     {
        
-        static readonly IDal s_dal = new Dal.DalList(); 
+        //static readonly IDal s_dal = new Dal.DalList();//stage 2
+        static readonly IDal s_dal = new Dal.DalXml(); //stage 3
         enum MainMenuChoice
         {
             Exit, Volunteer, Assignments, Calls, Config, InitializeData, ResetDatabase, DisplayAllData
