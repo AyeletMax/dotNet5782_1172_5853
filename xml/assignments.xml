@@ -3,401 +3,401 @@
   <Assignment>
     <Id>51</Id>
     <CallId>1</CallId>
-    <VolunteerId>216355129</VolunteerId>
-    <EntranceTime>2024-12-15T15:44:00</EntranceTime>
-    <ExitTime>2024-12-15T17:44:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>206796649</VolunteerId>
+    <EntranceTime>2024-12-15T18:09:00</EntranceTime>
+    <ExitTime>2024-12-15T20:09:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>52</Id>
     <CallId>2</CallId>
-    <VolunteerId>216355129</VolunteerId>
-    <EntranceTime>2024-12-15T18:58:00</EntranceTime>
-    <ExitTime>2024-12-15T20:58:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>209950148</VolunteerId>
+    <EntranceTime>2024-12-15T15:01:00</EntranceTime>
+    <ExitTime>2024-12-15T17:01:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>53</Id>
     <CallId>3</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T19:38:00</EntranceTime>
-    <ExitTime>2024-12-15T21:38:00</ExitTime>
+    <VolunteerId>262947314</VolunteerId>
+    <EntranceTime>2024-12-15T18:19:00</EntranceTime>
+    <ExitTime>2024-12-15T20:19:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>54</Id>
     <CallId>4</CallId>
-    <VolunteerId>216355129</VolunteerId>
-    <EntranceTime>2024-12-15T16:16:00</EntranceTime>
-    <ExitTime>2024-12-15T18:16:00</ExitTime>
+    <VolunteerId>364247581</VolunteerId>
+    <EntranceTime>2024-12-15T18:10:00</EntranceTime>
+    <ExitTime>2024-12-15T20:10:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>55</Id>
     <CallId>5</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T17:20:00</EntranceTime>
-    <ExitTime>2024-12-15T19:20:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T17:53:00</EntranceTime>
+    <ExitTime>2024-12-15T19:53:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>56</Id>
     <CallId>6</CallId>
-    <VolunteerId>327210734</VolunteerId>
-    <EntranceTime>2024-12-15T18:14:00</EntranceTime>
-    <ExitTime>2024-12-15T20:14:00</ExitTime>
+    <VolunteerId>278245597</VolunteerId>
+    <EntranceTime>2024-12-15T20:47:00</EntranceTime>
+    <ExitTime>2024-12-15T22:47:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>57</Id>
     <CallId>7</CallId>
-    <VolunteerId>263606866</VolunteerId>
-    <EntranceTime>2024-12-15T17:54:00</EntranceTime>
-    <ExitTime>2024-12-15T19:54:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>252800408</VolunteerId>
+    <EntranceTime>2024-12-15T15:33:00</EntranceTime>
+    <ExitTime>2024-12-15T17:33:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>58</Id>
     <CallId>8</CallId>
-    <VolunteerId>327210734</VolunteerId>
-    <EntranceTime>2024-12-15T18:09:00</EntranceTime>
-    <ExitTime>2024-12-15T20:09:00</ExitTime>
+    <VolunteerId>201290518</VolunteerId>
+    <EntranceTime>2024-12-15T19:31:00</EntranceTime>
+    <ExitTime>2024-12-15T21:31:00</ExitTime>
     <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>59</Id>
     <CallId>9</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T16:34:00</EntranceTime>
-    <ExitTime>2024-12-15T18:34:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>320898586</VolunteerId>
+    <EntranceTime>2024-12-15T21:28:00</EntranceTime>
+    <ExitTime>2024-12-15T23:28:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>60</Id>
     <CallId>10</CallId>
-    <VolunteerId>257489554</VolunteerId>
-    <EntranceTime>2024-12-15T18:19:00</EntranceTime>
-    <ExitTime>2024-12-15T20:19:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>364247581</VolunteerId>
+    <EntranceTime>2024-12-15T17:26:00</EntranceTime>
+    <ExitTime>2024-12-15T19:26:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>61</Id>
     <CallId>11</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T17:52:00</EntranceTime>
-    <ExitTime>2024-12-15T19:52:00</ExitTime>
+    <VolunteerId>252800408</VolunteerId>
+    <EntranceTime>2024-12-15T21:37:00</EntranceTime>
+    <ExitTime>2024-12-15T23:37:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>62</Id>
     <CallId>12</CallId>
-    <VolunteerId>354191969</VolunteerId>
-    <EntranceTime>2024-12-15T15:48:00</EntranceTime>
-    <ExitTime>2024-12-15T17:48:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>201290518</VolunteerId>
+    <EntranceTime>2024-12-15T18:16:00</EntranceTime>
+    <ExitTime>2024-12-15T20:16:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>63</Id>
     <CallId>13</CallId>
-    <VolunteerId>263606866</VolunteerId>
-    <EntranceTime>2024-12-15T16:26:00</EntranceTime>
-    <ExitTime>2024-12-15T18:26:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>206796649</VolunteerId>
+    <EntranceTime>2024-12-15T19:49:00</EntranceTime>
+    <ExitTime>2024-12-15T21:49:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>64</Id>
     <CallId>14</CallId>
-    <VolunteerId>295469126</VolunteerId>
-    <EntranceTime>2024-12-15T17:36:00</EntranceTime>
-    <ExitTime>2024-12-15T19:36:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T21:20:00</EntranceTime>
+    <ExitTime>2024-12-15T23:20:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>65</Id>
     <CallId>15</CallId>
-    <VolunteerId>285494294</VolunteerId>
-    <EntranceTime>2024-12-15T18:25:00</EntranceTime>
-    <ExitTime>2024-12-15T20:25:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>252800408</VolunteerId>
+    <EntranceTime>2024-12-15T18:55:00</EntranceTime>
+    <ExitTime>2024-12-15T20:55:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>66</Id>
     <CallId>16</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T18:35:00</EntranceTime>
-    <ExitTime>2024-12-15T20:35:00</ExitTime>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T18:51:00</EntranceTime>
+    <ExitTime>2024-12-15T20:51:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>67</Id>
     <CallId>17</CallId>
-    <VolunteerId>295469126</VolunteerId>
-    <EntranceTime>2024-12-15T15:20:00</EntranceTime>
-    <ExitTime>2024-12-15T17:20:00</ExitTime>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T19:09:00</EntranceTime>
+    <ExitTime>2024-12-15T21:09:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>68</Id>
     <CallId>18</CallId>
-    <VolunteerId>384064268</VolunteerId>
-    <EntranceTime>2024-12-15T16:23:00</EntranceTime>
-    <ExitTime>2024-12-15T18:23:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>268233807</VolunteerId>
+    <EntranceTime>2024-12-15T18:27:00</EntranceTime>
+    <ExitTime>2024-12-15T20:27:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>69</Id>
     <CallId>19</CallId>
-    <VolunteerId>207518059</VolunteerId>
-    <EntranceTime>2024-12-15T18:05:00</EntranceTime>
-    <ExitTime>2024-12-15T20:05:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>354851231</VolunteerId>
+    <EntranceTime>2024-12-15T18:26:00</EntranceTime>
+    <ExitTime>2024-12-15T20:26:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>70</Id>
     <CallId>20</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T17:35:00</EntranceTime>
-    <ExitTime>2024-12-15T19:35:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>206796649</VolunteerId>
+    <EntranceTime>2024-12-15T15:42:00</EntranceTime>
+    <ExitTime>2024-12-15T17:42:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>71</Id>
     <CallId>21</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T23:47:00</EntranceTime>
-    <ExitTime>2024-12-16T01:47:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T15:44:00</EntranceTime>
+    <ExitTime>2024-12-15T17:44:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>72</Id>
     <CallId>22</CallId>
-    <VolunteerId>344776222</VolunteerId>
-    <EntranceTime>2024-12-15T20:11:00</EntranceTime>
-    <ExitTime>2024-12-15T22:11:00</ExitTime>
+    <VolunteerId>320898586</VolunteerId>
+    <EntranceTime>2024-12-15T19:30:00</EntranceTime>
+    <ExitTime>2024-12-15T21:30:00</ExitTime>
     <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>73</Id>
     <CallId>23</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T16:58:00</EntranceTime>
-    <ExitTime>2024-12-15T18:58:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T20:53:00</EntranceTime>
+    <ExitTime>2024-12-15T22:53:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>74</Id>
     <CallId>24</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T17:55:00</EntranceTime>
-    <ExitTime>2024-12-15T19:55:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>346080758</VolunteerId>
+    <EntranceTime>2024-12-15T16:45:00</EntranceTime>
+    <ExitTime>2024-12-15T18:45:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>75</Id>
     <CallId>25</CallId>
-    <VolunteerId>344776222</VolunteerId>
-    <EntranceTime>2024-12-15T20:34:00</EntranceTime>
-    <ExitTime>2024-12-15T22:34:00</ExitTime>
+    <VolunteerId>278245597</VolunteerId>
+    <EntranceTime>2024-12-15T18:16:00</EntranceTime>
+    <ExitTime>2024-12-15T20:16:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>76</Id>
     <CallId>26</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T18:45:00</EntranceTime>
-    <ExitTime>2024-12-15T20:45:00</ExitTime>
+    <VolunteerId>364247581</VolunteerId>
+    <EntranceTime>2024-12-15T18:08:00</EntranceTime>
+    <ExitTime>2024-12-15T20:08:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>77</Id>
     <CallId>27</CallId>
-    <VolunteerId>327210734</VolunteerId>
-    <EntranceTime>2024-12-15T21:09:00</EntranceTime>
-    <ExitTime>2024-12-15T23:09:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T16:04:00</EntranceTime>
+    <ExitTime>2024-12-15T18:04:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>78</Id>
     <CallId>28</CallId>
-    <VolunteerId>285494294</VolunteerId>
-    <EntranceTime>2024-12-15T18:01:00</EntranceTime>
-    <ExitTime>2024-12-15T20:01:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T15:39:00</EntranceTime>
+    <ExitTime>2024-12-15T17:39:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>79</Id>
     <CallId>29</CallId>
-    <VolunteerId>295469126</VolunteerId>
-    <EntranceTime>2024-12-15T17:27:00</EntranceTime>
-    <ExitTime>2024-12-15T19:27:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T22:09:00</EntranceTime>
+    <ExitTime>2024-12-16T00:09:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>80</Id>
     <CallId>30</CallId>
-    <VolunteerId>250900191</VolunteerId>
-    <EntranceTime>2024-12-15T17:50:00</EntranceTime>
-    <ExitTime>2024-12-15T19:50:00</ExitTime>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T16:29:00</EntranceTime>
+    <ExitTime>2024-12-15T18:29:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>81</Id>
     <CallId>31</CallId>
-    <VolunteerId>250900191</VolunteerId>
-    <EntranceTime>2024-12-15T18:41:00</EntranceTime>
-    <ExitTime>2024-12-15T20:41:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>201290518</VolunteerId>
+    <EntranceTime>2024-12-15T21:07:00</EntranceTime>
+    <ExitTime>2024-12-15T23:07:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>82</Id>
     <CallId>32</CallId>
-    <VolunteerId>338691805</VolunteerId>
-    <EntranceTime>2024-12-15T21:34:00</EntranceTime>
-    <ExitTime>2024-12-15T23:34:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>206796649</VolunteerId>
+    <EntranceTime>2024-12-15T18:53:00</EntranceTime>
+    <ExitTime>2024-12-15T20:53:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>83</Id>
     <CallId>33</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T19:38:00</EntranceTime>
-    <ExitTime>2024-12-15T21:38:00</ExitTime>
+    <VolunteerId>252800408</VolunteerId>
+    <EntranceTime>2024-12-15T15:03:00</EntranceTime>
+    <ExitTime>2024-12-15T17:03:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>84</Id>
     <CallId>34</CallId>
-    <VolunteerId>354191969</VolunteerId>
-    <EntranceTime>2024-12-15T17:06:00</EntranceTime>
-    <ExitTime>2024-12-15T19:06:00</ExitTime>
+    <VolunteerId>278245597</VolunteerId>
+    <EntranceTime>2024-12-15T17:58:00</EntranceTime>
+    <ExitTime>2024-12-15T19:58:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>85</Id>
     <CallId>35</CallId>
-    <VolunteerId>344776222</VolunteerId>
-    <EntranceTime>2024-12-15T19:12:00</EntranceTime>
-    <ExitTime>2024-12-15T21:12:00</ExitTime>
+    <VolunteerId>262947314</VolunteerId>
+    <EntranceTime>2024-12-15T17:02:00</EntranceTime>
+    <ExitTime>2024-12-15T19:02:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>86</Id>
     <CallId>36</CallId>
-    <VolunteerId>386371289</VolunteerId>
-    <EntranceTime>2024-12-15T21:38:00</EntranceTime>
-    <ExitTime>2024-12-15T23:38:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>320898586</VolunteerId>
+    <EntranceTime>2024-12-15T16:38:00</EntranceTime>
+    <ExitTime>2024-12-15T18:38:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>87</Id>
     <CallId>37</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T20:04:00</EntranceTime>
-    <ExitTime>2024-12-15T22:04:00</ExitTime>
+    <VolunteerId>268233807</VolunteerId>
+    <EntranceTime>2024-12-15T16:51:00</EntranceTime>
+    <ExitTime>2024-12-15T18:51:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>88</Id>
     <CallId>38</CallId>
-    <VolunteerId>338691805</VolunteerId>
-    <EntranceTime>2024-12-15T15:56:00</EntranceTime>
-    <ExitTime>2024-12-15T17:56:00</ExitTime>
+    <VolunteerId>268233807</VolunteerId>
+    <EntranceTime>2024-12-15T20:12:00</EntranceTime>
+    <ExitTime>2024-12-15T22:12:00</ExitTime>
     <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>89</Id>
     <CallId>39</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T16:09:00</EntranceTime>
-    <ExitTime>2024-12-15T18:09:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>262947314</VolunteerId>
+    <EntranceTime>2024-12-15T17:43:00</EntranceTime>
+    <ExitTime>2024-12-15T19:43:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>90</Id>
     <CallId>40</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T16:41:00</EntranceTime>
-    <ExitTime>2024-12-15T18:41:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>206796649</VolunteerId>
+    <EntranceTime>2024-12-15T17:44:00</EntranceTime>
+    <ExitTime>2024-12-15T19:44:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>91</Id>
     <CallId>41</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T16:09:00</EntranceTime>
-    <ExitTime>2024-12-15T18:09:00</ExitTime>
+    <VolunteerId>351363844</VolunteerId>
+    <EntranceTime>2024-12-15T15:51:00</EntranceTime>
+    <ExitTime>2024-12-15T17:51:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>92</Id>
     <CallId>42</CallId>
-    <VolunteerId>373914561</VolunteerId>
-    <EntranceTime>2024-12-15T19:21:00</EntranceTime>
-    <ExitTime>2024-12-15T21:21:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>268233807</VolunteerId>
+    <EntranceTime>2024-12-15T19:30:00</EntranceTime>
+    <ExitTime>2024-12-15T21:30:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>93</Id>
     <CallId>43</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T20:24:00</EntranceTime>
-    <ExitTime>2024-12-15T22:24:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T18:42:00</EntranceTime>
+    <ExitTime>2024-12-15T20:42:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>94</Id>
     <CallId>44</CallId>
-    <VolunteerId>250900191</VolunteerId>
-    <EntranceTime>2024-12-15T17:25:00</EntranceTime>
-    <ExitTime>2024-12-15T19:25:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>201290518</VolunteerId>
+    <EntranceTime>2024-12-15T21:30:00</EntranceTime>
+    <ExitTime>2024-12-15T23:30:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>95</Id>
     <CallId>45</CallId>
-    <VolunteerId>384064268</VolunteerId>
-    <EntranceTime>2024-12-15T18:17:00</EntranceTime>
-    <ExitTime>2024-12-15T20:17:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>291978207</VolunteerId>
+    <EntranceTime>2024-12-15T21:08:00</EntranceTime>
+    <ExitTime>2024-12-15T23:08:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>96</Id>
     <CallId>46</CallId>
-    <VolunteerId>297381323</VolunteerId>
-    <EntranceTime>2024-12-15T16:48:00</EntranceTime>
-    <ExitTime>2024-12-15T18:48:00</ExitTime>
-    <FinishCallType>TakenCareOf</FinishCallType>
+    <VolunteerId>320898586</VolunteerId>
+    <EntranceTime>2024-12-15T16:22:00</EntranceTime>
+    <ExitTime>2024-12-15T18:22:00</ExitTime>
+    <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>97</Id>
     <CallId>47</CallId>
-    <VolunteerId>282676484</VolunteerId>
-    <EntranceTime>2024-12-15T18:27:00</EntranceTime>
-    <ExitTime>2024-12-15T20:27:00</ExitTime>
-    <FinishCallType>CanceledByManager</FinishCallType>
+    <VolunteerId>292329322</VolunteerId>
+    <EntranceTime>2024-12-15T19:04:00</EntranceTime>
+    <ExitTime>2024-12-15T21:04:00</ExitTime>
+    <FinishCallType>CanceledByVolunteer</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>98</Id>
     <CallId>48</CallId>
-    <VolunteerId>344776222</VolunteerId>
-    <EntranceTime>2024-12-15T18:34:00</EntranceTime>
-    <ExitTime>2024-12-15T20:34:00</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
+    <VolunteerId>364247581</VolunteerId>
+    <EntranceTime>2024-12-15T15:26:00</EntranceTime>
+    <ExitTime>2024-12-15T17:26:00</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>99</Id>
     <CallId>49</CallId>
-    <VolunteerId>263606866</VolunteerId>
-    <EntranceTime>2024-12-15T21:00:00</EntranceTime>
-    <ExitTime>2024-12-15T23:00:00</ExitTime>
+    <VolunteerId>201290518</VolunteerId>
+    <EntranceTime>2024-12-15T21:30:00</EntranceTime>
+    <ExitTime>2024-12-15T23:30:00</ExitTime>
     <FinishCallType>TakenCareOf</FinishCallType>
   </Assignment>
   <Assignment>
     <Id>100</Id>
     <CallId>50</CallId>
-    <VolunteerId>257489554</VolunteerId>
-    <EntranceTime>2024-12-15T18:35:00</EntranceTime>
-    <ExitTime>2024-12-15T20:35:00</ExitTime>
+    <VolunteerId>354851231</VolunteerId>
+    <EntranceTime>2024-12-15T16:41:00</EntranceTime>
+    <ExitTime>2024-12-15T18:41:00</ExitTime>
     <FinishCallType>CanceledByManager</FinishCallType>
   </Assignment>
 </ArrayOfAssignment>
