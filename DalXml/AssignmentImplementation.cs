@@ -13,9 +13,8 @@ internal class AssignmentImplementation : IAssignment
     /// Creates a new Assignment and adds it to the XML data source.
     public void Create(Assignment item)
     {
-        int newId = Config.NextAssignmentId;
+        Assignment newAssignment = item with { Id = Config.NextAssignmentId };
         List<Assignment> assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-        Assignment newAssignment = item with { Id = newId };
         assignments.Add(newAssignment);
         XMLTools.SaveListToXMLSerializer(assignments, Config.s_assignments_xml);
     }
@@ -25,8 +24,8 @@ internal class AssignmentImplementation : IAssignment
     public void Delete(int id)
     {
         List<Assignment> Assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-        if (Assignments.RemoveAll(it => it.Id == id) == 0)
-            throw new DalDoesNotExistException($"Assignment with ID={id} does Not exist");
+        if (!Assignments.Remove(Assignments.FirstOrDefault(a => a.Id == id)!))
+            throw new DalDoesNotExistException($"Assignment with ID {id} does not exist.");
         XMLTools.SaveListToXMLSerializer(Assignments, Config.s_assignments_xml);
     }
 
@@ -41,7 +40,6 @@ internal class AssignmentImplementation : IAssignment
     public Assignment? Read(int id)
     {
         List<Assignment> assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-
         return assignments.FirstOrDefault(item => item.Id == id);
     }
 
@@ -56,9 +54,7 @@ internal class AssignmentImplementation : IAssignment
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         List<Assignment> assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-        return filter == null
-            ? assignments
-            : assignments.Where(filter);
+        return filter == null ? assignments : assignments.Where(filter);
     }
 
     /// Updates an existing Assignment in the XML data source.

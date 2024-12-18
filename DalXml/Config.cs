@@ -7,13 +7,9 @@ internal static class Config
 {
 
     // File Names
-    /// The name of the file storing system configuration.
     internal const string s_data_config_xml = "data-config.xml";
-    /// The name of the file storing volunteer data.
     internal const string s_volunteers_xml = "volunteers.xml";
-    /// The name of the file storing assignment data.
     internal const string s_assignments_xml = "assignments.xml";
-    /// The name of the file storing call data.
     internal const string s_calls_xml = "calls.xml";
 
     /// Gets the next available Assignment/Call ID from the 'data-config.xml' file and updates it.

@@ -14,21 +14,31 @@ internal class CallImplementation : ICall
     /// Creates a new Call and adds it to the XML data source.
     public void Create(Call item)
     {
-        int newId = Config.NextAssignmentId;
-        List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
-        Call newCalls = item with { Id = newId };
-        calls.Add(newCalls);
-        XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml); ;
+        //int newId = Config.NextAssignmentId;
+        //List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        //Call newCalls = item with { Id = newId };
+        //calls.Add(newCalls);
+        //XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml); ;
+        int newId = XMLTools.GetAndIncreaseConfigIntVal("data-config.xml", "NextCallId");
+        Call callCopy = item with { Id = newId };
+        List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        Calls.Add(callCopy);
+        XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
     }
 
     /// Deletes a Call by its ID from the XML data source.
     public void Delete(int id)
     {
-        List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
-        if (Calls.RemoveAll(it => it.Id == id) == 0)
-            throw new DalDoesNotExistException($"Call with ID={id} does Not exist");
-        XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
+        //List<Call> Calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        //if (Calls.RemoveAll(it => it.Id == id) == 0)
+        //    throw new DalDoesNotExistException($"Call with ID={id} does Not exist");
+        //XMLTools.SaveListToXMLSerializer(Calls, Config.s_calls_xml);
+        List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+        if (!calls.Remove(Read(id)!))
+            throw new DalDoesNotExistException($"Call with ID={id} does not exist.");
+        XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml);
     }
+
 
     /// Deletes all Calls from the XML data source.
     public void DeleteAll()
@@ -40,7 +50,6 @@ internal class CallImplementation : ICall
     public Call? Read(int id)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
-
         return calls.FirstOrDefault(item => item.Id == id);
     }
 
@@ -55,9 +64,7 @@ internal class CallImplementation : ICall
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
-        return filter == null
-            ? calls
-            : calls.Where(filter);
+        return filter == null ? calls : calls.Where(filter);
     }
 
     /// Updates an existing Call in the XML data source.
