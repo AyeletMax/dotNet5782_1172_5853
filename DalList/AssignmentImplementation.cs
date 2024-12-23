@@ -17,16 +17,25 @@ internal class AssignmentImplementation : IAssignment
         DataSource.Assignments.Add(newAssignment);
     }
 
-    /// <summary>Throws an exception that Assignments cannot be deleted.</summary>
+    /// <summary>Deletes a Assignment by ID. Throws DalDoesNotExistException if not found.</summary>
     public void Delete(int id)
     {
-        throw new DalDeletionImpossible("Assignments cannot be deleted.");
+        Assignment? assignment = Read(id);
+        if (assignment != null)
+        {
+            DataSource.Assignments.Remove(assignment);
+        }
+        else
+        {
+            throw new DalDoesNotExistException($"Assignment with Id{id} was not found");
+
+        }
     }
 
-    /// <summary>Throws an exception that Assignments cannot be deleted</summary>
+    /// <summary>Deletes all Assignments from the data source.</summary>
     public void DeleteAll()
     {
-        throw new DalDeletionImpossible("Assignments cannot be deleted.");
+        DataSource.Assignments.Clear();
     }
     /// <summary>Reads an Assignment by ID.</summary>
     public Assignment? Read(int id)
