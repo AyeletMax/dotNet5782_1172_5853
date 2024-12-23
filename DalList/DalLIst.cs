@@ -7,8 +7,10 @@ namespace Dal;
 using DalApi;
 
 /// Provides an implementation of the IDal interface for managing data access operations.
-sealed public class DalList : IDal
+sealed internal class DalList : IDal
 {
+    public static IDal Instance { get; } = new DalList();
+    private DalList() { }
     /// Provides access to assignment data operations.
     public IAssignment Assignment { get; } = new AssignmentImplementation();
 
@@ -24,6 +26,7 @@ sealed public class DalList : IDal
    /// Resets the entire database, clearing all assignments, calls, volunteers, and configurations.
     public void ResetDB()
     {
+        Assignment.DeleteAll();
         Call.DeleteAll();
         Volunteer.DeleteAll();
         Config.Reset();

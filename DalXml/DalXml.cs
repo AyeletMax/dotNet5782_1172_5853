@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using System.Diagnostics;
 
 namespace Dal;
 /// <summary>
@@ -6,8 +7,10 @@ namespace Dal;
 /// Provides data operations for Assignments, Calls, Volunteers, and Config.
 /// </summary>
 
-sealed public class DalXml : IDal
+sealed internal class DalXml : IDal
 {
+    public static IDal Instance { get; } = new DalXml();
+    private DalXml() { }
     public IAssignment Assignment { get; } = new AssignmentImplementation();
 
     public ICall Call { get; } = new CallImplementation();
