@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace Dal;
-using DalApi;
+﻿using DalApi;
 
+namespace Dal;
 /// Provides an implementation of the IDal interface for managing data access operations.
 sealed internal class DalList : IDal
 {

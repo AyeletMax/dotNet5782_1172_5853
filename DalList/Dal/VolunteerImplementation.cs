@@ -1,7 +1,7 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
-
+using System.Collections.Generic;
 /// Provides all CRUD operations for the `Volunteer` entity.
 internal class VolunteerImplementation : IVolunteer
 {
