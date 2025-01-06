@@ -10,4 +10,25 @@ public enum DistanceType
     Walk,
     Drive
 }
+public enum CallType
+{
+    MusicPerformance,
+    MusicTherapy,
+    SingingAndEmotionalSupport,
+    GroupActivities,
+    PersonalizedMusicCare
+}
 
+
+public enum FinishCallType
+{
+    TakenCareOf,
+    CanceledByVolunteer,
+    CanceledByManager,
+    Expired
+}
+public enum Status
+{
+    InProgress,       
+    AtRisk            
+}
