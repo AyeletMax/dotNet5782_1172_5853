@@ -14,9 +14,5 @@ public class CallInProgress
     public DateTime? EntranceTime { get; set; }
     public double VolunteerResponseDistance { get; set; }
     public Status MyStatus { get; set; }
-
-
-
-
 }
 
