@@ -10,4 +10,5 @@ public class ClosedCallInList
     public DateTime TreatmentStartTime { get; init; }
     public DateTime? ActualTreatmentEndTime { get; init; }
     public FinishCallType? FinishCallType { get; init; }
+
 }
