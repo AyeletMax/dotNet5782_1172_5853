@@ -7,9 +7,10 @@ namespace DalTest
 {
     internal class Program
     {
-       
+
         //static readonly IDal s_dal = new DalList();//stage 2
-        static readonly IDal s_dal = new DalXml(); //stage 3
+        //static readonly IDal s_dal = new DalXml(); //stage 3
+        static readonly IDal s_dal = Factory.Get;//stage 4
         enum MainMenuChoice
         {
             Exit, Volunteer, Assignments, Calls, Config, InitializeData, ResetDatabase, DisplayAllData
@@ -70,7 +71,9 @@ namespace DalTest
                             ShowConfigMenu();
                             break;
                         case MainMenuChoice.InitializeData:
-                            Initialization.DO(s_dal);
+                            //Initialization.DO(s_dal);//stage 2
+                            Initialization.DO();//stage 4
+
                             break;
                         case MainMenuChoice.DisplayAllData:
                             try
