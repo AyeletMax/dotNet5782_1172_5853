@@ -30,5 +30,10 @@ public enum FinishCallType
 public enum Status
 {
     InProgress,       
-    AtRisk            
+    AtRisk,
+    InProgressAtRisk,
+    Opened,
+    Closed,
+    Expired
 }
+
