@@ -1,5 +1,7 @@
 ﻿
 
+using Helpers;
+
 namespace BO;
 
 public class CallInList
@@ -13,4 +15,5 @@ public class CallInList
     public TimeSpan? TimeRemainingToCall { get; init; }
     public string? LastVolunteer { get; init; }
     public TimeSpan? CompletionTime { get; init; }
+    public override string ToString() => this.ToStringProperty();
 }

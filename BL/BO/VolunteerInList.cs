@@ -1,4 +1,6 @@
 ﻿
+using Helpers;
+
 namespace BO;
 
 public class VolunteerInList
@@ -12,4 +14,5 @@ public class VolunteerInList
     public int TotalExpiredResponses { get; set; }
     public int? AssignedResponseId { get; set; }
     public CallType MyCallType {  get; set; }
+    public override string ToString() => this.ToStringProperty();
 }

@@ -1,4 +1,6 @@
 ﻿
+using Helpers;
+
 namespace BO;
 
 public class ClosedCallInList
@@ -10,5 +12,6 @@ public class ClosedCallInList
     public DateTime TreatmentStartTime { get; init; }
     public DateTime? ActualTreatmentEndTime { get; init; }
     public FinishCallType? FinishCallType { get; init; }
+    public override string ToString() => this.ToStringProperty();
 
 }

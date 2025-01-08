@@ -1,5 +1,7 @@
 ﻿
 
+using Helpers;
+
 namespace BO;
 
 public class CallInProgress
@@ -14,5 +16,6 @@ public class CallInProgress
     public DateTime? EntranceTime { get; set; }
     public double VolunteerResponseDistance { get; set; }
     public Status MyStatus { get; set; }
+    public override string ToString() => this.ToStringProperty();
 }
 
