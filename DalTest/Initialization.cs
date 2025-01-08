@@ -128,10 +128,12 @@ public static class Initialization
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }
-    public static void DO(IDal dal)
+    //public static void DO(IDal dal)//stage 2
+    public static void DO()//stage 4
     {
-       
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); 
+
+        //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
+        s_dal = DalApi.Factory.Get;
         Console.WriteLine("Reset Configuration values and List values...");
         s_dal.ResetDB();
         Console.WriteLine("Initializing Volunteers list ...");

@@ -22,8 +22,9 @@ public record Assignment
     /// <summary>
     ///  Default constructor
     /// </summary>
+  
     public Assignment() : this(0, 0, 0, DateTime.MinValue, DateTime.MinValue, default(FinishCallType)) { }
-
+   
 }
 
 
