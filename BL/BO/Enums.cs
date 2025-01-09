@@ -37,3 +37,11 @@ public enum Status
     Expired
 }
 
+public enum TimeUnit
+{
+    MINUTE,
+    HOUR,
+    DAY,
+    MONTH,
+    YEAR
+}
