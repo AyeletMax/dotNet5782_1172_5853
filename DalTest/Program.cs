@@ -2,7 +2,7 @@
 using Dal;
 using DO;
 
-//למה הוא לא מזהה את DAL
+
 namespace DalTest
 {
     internal class Program
@@ -216,10 +216,8 @@ namespace DalTest
             Console.WriteLine("Enter Volunteer details:");
             Console.Write("ID: ");
             int id = int.Parse(Console.ReadLine()!);
-            Console.Write("First Name: ");
-            string? firstName = Console.ReadLine()!;
-            Console.Write("Last Name: ");
-            string? lastName = Console.ReadLine()!;
+            Console.Write("Name: ");
+            string? name = Console.ReadLine()!;
             Console.Write("Phone Number: ");
             string? phoneNumber = Console.ReadLine()!;
             Console.Write("Email: ");
@@ -242,7 +240,7 @@ namespace DalTest
             Console.Write("Distance Type (Air or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
             // Creates the Volunteer using provided details.
-            s_dal!.Volunteer.Create(new(id, firstName, lastName, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
+            s_dal!.Volunteer.Create(new(id, name, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
         /// <summary>
@@ -377,12 +375,9 @@ namespace DalTest
         /// <returns>A new Volunteer entity with updated details.</returns>
         static Volunteer UpdateVolunteer(Volunteer existingVolunteer)
         {
-            Console.Write("First Name: ");
-            string? firstName = Console.ReadLine();
-            firstName = string.IsNullOrEmpty(firstName) ? existingVolunteer.FirstName : firstName;
-            Console.Write("Last Name: ");
-            string? lastName = Console.ReadLine();
-            lastName = string.IsNullOrEmpty(lastName) ? existingVolunteer.LastName : lastName;
+            Console.Write("Name: ");
+            string? name = Console.ReadLine();
+            name = string.IsNullOrEmpty(name) ? existingVolunteer.Name : name;
             Console.Write("Phone Number: ");
             string? phoneNumber = Console.ReadLine();
             phoneNumber = string.IsNullOrEmpty(phoneNumber) ? existingVolunteer.Phone : phoneNumber;
@@ -414,7 +409,7 @@ namespace DalTest
             Console.Write("Distance Type (Air or Walk): ");
             string myDistanceType = Console.ReadLine()!;
             DistanceType distanceType = string.IsNullOrEmpty(myDistanceType) ? existingVolunteer.MyDistanceType : (DistanceType)Enum.Parse(typeof(DistanceType), myDistanceType);
-            return new Volunteer(existingVolunteer.Id, firstName, lastName, phoneNumber, email, isActive, role, password, address, latitude, longitude, maxDistance, distanceType);
+            return new Volunteer(existingVolunteer.Id, name, phoneNumber, email, isActive, role, password, address, latitude, longitude, maxDistance, distanceType);
         }
         /// <summary>
         /// Prompts the user to update details of an existing Call entity.

@@ -17,8 +17,7 @@ public record Volunteer
 (
 
     int Id,
-    string FirstName,
-    string LastName,
+    string Name,
     string Phone,
     string Email,
     bool Active,
@@ -34,5 +33,5 @@ public record Volunteer
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Volunteer() : this(0, "", "", "", " ", false, Role.Volunteer) { }
+    public Volunteer() : this(0, "", "", "", false, Role.Volunteer) { }
 }

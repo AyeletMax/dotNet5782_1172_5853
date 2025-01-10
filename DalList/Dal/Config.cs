@@ -18,7 +18,7 @@ internal static class Config
     private static int nextCallId = StartCallId;
     internal static int NextCallId { get => nextCallId++; }
 
-    internal static DateTime Clock { get; set; } = new DateTime (2025,2,7,5,38,50);
+    internal static DateTime Clock { get; set; } = DateTime.Now;
     internal static TimeSpan RiskRange { get; set; } = TimeSpan.FromHours(1);
     internal static void Reset()
     {

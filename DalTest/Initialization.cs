@@ -38,11 +38,10 @@ public static class Initialization
                32.1820, 31.6700, 32.9674, 32.0840, 32.3143, 32.7872,
                32.0167, 31.8015, 32.7682
         };
-        s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(200000000, 400000000), "Chen", "Cohen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
+        s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(200000000, 400000000), "Chen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
         for (int i = 0; i < FullNames.Length; i++)
         {
-            string[] nameParts = FullNames[i].Split(' ');
-            s_dal!.Volunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), nameParts[0], nameParts[1], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
+            s_dal!.Volunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
                 latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
     }  
