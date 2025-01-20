@@ -18,7 +18,7 @@ public interface ICall
 
     // מתודת עדכון פרטי קריאה
     public void UpdateCallDetails(BO.Call call);
-
+ 
     // מתודת מחיקת קריאה
     public void DeleteCall(int callId);
 
