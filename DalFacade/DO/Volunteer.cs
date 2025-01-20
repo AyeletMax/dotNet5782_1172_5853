@@ -33,5 +33,5 @@ public record Volunteer
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Volunteer() : this(0, "", "", "", false, Role.Volunteer) { }
+    public Volunteer() : this(0, "", "", "", false, Role.Volunteer, "", "", 0, 0,0, DistanceType.Air) { }
 }
