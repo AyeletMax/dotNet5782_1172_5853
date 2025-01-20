@@ -14,6 +14,7 @@ public interface IVolunteer
     void UpdateVolunteerDetails(int requesterId, BO.Volunteer volunteer);
     void DeleteVolunteer(int volunteerId);
     void AddVolunteer(BO.Volunteer volunteer);
+    bool VerifyPassword(string enteredPassword, string storedPassword);
 }
 
 
