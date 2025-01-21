@@ -17,3 +17,10 @@ public class DalDoesNotExistException : Exception
     }
 }
 
+public class GeolocationNotFoundException : Exception
+{
+    public GeolocationNotFoundException(string? message) : base(message)
+    {
+
+    }
+}
