@@ -56,6 +56,34 @@ namespace Helpers
 
             return true;
         }
+        internal static List<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
+        {
+            return volunteers.Select(v =>
+            {
+                var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
+
+                var totalHandled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf);
+                var totalCanceled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByManager);
+                var totalExpired = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.Expired);
+
+                var currentAssignment = volunteerAssignments.FirstOrDefault(a => a.ExitTime == null);
+                var assignedResponseId = currentAssignment?.CallId;
+
+                return new BO.VolunteerInList
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Active = v.Active,
+                    TotalResponsesHandled = totalHandled,
+                    TotalResponsesCancelled = totalCanceled,
+                    TotalExpiredResponses = totalExpired,
+                    AssignedResponseId = assignedResponseId,
+                    MyCallType = assignedResponseId.HasValue
+                        ? (BO.CallType)(_dal.Call.Read(assignedResponseId.Value)?.MyCallType ?? DO.CallType.MusicPerformance)
+                        : BO.CallType.MusicPerformance
+                };
+            }).ToList();
+        }
 
         /// <summary>
         /// Creates a DO.Volunteer object from a BO.Volunteer object.

@@ -45,3 +45,14 @@ public enum TimeUnit
     MONTH,
     YEAR
 }
+public enum VolunteerSortField
+{
+    Id,
+    Name,
+    TotalResponsesHandled,
+    TotalResponsesCancelled,
+    TotalExpiredResponses,
+    SumOfCalls,
+    SumOfCancellation,
+    SumOfExpiredCalls
+}
