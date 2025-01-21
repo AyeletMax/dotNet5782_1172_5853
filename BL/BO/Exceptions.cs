@@ -5,4 +5,8 @@
  {
      public DalAlreadyExistsException(string? message) : base(message) { }
  }
+public class GeneralDatabaseException : Exception
+{
+    public GeneralDatabaseException(string? message, Exception? innerException) : base(message) { }
+}
 
