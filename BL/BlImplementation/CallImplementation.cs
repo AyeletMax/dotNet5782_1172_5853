@@ -1,10 +1,12 @@
 ﻿using BlApi;
 using BO;
+using DalApi;
+using DO;
 using Helpers;
 
 namespace BlImplementation;
 
-internal class CallImplementation:ICall
+internal class CallImplementation :ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public int[] GetCallQuantitiesByStatus()
@@ -16,7 +18,8 @@ internal class CallImplementation:ICall
                     .ToArray();
     }
 
-    public IEnumerable<CallInList> GetCallList(CallType? filterField = null, object? filterValue = null, Status? sortField = null)
+    // לבדוק עם מישהי מה יש בRETURN
+    public IEnumerable<CallInList> GetCallList(BO.CallType? filterField = null, object? filterValue = null, Status? sortField = null)
     {
         var calls = _dal.Call.ReadAll();
         if (filterField.HasValue && filterValue != null)
@@ -51,50 +54,100 @@ internal class CallImplementation:ICall
         });
     }
 
-    // Retrieve details of a specific call
-    public Call GetCallDetails(int callId)
+    public BO.Call GetCallDetails(int callId)
     {
-        var call = _dal.Call.Read(callId);
-        if (call == null) throw new Exception("Call not found.");
-
-        return new Call
+        try
         {
-            CallNumber = call.CallNumber,
-            Description = call.Description,
-            Status = call.Status,
-            Assignments = call.Assignments.Select(a => new CallAssignInList
+            DO.Call? call = _dal.Call.Read(callId);
+            // If no call was found, throw an exception
+            if (call == null)
             {
-                AssignmentId = a.AssignmentId,
-                VolunteerId = a.VolunteerId,
-                AssignmentDate = a.AssignmentDate
-            }).ToList()
-        };
+                throw new Exception($"Call with ID {callId} was not found.");
+            }
+            var callAssignments = _dal.Assignment.ReadAll(a => a.CallId == callId)
+                                             .Select(a => new BO.CallAssignInList
+                                             {
+                                                 VolunteerId = a.VolunteerId,
+                                                 Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
+                                                 EntranceTime = a.EntranceTime,
+                                                 ExitTime = a.ExitTime,
+                                                 FinishCallType = (BO.FinishCallType?)a.FinishCallType
+                                             })
+                                             .ToList();
+            // Create the BO.Call object with the necessary details
+            BO.Call callInList = new BO.Call
+            {
+                Id = call.Id,
+                MyCallType = (BO.CallType)call.MyCallType,
+                VerbalDescription = call.VerbalDescription,
+                Address = call.Address,
+                Latitude = call.Latitude,
+                Longitude = call.Longitude,
+                OpenTime = call.OpenTime,
+                MaxFinishTime = call.MaxFinishTime,
+                MyStatus = Helpers.CallManager.GetCallStatus(callId, _dal),
+                callAssignments = callAssignments
+            };
+            return callInList;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("An error occurred while fetching call details.", ex);
+        }
     }
 
     // Update call details
-    public void UpdateCallDetails(Call call)
+    public void UpdateCallDetails(BO.Call call)
     {
-        if (string.IsNullOrWhiteSpace(call.Address))
-            throw new Exception("Invalid address.");
-
-        if (call.EndTime < call.StartTime)
-            throw new Exception("End time must be after start time.");
-
-        var doCall = new Call
+        try
         {
-            CallNumber = call.CallNumber,
-            Description = call.Description,
-            Address = call.Address,
-            Status = call.Status
-        };
+            Helpers.CallManager.ValidateCallDetails(call);
+            var (latitude, longitude) = Helpers.CallManager.logicalChecking(call);
 
-        _dal.Call.Update(doCall);
+            if (latitude is null || longitude is null)
+            {
+                throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
+            }
+
+            // Update the properties of the updatedCall instance
+            call.Latitude = latitude.Value;
+            call.Longitude = longitude.Value;
+
+
+            // Convert BO.Call to DO.Call for data layer update
+            DO.Call callToUpdate = new DO.Call
+            {
+                Id = call.Id,
+                MyCallType = (DO.CallType)call.MyCallType,
+                VerbalDescription = call.VerbalDescription,
+                Address = call.Address,
+                Latitude = call.Latitude,
+                Longitude = call.Longitude,
+                OpenTime = call.OpenTime,
+                MaxFinishTime = call.MaxFinishTime
+            };
+
+            // Attempt to update the call in the data layer
+
+            _dal.Call.Update(callToUpdate);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.DalDoesNotExistException($"Call with ID={call.Id} does not exists");
+        }
+        catch (Exception ex)
+        {
+            // Catch the data layer exception and rethrow a custom exception to the UI layer
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while update.", ex);
+        }
     }
 
     // Delete a call
     public void DeleteCall(int callId)
     {
-        var call = DataAccess.GetCall(callId);
+        //var call = DataAccess.GetCall(callId);
+        var call = _dal.Call.Read(callId);
+
         if (call == null) throw new Exception("Call not found.");
 
         if (call.Status != Status.Open || call.Assignments.Any())
@@ -103,27 +156,46 @@ internal class CallImplementation:ICall
         _dal.Call.Delete(callId);
     }
 
-    // Add a new call
-    public void AddCall(Call call)
+    public void AddCall(BO.Call call)
     {
-        if (string.IsNullOrWhiteSpace(call.Address))
-            throw new Exception("Invalid address.");
-
-        var doCall = new Call
+        try
         {
-            CallNumber = call.CallNumber,
-            Description = call.Description,
-            Address = call.Address,
-            Status = call.Status
-        };
-
-        DataAccess.AddCall(doCall);
+            Helpers.CallManager.ValidateCallDetails(call);
+            var (latitude, longitude) = Helpers.CallManager.logicalChecking(call);
+            if (latitude is null || longitude is null)
+            {
+                throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
+            }
+            call.Latitude = latitude.Value;
+            call.Longitude = longitude.Value;
+            var dataCall = new DO.Call
+            {
+                MyCallType = (DO.CallType)call.MyCallType,
+                VerbalDescription = call.VerbalDescription,
+                Address = call.Address,
+                Latitude = call.Latitude,
+                Longitude = call.Longitude,
+                OpenTime = call.OpenTime,
+                MaxFinishTime = call.MaxFinishTime
+            };
+            _dal.Call.Create(dataCall);
+        }
+        catch (DO.DalAlreadyExistsException)
+        {
+            throw new BO.DalAlreadyExistsException("Failed to add the call to the system.");
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while add.", ex);
+        }
     }
 
     // Retrieve closed calls handled by a specific volunteer
     public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallType? callStatus = null, FinishCallType? sortField = null)
     {
-        var calls = DataAccess.GetCalls()
+        var calls = _dal.Call.ReadAll ()
+
+        //var calls = DataAccess.GetCalls()
                               .Where(c => c.Status == Status.Closed && c.Assignments.Any(a => a.VolunteerId == volunteerId));
 
         if (callStatus.HasValue)

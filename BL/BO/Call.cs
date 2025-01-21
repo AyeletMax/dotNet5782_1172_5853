@@ -1,6 +1,4 @@
-﻿
-
-using Helpers;
+﻿using Helpers;
 
 namespace BO;
 
