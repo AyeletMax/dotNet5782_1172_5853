@@ -70,7 +70,7 @@ internal class VolunteerImplementation : IVolunteer
         {
 
             var doVolunteer = _dal.Volunteer.ReadAll(v => v.Id == volunteerId).FirstOrDefault() ??
-               throw new BO.DalDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
+               throw new BO.BlDoesNotExistn($"Volunteer with ID={volunteerId} does not exist");
 
             var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime == null).FirstOrDefault();
             BO.CallInProgress? callInProgress = null;
@@ -113,11 +113,47 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.DalDoesNotExistException("Volunteer not found in data layer.");
+            throw new BO.BLDoesNotExistException("Volunteer not found in data layer.", ex);
         }
         catch (Exception ex)
         {
             throw new BO.GeneralDatabaseException("An unexpected error occurred while geting Volunteer details.", ex);
+        }
+    }
+    public void UpdateVolunteer(int requesterId, BO.Volunteer boVolunteer)
+    {
+        try
+        {
+
+            Helpers.VolunteerManager.ValidateInputFormat(boVolunteer);
+            //Helpers.VolunteerManager.logicalChecking( requesterId, boVolunteer)
+            // Validate logical rules for the volunteer
+            var (latitude, longitude) = VolunteerManager.logicalChecking(boVolunteer);
+            if (latitude != null & longitude != null)
+            {
+                // Update the properties of the BOVolunteer instance
+                boVolunteer.Latitude = latitude;
+                boVolunteer.Longitude = longitude;
+            }
+
+
+            // Ensure permissions are correct
+            Helpers.VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
+
+            // Prepare DO.Volunteer object for data layer update
+            DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(boVolunteer);
+            _dal.Volunteer.Update(doVolunteer); // Attempt to update the data layer
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not  exists", ex);
+
+        }
+
+        catch (Exception ex)
+        {
+            // Handle all other unexpected exceptions
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while update.", ex);
         }
     }
 

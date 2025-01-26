@@ -76,18 +76,22 @@ internal static class Tools
         }
         return Status.Closed;
     }
-   
-    public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+
+    public static double CalculateDistance(double? lat1, double? lon1, double lat2, double lon2)
     {
+        var lat1Value = lat1 ?? 0; 
+        var lon1Value = lon1 ?? 0; 
+
         var r = 6371;
-        var dLat = (lat2 - lat1) * Math.PI / 180;
-        var dLon = (lon2 - lon1) * Math.PI / 180;
+        var dLat = (lat2 - lat1Value) * Math.PI / 180;
+        var dLon = (lon2 - lon1Value) * Math.PI / 180;
         var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
+                Math.Cos(lat1Value * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
                 Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
         var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
         return r * c;
     }
+
     private static readonly string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
     private static readonly string apiUrl = "https://us1.locationiq.com/v1/search.php?key={0}&q={1}&format=json";
 
