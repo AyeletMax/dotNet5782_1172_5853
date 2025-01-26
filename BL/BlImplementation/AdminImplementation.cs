@@ -45,7 +45,7 @@ internal class AdminImplementation
     public void InitializeDatabase()
     {
         ResetDatabase();
-        _dal.Initialization(); // הוספת נתוני התחלה
+        _dal.Initialization(); 
     }
 }
 
