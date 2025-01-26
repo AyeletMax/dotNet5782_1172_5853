@@ -3,8 +3,7 @@
 /// Volunteer Entity represents a volunteer with all its props
 /// </summary>
 /// <param name="Id">Personal unique ID of the volunteer</param>
-/// <param name="FirstName">Private name of the volunteer</param>
-/// <param name="LastName">Volunteers Last Name</param>
+/// <param name="Name">Private name of the volunteer</param>
 /// <param name="Phone">Volunteer phone number</param>
 /// <param name="Email">Volunteer email address</param>
 /// <param name="Password">Volunteer password</param>
