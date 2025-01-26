@@ -85,7 +85,7 @@ namespace Helpers
                 };
             }).ToList();
         }
-       internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
+        internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
         {
             if (boVolunteer == null)
                 throw new BO.BlDoesNotExistn("Volunteer object cannot be null.");
@@ -93,8 +93,8 @@ namespace Helpers
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 throw new BO.InvalidFormatException("Invalid email format.");
 
-            if (boVolunteer.Id < 0)
-                throw new BO.InvalidFormatException("Invalid ID format. ID must be a non-negative number.");
+            if (boVolunteer.Id < 0 || !Helpers.IdValidation.IsValidId(boVolunteer.Id))
+                throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
                 throw new BO.InvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
@@ -102,9 +102,10 @@ namespace Helpers
             if (boVolunteer.Name.Length < 2)
                 throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
 
-            if (boVolunteer.Password.Length < 6)
-                throw new BO.InvalidFormatException("Password is too short. Password must have at least 6 characters.");
+            if (boVolunteer.Password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(boVolunteer.Password))
+                throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
         }
+
 
 
 
@@ -114,23 +115,22 @@ namespace Helpers
                 boVolunteer.Id,
                 boVolunteer.Name,
                 boVolunteer.Email,
-                boVolunteer.PhoneN,
-               (DO.Role)boVolunteer.role,
+                boVolunteer.Phone,
+                (DO.Role)boVolunteer.Role,
                 boVolunteer.IsActive,
                 boVolunteer.MaxDistanceForTask,
-               EncryptPassword(boVolunteer.Password),
+                Helpers.VolunteerManager.EncryptPassword(boVolunteer.Password),
                 boVolunteer.Address,
                 boVolunteer.Longitude,
                 boVolunteer.Latitude
             );
         }
 
-   
+
         public static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
         {
             IsPasswordStrong(boVolunteer.Password);
             return Tools.GetCoordinatesFromAddress(boVolunteer.Address);
-
         }
 
 
@@ -140,31 +140,58 @@ namespace Helpers
         public static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
         {
             bool isSelf = requesterId == boVolunteer.Id;
-            bool isAdmin = boVolunteer.role == Role.Manager;
+            bool isAdmin = boVolunteer.Role == BO.Role.Manager;
 
             if (!isAdmin && !isSelf)
                 throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
 
-            if (!isAdmin && boVolunteer.role != Role.Volunteer)
+            if (!isAdmin && boVolunteer.Role != BO.Role.Volunteer)
                 throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
         }
+        public static List<string> GetChangedFields(DO.Volunteer original, BO.Volunteer updated)
+        {
+            var changedFields = new List<string>();
 
+            if (original.Name != updated.Name) changedFields.Add("Name");
+            if (original.Email != updated.Email) changedFields.Add("Email");
+            if (original.Phone != updated.Phone) changedFields.Add("Phone");
+            if (original.Role != (DO.Role)updated.Role) changedFields.Add("Role");
+            if (original.Address != updated.Address) changedFields.Add("Address");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            return changedFields;
         }
+
+        public static bool CanUpdateFields(int requesterId, List<string> changedFields)
+        {
+            // Define restricted fields
+            var restrictedFields = new List<string> { "Role" };
+
+            // Check if the requester is an admin
+            bool isAdmin = requesterId == -1; // Replace with actual admin check
+
+            // If the requester is not an admin, ensure no restricted fields are being updated
+            if (!isAdmin && changedFields.Any(field => restrictedFields.Contains(field)))
+                return false;
+
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+}
 

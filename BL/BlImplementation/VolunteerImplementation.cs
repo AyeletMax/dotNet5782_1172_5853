@@ -124,38 +124,44 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-
             Helpers.VolunteerManager.ValidateInputFormat(boVolunteer);
-            //Helpers.VolunteerManager.logicalChecking( requesterId, boVolunteer)
-            // Validate logical rules for the volunteer
-            var (latitude, longitude) = VolunteerManager.logicalChecking(boVolunteer);
-            if (latitude != null & longitude != null)
-            {
-                // Update the properties of the BOVolunteer instance
-                boVolunteer.Latitude = latitude;
-                boVolunteer.Longitude = longitude;
-            }
 
+            var coordinates = Helpers.Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            //if (coordinates == null)
+            //    throw new BO.GeolocationNotFoundException($"Invalid address: {boVolunteer.Address}");
 
-            // Ensure permissions are correct
+            boVolunteer.Latitude = coordinates.Latitude;
+            boVolunteer.Longitude = coordinates.Longitude;
             Helpers.VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
+
+            var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
+            var changedFields = Helpers.VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
+
+            // Ensure the requester has permission to update specific fields
+            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, changedFields))
+                throw new UnauthorizedAccessException("You do not have permission to update these fields.");
 
             // Prepare DO.Volunteer object for data layer update
             DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(boVolunteer);
-            _dal.Volunteer.Update(doVolunteer); // Attempt to update the data layer
+
+            // Attempt to update the volunteer in the data layer
+            _dal.Volunteer.Update(doVolunteer);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not  exists", ex);
-
+            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);
         }
-
+        catch (UnauthorizedAccessException ex)
+        {
+            throw new BO.GeneralDatabaseException("Unauthorized access while updating volunteer.", ex);
+        }
         catch (Exception ex)
         {
             // Handle all other unexpected exceptions
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while update.", ex);
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
+
 
 }
 
