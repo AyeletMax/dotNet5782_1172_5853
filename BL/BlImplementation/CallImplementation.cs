@@ -204,7 +204,7 @@ internal class CallImplementation :BlApi.ICall
         }
         catch (DO.DalAlreadyExistsException)
         {
-            throw new BO.DalAlreadyExistsException("Failed to add the call to the system.");
+            throw new BO.BLAlreadyExistsException("Failed to add the call to the system.");
         }
         catch (Exception ex)
         {
