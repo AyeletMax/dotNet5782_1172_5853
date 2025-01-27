@@ -1,9 +1,9 @@
 ﻿namespace BO;
 
 
- public class DalAlreadyExistsException : Exception
+ public class BLAlreadyExistsException : Exception
  {
-     public DalAlreadyExistsException(string? message) : base(message) { }
+     public BLAlreadyExistsException(string? message) : base(message) { }
  }
 public class GeneralDatabaseException : Exception
 {
@@ -38,4 +38,17 @@ public class InvalidFormatException : Exception
 
     }
 }
+public class DeletionException : Exception
+{
+    public DeletionException(string? message) : base(message)
+    {
 
+    }
+}
+public class BLDoesNotExist : Exception
+{
+    public BLDoesNotExist(string? message, Exception ex) : base(message)
+    {
+
+    }
+}

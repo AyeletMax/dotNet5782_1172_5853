@@ -1,16 +1,12 @@
 ﻿
 namespace BlImplementation;
-using Helpers;
 using BlApi;
 using BO;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using DO;
-using System.Net;
-using DalApi;
+using Helpers;
+using System.Numerics;
+using System.Xml.Linq;
+
 
 
 internal class VolunteerImplementation : IVolunteer
@@ -23,10 +19,10 @@ internal class VolunteerImplementation : IVolunteer
         var volunteer = _dal.Volunteer.ReadAll().Select(v => VolunteerManager.MapVolunteer(v)).FirstOrDefault(v => v.Name == username);
 
         if (volunteer! == null)
-            throw new BO.DalAlreadyExistsException("Invalid username.");
+            throw new BO.BLAlreadyExistsException("Invalid username.");
 
         if (!VolunteerManager.VerifyPassword(password, volunteer.Password!))
-            throw new BO.DalAlreadyExistsException("Invalid password.");
+            throw new BO.BLAlreadyExistsException("Invalid password.");
 
         return volunteer.MyRole;
 
@@ -136,15 +132,12 @@ internal class VolunteerImplementation : IVolunteer
 
             var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
             var changedFields = Helpers.VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
+            //צריך לבדוק איזה שדות עוד א"א לעדכן ולשנות בפונ ע"פ requesterId
+            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
+                throw new UnauthorizedAccessException("You do not have permission to update the Role field.");
 
-            // Ensure the requester has permission to update specific fields
-            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, changedFields))
-                throw new UnauthorizedAccessException("You do not have permission to update these fields.");
-
-            // Prepare DO.Volunteer object for data layer update
             DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(boVolunteer);
 
-            // Attempt to update the volunteer in the data layer
             _dal.Volunteer.Update(doVolunteer);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -157,14 +150,69 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (Exception ex)
         {
-            // Handle all other unexpected exceptions
             throw new BO.GeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
+    public void DeleteVolunteer(int volunteerId)
+    {
+        try
+        {
+            var volunteer = _dal.Volunteer.Read(volunteerId);
+            if (volunteer == null)
+            {
+                throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
+            }
+
+            IEnumerable<Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
+            if (assignmentsWithVolunteer.Any())
+            {
+                throw new BO.DeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
+            }
+            _dal.Volunteer.Delete(volunteerId);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BLDoesNotExistException($"Error: Volunteer with ID {volunteerId} does not exist in the database.", ex);
+        }
+    }
+    public void AddVolunteer(BO.Volunteer boVolunteer)
+    {
+        try
+        {
+            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
+            if (existingVolunteer != null)
+            {
+                throw new DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
+            }
+            Helpers.VolunteerManager.ValidateInputFormat(boVolunteer);
+            var (latitude, longitude) = VolunteerManager.logicalChecking(boVolunteer);
+            if (latitude != null && longitude != null)
+            {
+                boVolunteer.Latitude = latitude;
+                boVolunteer.Longitude = longitude;
+            }
+            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
+            _dal.Volunteer.Create(doVolunteer);
+        }
+        catch (DO.DalAlreadyExistsException ex)
+        {
+            throw new BO.BLDoesNotExist($"Volunteer with ID={boVolunteer.Id} already exists", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
+        }
+
+    }
+
 
 
 }
 
+
+
+
+  
 
 
 
