@@ -52,3 +52,24 @@ public class BLDoesNotExist : Exception
 
     }
 }
+public class AssignmentNotFoundException : Exception
+{
+    public AssignmentNotFoundException(string? message) : base(message)
+    {
+
+    }
+}
+public class PermissionDeniedException : Exception
+{
+    public PermissionDeniedException(string? message) : base(message)
+    {
+
+    }
+}
+public class InvalidOperationException : Exception
+{
+    public InvalidOperationException(string? message) : base(message)
+    {
+
+    }
+}
