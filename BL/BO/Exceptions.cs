@@ -34,6 +34,10 @@ public class BLDoesNotExist : Exception
 {
     public BLDoesNotExist(string? message, Exception ex) : base(message) { }    
 }
+public class ApiRequestException : Exception
+{
+    public ApiRequestException(string? message) : base(message) { }
+}
 public class AssignmentNotFoundException : Exception
 {
     public AssignmentNotFoundException(string? message) : base(message) { }    
@@ -45,4 +49,8 @@ public class PermissionDeniedException : Exception
 public class InvalidOperationException : Exception
 {
     public InvalidOperationException(string? message) : base(message)    { }
+}
+public class InvalidAddressException : Exception
+{
+    public InvalidAddressException(string? message) : base(message) { }
 }

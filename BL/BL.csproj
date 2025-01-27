@@ -18,5 +18,9 @@
     <ProjectReference Include="..\DalTest\DalTest.csproj" />
     <ProjectReference Include="..\DalXml\DalXml.csproj" />
   </ItemGroup>
-
+	
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+	
 </Project>

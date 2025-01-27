@@ -92,33 +92,97 @@ internal static class Tools
         return r * c;
     }
 
-    private static readonly string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
-    private static readonly string apiUrl = "https://us1.locationiq.com/v1/search.php?key={0}&q={1}&format=json";
+    //private static readonly string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
+    //private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
 
-    public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string? address = null)
+    //private static readonly string apiUrl = "https://us1.locationiq.com/v1/search.php?key={0}&q={1}&format=json";
+
+    //public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string? address = null)
+    //{
+    //    try
+    //    {
+    //        if (string.IsNullOrWhiteSpace(address))
+    //        {
+    //            return (null, null);
+
+    //        }
+
+    //        // Create URL for the API request
+    //        string url = string.Format(apiUrl, apiKey, Uri.EscapeDataString(address));
+
+    //        using (HttpClient client = new HttpClient())
+    //        {
+    //            // Make the synchronous API request
+    //            HttpResponseMessage response = client.GetAsync(url).Result;
+    //            // Check if the API request was successful
+    //            if (response.IsSuccessStatusCode)
+    //            {
+    //                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+    //                // Parse the JSON response
+    //                JArray jsonArray = JArray.Parse(jsonResponse);
+    //                // If there are results, return the coordinates
+    //                if (jsonArray.Count > 0)
+    //                {
+    //                    var firstResult = jsonArray[0];
+    //                    double latitude = (double)firstResult["lat"];
+    //                    double longitude = (double)firstResult["lon"];
+    //                    return (latitude, longitude);
+    //                }
+    //                else
+    //                {
+    //                    throw new GeolocationNotFoundException(address);
+    //                }
+    //            }
+    //            else
+    //            {
+    //                throw new Exception(response.StatusCode.ToString());
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception("Error occurred while fetching coordinates for the address. ", ex);
+    //    }
+
+    //}
+    private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
+    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
+
+    /// <summary>
+    /// Retrieves coordinates (latitude and longitude) for a given address.
+    /// If the address is invalid or the API request fails, an appropriate exception is thrown.
+    /// </summary>
+    /// <param name="address">The address for which coordinates are requested.</param>
+    /// <returns>A tuple containing latitude and longitude of the address.</returns>
+    /// <exception cref="InvalidAddressException">Thrown when the address is invalid or cannot be processed.</exception>
+    /// <exception cref="ApiRequestException">Thrown when the API request fails.</exception>
+    /// <exception cref="GeolocationNotFoundException">Thrown when no geolocation is found for the address.</exception>
+    public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
     {
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            throw new InvalidAddressException(address); // חריגה אם הכתובת לא תקינה
+        }
+
         try
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                return (null, null);
-
-            }
-
-            // Create URL for the API request
-            string url = string.Format(apiUrl, apiKey, Uri.EscapeDataString(address));
+            // יצירת ה-URL לפנייה ל-API
+            string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
 
             using (HttpClient client = new HttpClient())
             {
-                // Make the synchronous API request
+                // בקשה סינכרונית ל-API
                 HttpResponseMessage response = client.GetAsync(url).Result;
-                // Check if the API request was successful
+
+                // בדיקה אם הבקשה הצליחה
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonResponse = response.Content.ReadAsStringAsync().Result;
-                    // Parse the JSON response
+
+                    // ניתוח התשובה כ-JSON
                     JArray jsonArray = JArray.Parse(jsonResponse);
-                    // If there are results, return the coordinates
+
+                    // אם יש תוצאות, מחזירים את הקואורדינטות
                     if (jsonArray.Count > 0)
                     {
                         var firstResult = jsonArray[0];
@@ -128,19 +192,19 @@ internal static class Tools
                     }
                     else
                     {
-                        throw new GeolocationNotFoundException(address);
+                        throw new GeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
                     }
                 }
                 else
                 {
-                    throw new Exception(response.StatusCode.ToString());
+                    throw new ApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
                 }
             }
         }
         catch (Exception ex)
         {
-            throw new Exception("Error occurred while fetching coordinates for the address. ", ex);
+            // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
+            throw new ApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
         }
-
     }
 }
