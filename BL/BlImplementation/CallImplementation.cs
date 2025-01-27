@@ -3,10 +3,11 @@ using BO;
 using DalApi;
 using DO;
 using Helpers;
+using System.Threading.Channels;
 
 namespace BlImplementation;
 
-internal class CallImplementation :ICall
+internal class CallImplementation :BlApi.ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public int[] GetCallQuantitiesByStatus()
@@ -133,7 +134,7 @@ internal class CallImplementation :ICall
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.DalDoesNotExistException($"Call with ID={call.Id} does not exists");
+            throw new BO.BLDoesNotExistException($"Call with ID={call.Id} does not exists",ex);
         }
         catch (Exception ex)
         {
@@ -146,13 +147,34 @@ internal class CallImplementation :ICall
     public void DeleteCall(int callId)
     {
         //var call = DataAccess.GetCall(callId);
-        var call = _dal.Call.Read(callId);
+        var call = _dal.Call.Read(callId); // Fetch the call details
 
-        if (call == null) throw new Exception("Call not found.");
+        if (call == null)
+        {
+            throw new ArgumentException("The call with the specified ID does not exist.");
+        }
 
-        if (call.Status != Status.Open || call.Assignments.Any())
-            throw new Exception("Cannot delete a call that is not open or has assignments.");
+        // Step 2: Fetch the latest assignment for the call
+        var latestAssignment = _dal.Assignment.ReadAll() // Get all assignments
+            .Where(a => a.CallId == callId) // Filter by CallId
+            .OrderByDescending(a => a.EntranceTime) // Get the latest by EntryTime
+            .FirstOrDefault(); // May return null if no assignments exist
 
+        // Step 3: Calculate the status using the helper method
+        var status = Helpers.CallManager.GetCallStatus(call.Id, _dal);
+
+        // Step 4: Check if the call can be deleted
+        if (status != Status.Opened)
+        {
+            throw new InvalidOperationException("The call cannot be deleted because it is not in an open state.");
+        }
+
+        if (latestAssignment != null)
+        {
+            throw new InvalidOperationException("The call cannot be deleted because it has been assigned to a volunteer.");
+        }
+
+        // Step 5: Attempt to delete the call
         _dal.Call.Delete(callId);
     }
 
@@ -191,60 +213,143 @@ internal class CallImplementation :ICall
     }
 
     // Retrieve closed calls handled by a specific volunteer
-    public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, CallType? callStatus = null, FinishCallType? sortField = null)
+    public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callStatus = null, BO.FinishCallType? sortField = null)
     {
-        var calls = _dal.Call.ReadAll ()
-
-        //var calls = DataAccess.GetCalls()
-                              .Where(c => c.Status == Status.Closed && c.Assignments.Any(a => a.VolunteerId == volunteerId));
-
-        if (callStatus.HasValue)
+        try
         {
-            calls = calls.Where(c => c.CallType == callStatus.Value);
+            var closedCalls = _dal.Call.ReadAll()
+                .Where(c => c.Id == volunteerId && CallManager.GetCallStatus(c.Id, _dal) == BO.Status.Closed)
+                .Select(c => new ClosedCallInList
+                {
+                    Id = c.Id,
+                    CallType = (BO.CallType)c.MyCallType,
+                    CallAddress = c.Address,
+                    OpenningTime = c.OpenTime,
+                    TreatmentStartTime = c.TreatmentStartTime, 
+                    ActualTreatmentEndTime = c.ActualTreatmentEndTime, 
+                    FinishCallType = (BO.FinishCallType?)c.FinishCallType 
+                });
+            if (callStatus.HasValue)
+            {
+                closedCalls = closedCalls.Where(c => c.CallType == callStatus.Value);
+            }
+            if (sortField.HasValue)
+            {
+                closedCalls = sortField.Value switch
+                {
+                    BO.FinishCallType.TakenCareOf => closedCalls.OrderBy(c => c.FinishCallType),
+                    BO.FinishCallType.CanceledByVolunteer => closedCalls.OrderBy(c => c.FinishCallType),
+                    BO.FinishCallType.CanceledByManager => closedCalls.OrderBy(c => c.FinishCallType),
+                    BO.FinishCallType.Expired => closedCalls.OrderBy(c => c.FinishCallType),
+                    _ => closedCalls.OrderBy(c => c.Id)
+                };
+            }
+            else
+            {
+                closedCalls = closedCalls.OrderBy(c => c.Id); 
+            }
+
+            return closedCalls!;
         }
-
-        calls = sortField.HasValue ? calls.OrderBy(c => c.GetFieldValue(sortField.Value)) : calls.OrderBy(c => c.CallNumber);
-
-        return calls.Select(call => new ClosedCallInList
+        catch (Exception ex)
         {
-            CallNumber = call.CallNumber,
-            FinishType = call.FinishType,
-            CloseDate = call.CloseDate
-        });
+            throw new BO.GeneralDatabaseException("An error occurred while retrieving the closed calls list.", ex);
+        }
     }
+    //// Calculate average handling time for closed calls
+    //public double CalculateAverageHandlingTime()
+    //{
+    //}
 
-    // Calculate average handling time for closed calls
-    public double CalculateAverageHandlingTime()
-    {
-        var calls = DataAccess.GetCalls().Where(c => c.Status == Status.Closed);
-        return !calls.Any() ? 0 : calls.Average(call => (call.CloseDate - call.StartDate).TotalMinutes);
-    }
 
-    // Retrieve calls by address
-    public IEnumerable<CallInList> GetCallsByAddress(string address)
+    //// Retrieve calls by address
+    //public IEnumerable<CallInList> GetCallsByAddress(string address)
+    //{
+    //    var calls = DataAccess.GetCalls().Where(c => c.Address.Contains(address, StringComparison.OrdinalIgnoreCase));
+    //    return calls.Select(call => new CallInList
+    //    {
+    //        CallNumber = call.CallNumber,
+    //        Status = call.Status,
+    //        LastAssignment = call.Assignments.OrderByDescending(a => a.AssignmentDate).FirstOrDefault()
+    //    });
+    //}
+
+
+    public IEnumerable<CallInProgress> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.Status? sortField = null)
     {
-        var calls = DataAccess.GetCalls().Where(c => c.Address.Contains(address, StringComparison.OrdinalIgnoreCase));
-        return calls.Select(call => new CallInList
+        try
         {
-            CallNumber = call.CallNumber,
-            Status = call.Status,
-            LastAssignment = call.Assignments.OrderByDescending(a => a.AssignmentDate).FirstOrDefault()
-        });
+            // שלב 1: קבלת כל הקריאות הפתוחות או הפתוחות בסיכון מה-DAL
+            var openCalls = _dal.Call.ReadAll()
+                .Where(c =>
+                {
+                    // מחשבים סטטוס של כל קריאה
+                    var status = CallManager.GetCallStatus(c.Id, _dal);
+                    return status == BO.Status.Opened || status == BO.Status.AtRisk;
+                }).Select(c => new CallInProgress
+                {
+                    Id = volunteerId, // ת.ז של המתנדב
+                    CallId = c.Id, // מזהה הקריאה
+                    MyCallType = (BO.CallType)c.MyCallType, // סוג הקריאה
+                    VerbalDescription = c.VerbalDescription, // תיאור מילולי
+                    Address = c.Address, // כתובת הקריאה
+                    OpenTime = c.OpenTime, // זמן פתיחת הקריאה
+                    MaxFinishTime = c.MaxFinishTime, // זמן סיום משוער
+                    EntranceTime = null, // נתון שאינו קיים בשלב זה
+                   //MyStatus = (BO.Status)c.MyStatus // סטטוס הקריאה
+                    MyStatus = CallManager.GetCallStatus(c.Id, _dal)
+                });
+
+            // שלב 2: השגת הקואורדינטות של המתנדב מה-DAL
+            var volunteer = _dal.Volunteer.Read(volunteerId); // השגת המתנדב מה-DAL
+            if (volunteer == null)
+            {
+                throw new Exception("Volunteer not found.");
+            }
+
+            double volunteerLatitude = volunteer.Latitude ?? 0; 
+            double volunteerLongitude = volunteer.Longitude ?? 0;
+
+            // שלב 3: חישוב המרחק בין המתנדב לקריאה לכל קריאה
+            foreach (var call in openCalls)
+            {
+                call.VolunteerResponseDistance = Helpers.Tools.CalculateDistance(
+                    volunteerLatitude,
+                    volunteerLongitude,
+                    call.Latitude,  // קואורדינטות הקריאה (נניח שנמצאות ב-DAL)
+                    call.Longitude);
+            }
+
+            // שלב 4: סינון לפי סוג הקריאה (אם לא null)
+            if (callType.HasValue)
+            {
+                openCalls = openCalls.Where(c => c.MyCallType == callType.Value);
+            }
+
+            // שלב 5: מיון הרשימה
+            if (sortField.HasValue)
+            {
+                openCalls = sortField.Value switch
+                {
+                    BO.Status.Opened => openCalls.OrderBy(c => c.VolunteerResponseDistance), // מיון לפי מרחק
+                    BO.Status.AtRisk => openCalls.OrderBy(c => c.OpenTime), // מיון לפי זמן פתיחה
+                    _ => openCalls.OrderBy(c => c.CallId) // ברירת מחדל
+                };
+            }
+            else
+            {
+                openCalls = openCalls.OrderBy(c => c.CallId); // מיון לפי מזהה הקריאה כברירת מחדל
+            }
+
+            return openCalls!;
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
+        }
     }
 
-    // Check the status of a specific call
-    public Status CheckCallStatus(int callId)
-    {
-        var call = DataAccess.GetCall(callId);
-        if (call == null) throw new Exception("Call not found.");
 
-        return call.Status;
-    }
-
-    public IEnumerable<CallInProgress> GetOpenCallsForVolunteer(int volunteerId, CallType? callType = null, Status? sortField = null)
-    {
-        throw new NotImplementedException();
-    }
 
     public void UpdateCallCompletion(int volunteerId, int assignmentId)
     {
