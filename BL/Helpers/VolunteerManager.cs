@@ -9,8 +9,7 @@ namespace Helpers
 {
     internal class VolunteerManager
     {
-        private static IDal s_dal = Factory.Get; //stage 4
-    
+        private static readonly DalApi.IDal s_dal = DalApi.Factory.Get;
         internal static bool VerifyPassword(string enteredPassword, string storedPassword)
         {
             var encryptedPassword = EncryptPassword(enteredPassword);
@@ -77,22 +76,22 @@ namespace Helpers
         internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
         {
             if (boVolunteer == null)
-                throw new BO.BlDoesNotExistn("Volunteer object cannot be null.");
+                throw new BO.BlDoesNotExistException("Volunteer object cannot be null.");
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                throw new BO.InvalidFormatException("Invalid email format.");
+                throw new BO.BlInvalidFormatException("Invalid email format.");
 
             if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
-                throw new BO.InvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
+                throw new BO.BlInvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
-                throw new BO.InvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
+                throw new BO.BlInvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
 
             if (boVolunteer.Name.Length < 2)
-                throw new BO.InvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
+                throw new BO.BlInvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
 
             if (boVolunteer.Password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(boVolunteer.Password))
-                throw new BO.InvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
+                throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
         }
         internal static bool IsValidId(int id)
         {
@@ -150,10 +149,10 @@ namespace Helpers
             bool isAdmin = boVolunteer.MyRole == BO.Role.Manager;
 
             if (!isAdmin && !isSelf)
-                throw new BO.UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
+                throw new BO.BlUnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
 
             if (!isAdmin && boVolunteer.MyRole != BO.Role.Volunteer)
-                throw new BO.UnauthorizedAccessException("Only an admin can update the volunteer's role.");
+                throw new BO.BlUnauthorizedAccessException("Only an admin can update the volunteer's role.");
         }
         internal static List<string> GetChangedFields(DO.Volunteer original, BO.Volunteer updated)
         {

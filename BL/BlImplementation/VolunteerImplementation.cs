@@ -14,20 +14,22 @@ internal class VolunteerImplementation : IVolunteer
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
 
-   
+
     public BO.Role Login(string username, string password)
     {
-       
-         IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
+        try
+        {
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
 
-         DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v =>VolunteerManager.VerifyPassword(password, v.Password));
+            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password)) ??
+                throw new BO.BlDoesNotExistException("Incorrect username or password.");
+            return (BO.Role)matchingVolunteer.MyRole;
+        }
 
-         if (matchingVolunteer == null)
-         {
-             throw new BO.BLDoesNotExist("Incorrect username or password.");
-         }
-
-         return (BO.Role)matchingVolunteer.MyRole;
+        catch (Exception ex)
+        {
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
+        }
     }
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null)
     {
@@ -55,11 +57,11 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.GeneralDatabaseException("Error accessing data.", ex);
+            throw new BO.BlGeneralDatabaseException("Error accessing data.", ex);
         }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
         }
     }
     public BO.Volunteer GetVolunteerDetails(int volunteerId)
@@ -68,7 +70,7 @@ internal class VolunteerImplementation : IVolunteer
         {
 
             var doVolunteer = _dal.Volunteer.Read(v => v.Id == volunteerId)??
-               throw new BO.BlDoesNotExistn($"Volunteer with ID={volunteerId} does not exist");
+               throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
 
             var currentAssignment = _dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.ExitTime == null);
             BO.CallInProgress? callInProgress = null;
@@ -115,11 +117,11 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExistException("Volunteer not found in data layer.", ex);
+            throw new BO.BlDoesNotExistException("Volunteer not found in data layer.", ex);
         }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while geting Volunteer details.", ex);
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while geting Volunteer details.", ex);
         }
     }
     public void UpdateVolunteer(int requesterId, BO.Volunteer boVolunteer)
@@ -140,7 +142,7 @@ internal class VolunteerImplementation : IVolunteer
             var changedFields =VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
             //צריך לבדוק איזה שדות עוד א"א לעדכן ולשנות בפונ ע"פ requesterId
             if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
-                throw new UnauthorizedAccessException("You do not have permission to update the Role field.");
+                throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
 
@@ -148,38 +150,34 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            throw new BO.GeneralDatabaseException("Unauthorized access while updating volunteer.", ex);
+            throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);
         }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
     public void DeleteVolunteer(int volunteerId)
     {
         try
         {
-            var volunteer = _dal.Volunteer.Read(volunteerId);
-            if (volunteer == null)
-            {
-                throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
-            }
-
+            var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
             IEnumerable<Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
             if (assignmentsWithVolunteer.Any())
             {
-                throw new BO.DeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
+                throw new BO.BlDeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
             }
             _dal.Volunteer.Delete(volunteerId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExistException($"Error: Volunteer with ID {volunteerId} does not exist in the database.", ex);
+            throw new BO.BlDoesNotExistException($"Error: Volunteer with ID {volunteerId} does not exist in the database.", ex);
         }
+        catch (Exception ex)
+        {
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
+        }
+
     }
     public void AddVolunteer(BO.Volunteer boVolunteer)
     {
@@ -202,11 +200,11 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalAlreadyExistsException ex)
         {
-            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
+            throw new BO.BlAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
         }
         catch (Exception ex)
         {
-            throw new BO.GeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
         }
 
     }

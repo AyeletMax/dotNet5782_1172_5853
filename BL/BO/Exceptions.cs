@@ -1,61 +1,59 @@
 ﻿namespace BO;
 
 
- public class BLAlreadyExistsException : Exception
- {
-     public BLAlreadyExistsException(string? message) : base(message) { }
- }
-public class GeneralDatabaseException : Exception
-{
-    public GeneralDatabaseException(string? message, Exception? innerException) : base(message) { }
-}
 
+public class BlAlreadyExistsException : Exception
+{
+    public BlAlreadyExistsException(string? message) : base(message) { }
 
-public class BLDoesNotExistException : Exception
-{
-    public BLDoesNotExistException(string? message, Exception ex) : base(message) { }
-}
-
-public class GeolocationNotFoundException : Exception
-{
-    public GeolocationNotFoundException(string? message) : base(message) { }
-}
-public class BlDoesNotExistn : Exception
-{
-    public BlDoesNotExistn(string? message) : base(message) { }
-}
-public class InvalidFormatException : Exception
-{
-    public InvalidFormatException(string? message) : base(message) { }
-}
-public class DeletionException : Exception
-{
-    public DeletionException(string? message) : base(message) { }
-}
-public class BLDoesNotExist : Exception
-{
-    public BLDoesNotExist(string? message) : base(message) { }    
-}
-public class ApiRequestException : Exception
-{
-    public ApiRequestException(string? message) : base(message) { }
-}
-public class AssignmentNotFoundException : Exception
-{
-    public AssignmentNotFoundException(string? message) : base(message) { }    
-}
-public class UnauthorizedAccessException : Exception
-{
-    public UnauthorizedAccessException(string? message) : base(message)    { }
-}
-public class InvalidOperationException : Exception
-{
-    public InvalidOperationException(string? message) : base(message) { }
-
-    public InvalidOperationException(string? message, Exception? innerException)
+    public BlAlreadyExistsException(string? message, Exception? innerException)
         : base(message, innerException) { }
 }
-public class InvalidAddressException : Exception
+public class BlDoesNotExistException : Exception
 {
-    public InvalidAddressException(string? message) : base(message) { }
+    public BlDoesNotExistException(string? message) : base(message) { }
+
+    public BlDoesNotExistException(string? message, Exception? innerException)
+        : base(message, innerException) { }
 }
+public class BlGeneralDatabaseException : Exception
+{
+    public BlGeneralDatabaseException(string? message, Exception? innerException) : base(message) { }
+}
+public class BlGeolocationNotFoundException : Exception
+{
+    public BlGeolocationNotFoundException(string? message) : base(message) { }
+}
+public class BlInvalidFormatException : Exception
+{
+    public BlInvalidFormatException(string? message) : base(message) { }
+}
+public class BlDeletionException : Exception
+{
+    public BlDeletionException(string? message) : base(message) { }
+}
+
+public class BlApiRequestException : Exception
+{
+    public BlApiRequestException(string? message) : base(message) { }
+}
+
+public class BlUnauthorizedAccessException : Exception
+{
+    public BlUnauthorizedAccessException(string? message) : base(message)    { }
+}
+public class BlInvalidOperationException : Exception
+{
+    public BlInvalidOperationException(string? message) : base(message) { }
+
+    public BlInvalidOperationException(string? message, Exception? innerException)
+        : base(message, innerException) { }
+}
+//public class AssignmentNotFoundException : Exception
+//{
+//    public AssignmentNotFoundException(string? message) : base(message) { }    
+//}
+//public class InvalidAddressException : Exception
+//{
+//    public InvalidAddressException(string? message) : base(message) { }
+//}
