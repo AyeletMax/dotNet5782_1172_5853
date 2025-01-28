@@ -16,11 +16,14 @@ public class Volunteer
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public double? LargestDistance { get; set; }
-    public DistanceType MyDistanceType { get; set; }
-    public int TotalCallsHandled { get; set; }
-    public int TotalCallsCancelled { get; set; }
-    public int TotalExpiredCallsChosen { get; set; }
-    public BO.CallInProgress? CurrentCallInProgress { get; set; }
+    public DistanceType MyDistanceType { get; set; } = DistanceType.Air;
+    public int TotalCallsHandled { get; init; }
+    public int TotalCallsCancelled { get; init; }
+    public int TotalExpiredCallsChosen { get; init; }
+    public BO.CallInProgress? CurrentCallInProgress { get; init; }
     public override string ToString() => this.ToStringProperty();
 }
+
+
+
 

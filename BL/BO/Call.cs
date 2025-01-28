@@ -13,10 +13,9 @@ public class Call
     public DateTime OpenTime { get; set; }
     public DateTime? MaxFinishTime { get; set; }
     public Status MyStatus { get; set; }
-    public List<BO.CallAssignInList>? callAssignments {  get; set; }
+    public List<CallAssignInList>? callAssignments {  get; set; }
     public override string ToString() => this.ToStringProperty();
 }
 
 
 
-                  

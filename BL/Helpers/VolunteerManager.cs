@@ -150,10 +150,10 @@ namespace Helpers
             bool isAdmin = boVolunteer.MyRole == BO.Role.Manager;
 
             if (!isAdmin && !isSelf)
-                throw new UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
+                throw new BO.UnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");
 
             if (!isAdmin && boVolunteer.MyRole != BO.Role.Volunteer)
-                throw new UnauthorizedAccessException("Only an admin can update the volunteer's role.");
+                throw new BO.UnauthorizedAccessException("Only an admin can update the volunteer's role.");
         }
         internal static List<string> GetChangedFields(DO.Volunteer original, BO.Volunteer updated)
         {

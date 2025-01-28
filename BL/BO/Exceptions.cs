@@ -42,9 +42,9 @@ public class AssignmentNotFoundException : Exception
 {
     public AssignmentNotFoundException(string? message) : base(message) { }    
 }
-public class PermissionDeniedException : Exception
+public class UnauthorizedAccessException : Exception
 {
-    public PermissionDeniedException(string? message) : base(message)    { }
+    public UnauthorizedAccessException(string? message) : base(message)    { }
 }
 public class InvalidOperationException : Exception
 {

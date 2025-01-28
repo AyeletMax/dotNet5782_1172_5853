@@ -20,7 +20,7 @@ internal class VolunteerImplementation : IVolunteer
        
          IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
 
-         DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => Helpers.VolunteerManager.VerifyPassword(password, v.Password));
+         DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v =>VolunteerManager.VerifyPassword(password, v.Password));
 
          if (matchingVolunteer == null)
          {
@@ -122,23 +122,23 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            Helpers.VolunteerManager.ValidateInputFormat(boVolunteer);
+           VolunteerManager.ValidateInputFormat(boVolunteer);
 
-            var coordinates = Helpers.Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            var coordinates = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
             //if (coordinates == null)
             //    throw new BO.GeolocationNotFoundException($"Invalid address: {boVolunteer.Address}");
 
             boVolunteer.Latitude = coordinates.Latitude;
             boVolunteer.Longitude = coordinates.Longitude;
-            Helpers.VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
+            VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
 
             var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
-            var changedFields = Helpers.VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
+            var changedFields =VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
             //צריך לבדוק איזה שדות עוד א"א לעדכן ולשנות בפונ ע"פ requesterId
-            if (!Helpers.VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
+            if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
                 throw new UnauthorizedAccessException("You do not have permission to update the Role field.");
 
-            DO.Volunteer doVolunteer = Helpers.VolunteerManager.CreateDoVolunteer(boVolunteer);
+            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
 
             _dal.Volunteer.Update(doVolunteer);
         }
@@ -186,7 +186,7 @@ internal class VolunteerImplementation : IVolunteer
             {
                 throw new DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
             }
-            Helpers.VolunteerManager.ValidateInputFormat(boVolunteer);
+            VolunteerManager.ValidateInputFormat(boVolunteer);
             var (latitude, longitude) = VolunteerManager.logicalChecking(boVolunteer);
             if (latitude != null && longitude != null)
             {

@@ -45,7 +45,7 @@ internal class AdminImplementation : IAdmin
     }
     public void InitializeDB() {
 
-        DalTest.Initialization.Do();
+        DalTest.Initialization.DO();
         ClockManager.UpdateClock(ClockManager.Now);
     }
 

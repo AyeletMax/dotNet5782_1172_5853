@@ -6,10 +6,10 @@ namespace BO;
 
 public class CallAssignInList
 {
-    public int? VolunteerId {  get; set; }
-    public string? Name { get; set; }
-    public DateTime EntranceTime {  get; set; }
-    public DateTime? ExitTime {  get; set; }
-    public FinishCallType? FinishCallType {  get; set; }
+    public int? VolunteerId {  get; init; }
+    public string? Name { get; init; }
+    public DateTime EntranceTime {  get; init; }
+    public DateTime? ExitTime {  get; init; }
+    public FinishCallType? FinishCallType {  get; init; }
     public override string ToString() => this.ToStringProperty();
 }
