@@ -386,13 +386,71 @@ internal class CallImplementation : BlApi.ICall
         {
             throw new BO.GeneralDatabaseException("An error occurred while updating the assignment completion.", ex);
         }
-
     }
 
     public void UpdateCallCancellation(int volunteerId, int assignmentId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // 1. פנייה לשכבת הנתונים להבאת ההקצאה לפי מזהה ההקצאה
+            var assignment = _dal.Assignment.Read(assignmentId);
+
+            // 2. בדיקה אם ההקצאה לא קיימת
+            if (assignment == null)
+            {
+                throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
+            }
+
+            // 3. בדיקת הרשאה לביטול (האם המבקש הוא מנהל או המתנדב עצמו)
+            var volunteer = _dal.Volunteer.Read(volunteerId);
+            if (volunteer == null)
+            {
+                throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
+            }
+
+            if (!(volunteer.MyRole!= DO.Role.Manager || assignment.VolunteerId != volunteerId))
+            {
+                throw new UnauthorizedAccessException("You do not have permission to cancel this assignment.");
+            }
+
+            // 4. בדיקת סטטוס ההקצאה: לוודא שהיא פתוחה ולא טופלה
+            var status = CallManager.GetCallStatus(assignment.CallId, _dal);
+
+            if (status == Status.Expired || status == Status.Closed)
+            {
+                throw new BO.InvalidOperationException($"Cannot cancel an assignment that is {status}.");
+            }
+
+            // 5. עדכון הנתונים של ההקצאה
+            assignment.ActualEndTime = DateTime.Now; // זמן הסיום בפועל
+
+            // 6. הגדרת סוג סיום הטיפול בהתאם לזהות המבקש
+            if (assignment.VolunteerId == volunteerId)
+            {
+                assignment.FinishType = "Self-Cancelled"; // ביטול עצמי
+            }
+            else
+            {
+                assignment.FinishCallType = FinishCallType.CanceledByManager; // ביטול על ידי מנהל
+            }
+
+            // 7. עדכון ההקצאה בשכבת הנתונים
+            s_dal.Assignment.Update(assignment);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            throw new ArgumentException(ex.Message, ex);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            throw new InvalidOperationException(ex.Message, ex);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("An error occurred while updating the call cancellation.", ex);
+        }
     }
+
 
     public void SelectCallForTreatment(int volunteerId, int callId)
     {
