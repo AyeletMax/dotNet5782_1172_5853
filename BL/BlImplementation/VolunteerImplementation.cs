@@ -14,18 +14,20 @@ internal class VolunteerImplementation : IVolunteer
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
 
+   
     public BO.Role Login(string username, string password)
     {
-        var volunteer = _dal.Volunteer.ReadAll().Select(v => VolunteerManager.MapVolunteer(v)).FirstOrDefault(v => v.Name == username);
+       
+         IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
 
-        if (volunteer! == null)
-            throw new BO.BLAlreadyExistsException("Invalid username.");
+         DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => Helpers.VolunteerManager.VerifyPassword(password, v.Password));
 
-        if (!VolunteerManager.VerifyPassword(password, volunteer.Password!))
-            throw new BO.BLAlreadyExistsException("Invalid password.");
+         if (matchingVolunteer == null)
+         {
+             throw new BO.BLDoesNotExist("Incorrect username or password.");
+         }
 
-        return volunteer.MyRole;
-
+         return (BO.Role)matchingVolunteer.MyRole;
     }
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null)
     {
@@ -49,7 +51,7 @@ internal class VolunteerImplementation : IVolunteer
                 _ => volunteerList.OrderBy(v => v.Id).ToList()
             } : volunteerList.OrderBy(v => v.Id).ToList();
 
-            return volunteerList;
+            return volunteerList.ToList();
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -65,10 +67,10 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
 
-            var doVolunteer = _dal.Volunteer.ReadAll(v => v.Id == volunteerId).FirstOrDefault() ??
+            var doVolunteer = _dal.Volunteer.Read(v => v.Id == volunteerId)??
                throw new BO.BlDoesNotExistn($"Volunteer with ID={volunteerId} does not exist");
 
-            var currentAssignment = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime == null).FirstOrDefault();
+            var currentAssignment = _dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.ExitTime == null);
             BO.CallInProgress? callInProgress = null;
             if (currentAssignment != null)
             {
@@ -89,7 +91,7 @@ internal class VolunteerImplementation : IVolunteer
                     };
                 }
             }
-
+            //יש עוד דברים שצריך להחזיר
             return new BO.Volunteer
             {
                 Id = volunteerId,
@@ -196,7 +198,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalAlreadyExistsException ex)
         {
-            throw new BO.BLDoesNotExist($"Volunteer with ID={boVolunteer.Id} already exists", ex);
+            throw new BO.BLDoesNotExistException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
         }
         catch (Exception ex)
         {

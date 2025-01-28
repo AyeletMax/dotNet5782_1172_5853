@@ -10,19 +10,7 @@ namespace Helpers
     internal class VolunteerManager
     {
         private static IDal s_dal = Factory.Get; //stage 4
-        internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-        {
-            return new BO.Volunteer
-            {
-                Id = volunteer.Id,
-                Name = volunteer.Name,
-                Phone = volunteer.Phone,
-                Email = volunteer.Email,
-                Active = volunteer.Active,
-                MyRole = (BO.Role)volunteer.MyRole,
-
-            };
-        }
+    
         internal static bool VerifyPassword(string enteredPassword, string storedPassword)
         {
             var encryptedPassword = EncryptPassword(enteredPassword);
@@ -56,7 +44,8 @@ namespace Helpers
                 return false;
             return true;
         }
-        internal static List<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
+
+        internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
         {
             return volunteers.Select(v =>
             {
@@ -79,11 +68,12 @@ namespace Helpers
                     TotalExpiredResponses = totalExpired,
                     AssignedResponseId = assignedResponseId,
                     MyCallType = assignedResponseId.HasValue
-                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.MyCallType ?? DO.CallType.MusicPerformance)
-                        : BO.CallType.MusicPerformance
+                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.MyCallType ?? DO.CallType.None)
+                        : BO.CallType.None
                 };
-            }).ToList();
+            });
         }
+
         internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
         {
             if (boVolunteer == null)
@@ -191,8 +181,20 @@ namespace Helpers
 
             return true; 
         }
+        //לבדוק אם צריך אותה
+        //internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
+        //{
+        //    return new BO.Volunteer
+        //    {
+        //        Id = volunteer.Id,
+        //        Name = volunteer.Name,
+        //        Phone = volunteer.Phone,
+        //        Email = volunteer.Email,
+        //        Active = volunteer.Active,
+        //        MyRole = (BO.Role)volunteer.MyRole,
 
-
+        //    };
+        //}
 
 
 

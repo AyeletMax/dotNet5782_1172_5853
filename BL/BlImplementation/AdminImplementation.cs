@@ -1,15 +1,16 @@
-﻿
+﻿using BlApi;
 using BO;
 using DalApi;
 using Helpers;
 
 namespace BlImplementation;
 
-internal class AdminImplementation
+internal class AdminImplementation : IAdmin
 {
     private static readonly IDal _dal = Factory.Get;
     public DateTime GetClock()
     {
+        ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
         return ClockManager.Now;
     }
     public void AdvanceClock(TimeUnit unit)
@@ -27,26 +28,28 @@ internal class AdminImplementation
         ClockManager.UpdateClock(newClock);
     }
 
-    public TimeSpan GetRiskTimeSpan()
+    public int GetMaxRange()
     {
-        return _dal.Config.RiskRange;
+        return (int)_dal.Config.RiskRange.TotalMinutes;
     }
 
-    public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
+    public void SetMaxRange(int maxRange)
     {
-        _dal.Config.RiskRange = riskTimeSpan;
+        TimeSpan timeSpan = TimeSpan.FromMinutes(maxRange);
+        _dal.Config.RiskRange = timeSpan;
     }
 
-    public void ResetDatabase()
+    public void ResetDB()
     {
-        _dal.Config.ResetToDefaults(); 
-        _dal.ClearAllEntities(); 
+        _dal.Config.Reset(); 
+    }
+    public void InitializeDB() {
+
+        DalTest.Initialization.Do();
+        ClockManager.UpdateClock(ClockManager.Now);
     }
 
-    public void InitializeDatabase()
-    {
-        ResetDatabase();
-        _dal.Initialization(); 
-    }
 }
 
+    
+    

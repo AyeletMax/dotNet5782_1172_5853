@@ -32,7 +32,7 @@ public class DeletionException : Exception
 }
 public class BLDoesNotExist : Exception
 {
-    public BLDoesNotExist(string? message, Exception ex) : base(message) { }    
+    public BLDoesNotExist(string? message) : base(message) { }    
 }
 public class ApiRequestException : Exception
 {
