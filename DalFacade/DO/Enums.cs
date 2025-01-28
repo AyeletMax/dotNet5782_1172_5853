@@ -14,6 +14,7 @@ public enum DistanceType
 
 public enum CallType
 {
+    None,
     MusicPerformance,
     MusicTherapy,
     SingingAndEmotionalSupport,
