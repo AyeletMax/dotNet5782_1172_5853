@@ -1,6 +1,4 @@
-﻿
-
-using BO;
+﻿using BO;
 using DalApi;
 
 namespace Helpers;
@@ -87,7 +85,7 @@ internal static class CallManager
     {
         if (boCall.MaxFinishTime.HasValue && boCall.MaxFinishTime.Value <= boCall.OpenTime)
         {
-            throw new BO.InvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
+            throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
         }
         // Validate that the open time is not in the future
         if (boCall.OpenTime > DateTime.Now)

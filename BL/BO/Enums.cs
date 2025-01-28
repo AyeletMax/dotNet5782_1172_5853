@@ -57,3 +57,8 @@ public enum VolunteerSortField
     SumOfCancellation,
     SumOfExpiredCalls
 }
+
+public enum CallSortField
+{
+
+}
