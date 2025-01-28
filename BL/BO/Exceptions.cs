@@ -9,6 +9,8 @@ public class GeneralDatabaseException : Exception
 {
     public GeneralDatabaseException(string? message, Exception? innerException) : base(message) { }
 }
+
+
 public class BLDoesNotExistException : Exception
 {
     public BLDoesNotExistException(string? message, Exception ex) : base(message) { }
@@ -48,7 +50,10 @@ public class UnauthorizedAccessException : Exception
 }
 public class InvalidOperationException : Exception
 {
-    public InvalidOperationException(string? message) : base(message)    { }
+    public InvalidOperationException(string? message) : base(message) { }
+
+    public InvalidOperationException(string? message, Exception? innerException)
+        : base(message, innerException) { }
 }
 public class InvalidAddressException : Exception
 {
