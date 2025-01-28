@@ -7,7 +7,7 @@ using System.Threading.Channels;
 
 namespace BlImplementation;
 
-internal class CallImplementation :BlApi.ICall
+internal class CallImplementation : BlApi.ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public int[] GetCallQuantitiesByStatus()
@@ -134,7 +134,7 @@ internal class CallImplementation :BlApi.ICall
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BLDoesNotExistException($"Call with ID={call.Id} does not exists",ex);
+            throw new BO.BLDoesNotExistException($"Call with ID={call.Id} does not exists", ex);
         }
         catch (Exception ex)
         {
@@ -166,12 +166,12 @@ internal class CallImplementation :BlApi.ICall
         // Step 4: Check if the call can be deleted
         if (status != Status.Opened)
         {
-            throw new InvalidOperationException("The call cannot be deleted because it is not in an open state.");
+            throw new BO.InvalidOperationException("The call cannot be deleted because it is not in an open state.");
         }
 
         if (latestAssignment != null)
         {
-            throw new InvalidOperationException("The call cannot be deleted because it has been assigned to a volunteer.");
+            throw new BO.InvalidOperationException("The call cannot be deleted because it has been assigned to a volunteer.");
         }
 
         // Step 5: Attempt to delete the call
@@ -204,7 +204,7 @@ internal class CallImplementation :BlApi.ICall
         }
         catch (DO.DalAlreadyExistsException)
         {
-            throw new BO.DalAlreadyExistsException("Failed to add the call to the system.");
+            throw new BO.BLAlreadyExistsException("Failed to add the call to the system.");
         }
         catch (Exception ex)
         {
@@ -225,9 +225,9 @@ internal class CallImplementation :BlApi.ICall
                     CallType = (BO.CallType)c.MyCallType,
                     CallAddress = c.Address,
                     OpenningTime = c.OpenTime,
-                    TreatmentStartTime = c.TreatmentStartTime, 
-                    ActualTreatmentEndTime = c.ActualTreatmentEndTime, 
-                    FinishCallType = (BO.FinishCallType?)c.FinishCallType 
+                    TreatmentStartTime = c.TreatmentStartTime,
+                    ActualTreatmentEndTime = c.ActualTreatmentEndTime,
+                    FinishCallType = (BO.FinishCallType?)c.FinishCallType
                 });
             if (callStatus.HasValue)
             {
@@ -246,7 +246,7 @@ internal class CallImplementation :BlApi.ICall
             }
             else
             {
-                closedCalls = closedCalls.OrderBy(c => c.Id); 
+                closedCalls = closedCalls.OrderBy(c => c.Id);
             }
 
             return closedCalls!;
@@ -296,7 +296,7 @@ internal class CallImplementation :BlApi.ICall
                     OpenTime = c.OpenTime, // זמן פתיחת הקריאה
                     MaxFinishTime = c.MaxFinishTime, // זמן סיום משוער
                     EntranceTime = null, // נתון שאינו קיים בשלב זה
-                   //MyStatus = (BO.Status)c.MyStatus // סטטוס הקריאה
+                                         //MyStatus = (BO.Status)c.MyStatus // סטטוס הקריאה
                     MyStatus = CallManager.GetCallStatus(c.Id, _dal)
                 });
 
@@ -307,7 +307,7 @@ internal class CallImplementation :BlApi.ICall
                 throw new Exception("Volunteer not found.");
             }
 
-            double volunteerLatitude = volunteer.Latitude ?? 0; 
+            double volunteerLatitude = volunteer.Latitude ?? 0;
             double volunteerLongitude = volunteer.Longitude ?? 0;
 
             // שלב 3: חישוב המרחק בין המתנדב לקריאה לכל קריאה
@@ -348,12 +348,45 @@ internal class CallImplementation :BlApi.ICall
             throw new BO.GeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
         }
     }
-
-
-
+    
     public void UpdateCallCompletion(int volunteerId, int assignmentId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // שליפת ההקצאה מתוך מאגר הנתונים
+            var assignment = _dal.Assignment.Read(assignmentId);
+            if (assignment == null)
+            {
+                throw new BO.AssignmentNotFoundException($"Assignment with ID {assignmentId} not found.");
+            }
+
+            // בדיקה אם המתנדב המבצע את הבקשה הוא המתנדב שההקצאה רשומה עליו
+            if (assignment.VolunteerId != volunteerId)
+            {
+                throw new BO.PermissionDeniedException($"Volunteer with ID {volunteerId} is not authorized to complete this assignment.");
+            }
+
+            // בדיקה שההקצאה פתוחה (לא טופלה, לא בוטלה, לא פג תוקף)
+            if (assignment.FinishCallType.HasValue)
+            {
+                throw new BO.InvalidOperationException("The assignment has already been completed or canceled.");
+            }
+
+            // יצירת אובייקט חדש עם הערך המעודכן
+            var updatedAssignment = assignment with
+            {
+                FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf, // ערך הסיום
+                ExitTime = ClockManager.Now // זמן סיום
+            };
+
+            // שמירת השינויים
+            _dal.Assignment.Update(updatedAssignment);
+        }
+        catch (Exception ex)
+        {
+            throw new BO.GeneralDatabaseException("An error occurred while updating the assignment completion.", ex);
+        }
+
     }
 
     public void UpdateCallCancellation(int volunteerId, int assignmentId)
