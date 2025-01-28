@@ -96,17 +96,21 @@ internal class VolunteerImplementation : IVolunteer
             {
                 Id = volunteerId,
                 Name= doVolunteer.Name,
-                Email = doVolunteer.Email,
                 Phone = doVolunteer.Phone,
-                MyRole = (BO.Role)doVolunteer.MyRole,
+                Email = doVolunteer.Email,
                 Active = doVolunteer.Active,
-                LargestDistance = doVolunteer.LargestDistance,
+                MyRole = (BO.Role)doVolunteer.MyRole,
                 Password = doVolunteer.Password,
                 Address = doVolunteer.Address,
                 Longitude = doVolunteer.Longitude,
                 Latitude = doVolunteer.Latitude,
+                LargestDistance = doVolunteer.LargestDistance,
                 MyDistanceType = (BO.DistanceType)doVolunteer.MyDistanceType,
-                CurrentCallInProgress = callInProgress
+                   // public int TotalCallsHandled { get; init; }
+                   //public int TotalCallsCancelled { get; init; }
+                   //public int TotalExpiredCallsChosen { get; init; 
+               CurrentCallInProgress = callInProgress
+
             };
         }
         catch (DO.DalDoesNotExistException ex)
