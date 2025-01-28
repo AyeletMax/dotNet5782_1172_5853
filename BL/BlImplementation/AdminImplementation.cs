@@ -7,7 +7,7 @@ namespace BlImplementation;
 
 internal class AdminImplementation : IAdmin
 {
-    private static readonly IDal _dal = Factory.Get;
+    private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public DateTime GetClock()
     {
         ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
