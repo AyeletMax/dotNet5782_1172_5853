@@ -3,6 +3,7 @@ using BO;
 using DalApi;
 using DO;
 using Helpers;
+using System.Globalization;
 using System.Threading.Channels;
 
 namespace BlImplementation;
@@ -19,52 +20,97 @@ internal class CallImplementation : BlApi.ICall
                     .ToArray();
     }
 
-    // לבדוק עם מישהי מה יש בRETURN
-    public IEnumerable<CallInList> GetCallList(BO.CallType? filterField = null, object? filterValue = null, Status? sortField = null)
-    {
-        var calls = _dal.Call.ReadAll();
-        if (filterField.HasValue && filterValue != null)
-        {
-            calls = from call in calls
-                    let boCall = CallManager.ConvertToBOCall(call)
-                    where CallManager.GetFieldValue(boCall, filterField.Value.ToString())?.Equals(filterValue) ?? false
-                    select call;
-        }
-        if (sortField.HasValue)
-        {
-            calls = from call in calls
-                    let boCall = CallManager.ConvertToBOCall(call)
-                    orderby CallManager.GetFieldValue(boCall, sortField.Value.ToString())
-                    select call;
-        }
-        else
-        {
-            calls = calls.OrderBy(call => call.Id);
-        }
-        return calls.Select(call =>
+    ////לבדוק עם מישהי מה יש בRETURN
+    //public IEnumerable<CallInList> GetCallList(BO.CallSortField? filterField = null, object? filterValue = null, BO.CallSortField? sortField = null)
+    //{
+    //    try
+    //    {
+    //        var calls = _dal.Call.ReadAll()
+    //        .Select(c =>
+    //        {
+    //            var lastAssignment = _dal.Assignment.ReadAll(a => a.CallId == c.Id)
+    //                .OrderByDescending(a => a.EntranceTime)
+    //                .FirstOrDefault();
 
+    //            return new BO.CallInList
+    //            {
+    //                TotalAllocations = _dal.Assignment.ReadAll(a => a.CallId == c.Id).Count(),
+    //                CallId = c.Id,
+    //                CallType = (BO.CallType)c.MyCallType,
+    //                MyStatus = CallManager.GetCallStatus(c.Id, _dal),
+    //                Id = lastAssignment?.Id,
+    //                OpenTime = c.OpenTime,
+    //                TimeRemainingToCall = c.MaxFinishTime?.Subtract(_dal.Config.Clock),
+    //                LastVolunteer = lastAssignment != null ? _dal.Volunteer.Read(lastAssignment.VolunteerId)?.Name : null,
+    //                CompletionTime = lastAssignment?.ExitTime.HasValue == true
+    //                    ? lastAssignment.ExitTime.Value - lastAssignment.EntranceTime
+    //                    : null,
+    //            };
+    //        });
+
+    //        if (filterField.HasValue && filterValue != null)
+    //        {
+    //            calls = calls.Where(c => c.GetType().GetProperty(filterField.ToString())?.GetValue(c)?.Equals(filterValue) == true);
+    //        }
+
+    //        return sortField.HasValue
+    //            ? calls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+    //            : calls.OrderBy(c => c.CallId);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new BO.BlGeneralDatabaseException("Failed to retrieve calls list", ex);
+    //    }
+    //}
+
+    public IEnumerable<CallInList> GetCallList(BO.CallSortField? filterField = null, object? filterValue = null, BO.CallSortField? sortField = null)
+    {
+        try
         {
-            var boCall = CallManager.ConvertToBOCall(call);
-            return new CallInList
+            // קריאה לכל הקריאות ממסד הנתונים
+            var calls = _dal.Call.ReadAll()
+                .Select(c =>
+                {
+                    var assignments = _dal.Assignment.ReadAll(a => a.CallId == c.Id);
+                    var lastAssignment = assignments.OrderByDescending(a => a.EntranceTime).FirstOrDefault();
+
+                    return new BO.CallInList
+                    {
+                        TotalAllocations = assignments.Count(),
+                        CallId = c.Id,
+                        CallType = (BO.CallType)c.MyCallType,
+                        MyStatus = CallManager.GetCallStatus(c.Id, _dal),
+                        Id = c.Id,
+                        OpenTime = c.OpenTime,
+                        TimeRemainingToCall = c.MaxFinishTime?.Subtract(_dal.Config.Clock),
+                        LastVolunteer = lastAssignment != null ? _dal.Volunteer.Read(lastAssignment.VolunteerId)?.Name : null,
+                        CompletionTime = lastAssignment?.ExitTime.HasValue == true
+                            ? lastAssignment.ExitTime.Value - lastAssignment.EntranceTime
+                            : null,
+                    };
+                });
+            if (filterField.HasValue && filterValue != null)
             {
-                CallId = boCall.Id,
-                CallType = boCall.MyCallType,
-                MyStatus = boCall.MyStatus,
-                LastVolunteer = boCall.callAssignments?.OrderByDescending(a => a.EntranceTime).FirstOrDefault()?.Name,
-            };
-        });
+                calls = calls.Where(c => c.GetType().GetProperty(filterField.ToString())?.GetValue(c)?.Equals(filterValue) == true);
+            }
+
+            return sortField.HasValue
+                ? calls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+                : calls.OrderBy(c => c.CallId);
+
+        }
+        catch (Exception ex)
+        {
+            throw new BO.BlGeneralDatabaseException("Failed to retrieve calls list", ex);
+        }
     }
+
 
     public BO.Call GetCallDetails(int callId)
     {
         try
         {
-            DO.Call? call = _dal.Call.Read(callId);
-            // If no call was found, throw an exception
-            if (call == null)
-            {
-                throw new Exception($"Call with ID {callId} was not found.");
-            }
+            DO.Call? call = _dal.Call.Read(callId) ?? throw new BlDoesNotExistException($"Call with ID {callId} was not found.");
             var callAssignments = _dal.Assignment.ReadAll(a => a.CallId == callId)
                                              .Select(a => new BO.CallAssignInList
                                              {
@@ -76,7 +122,7 @@ internal class CallImplementation : BlApi.ICall
                                              })
                                              .ToList();
             // Create the BO.Call object with the necessary details
-            BO.Call callInList = new BO.Call
+            return new BO.Call
             {
                 Id = call.Id,
                 MyCallType = (BO.CallType)call.MyCallType,
@@ -89,7 +135,7 @@ internal class CallImplementation : BlApi.ICall
                 MyStatus = Helpers.CallManager.GetCallStatus(callId, _dal),
                 callAssignments = callAssignments
             };
-            return callInList;
+     
         }
         catch (Exception ex)
         {
@@ -114,7 +160,6 @@ internal class CallImplementation : BlApi.ICall
             call.Latitude = latitude.Value;
             call.Longitude = longitude.Value;
 
-
             // Convert BO.Call to DO.Call for data layer update
             DO.Call callToUpdate = new DO.Call
             {
@@ -127,9 +172,7 @@ internal class CallImplementation : BlApi.ICall
                 OpenTime = call.OpenTime,
                 MaxFinishTime = call.MaxFinishTime
             };
-
             // Attempt to update the call in the data layer
-
             _dal.Call.Update(callToUpdate);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -213,7 +256,7 @@ internal class CallImplementation : BlApi.ICall
     }
 
     //צריך לעדכן אתהENUN שלCallSortField
-    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortBy = null)
+    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
     {
         try
         {
@@ -236,8 +279,8 @@ internal class CallImplementation : BlApi.ICall
                 });
 
             // אם נבחר שדה למיון, מיון לפי השדה הנבחר
-            return sortBy.HasValue
-                ? assignments.OrderBy(a => a.GetType().GetProperty(sortBy.ToString())?.GetValue(a))
+            return sortField.HasValue
+                ? assignments.OrderBy(a => a.GetType().GetProperty(sortField.ToString())?.GetValue(a))
                 : assignments.OrderBy(a => a.Id);
         }
         catch (Exception ex)
@@ -248,73 +291,32 @@ internal class CallImplementation : BlApi.ICall
       
 
 
-    public IEnumerable<CallInProgress> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.Status? sortField = null)
+    public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
     {
         try
         {
             // שלב 1: קבלת כל הקריאות הפתוחות או הפתוחות בסיכון מה-DAL
+            var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
             var openCalls = _dal.Call.ReadAll()
-                .Where(c =>
-                {
-                    // מחשבים סטטוס של כל קריאה
-                    var status = CallManager.GetCallStatus(c.Id, _dal);
-                    return status == BO.Status.Opened || status == BO.Status.AtRisk;
-                }).Select(c => new CallInProgress
+                .Where(c =>                
+                // מחשבים סטטוס של כל קריאה
+                (CallManager.GetCallStatus(c.Id, _dal) == BO.Status.Opened || CallManager.GetCallStatus(c.Id, _dal) == BO.Status.AtRisk)) // הפשטת הבדיקה
+                .Select(c => new BO.OpenCallInList
                 {
                     Id = volunteerId, // ת.ז של המתנדב
-                    CallId = c.Id, // מזהה הקריאה
                     MyCallType = (BO.CallType)c.MyCallType, // סוג הקריאה
                     VerbalDescription = c.VerbalDescription, // תיאור מילולי
                     Address = c.Address, // כתובת הקריאה
                     OpenTime = c.OpenTime, // זמן פתיחת הקריאה
                     MaxFinishTime = c.MaxFinishTime, // זמן סיום משוער
-                    EntranceTime = null, // נתון שאינו קיים בשלב זה
-                                         //MyStatus = (BO.Status)c.MyStatus // סטטוס הקריאה
-                    MyStatus = CallManager.GetCallStatus(c.Id, _dal)
+                    distanceFromVolunteerToCall = Tools.CalculateDistance(volunteer.Latitude,volunteer.Longitude, c.Latitude,c.Longitude)
                 });
 
-            // שלב 2: השגת הקואורדינטות של המתנדב מה-DAL
-            var volunteer = _dal.Volunteer.Read(volunteerId); // השגת המתנדב מה-DAL
-            if (volunteer == null)
-            {
-                throw new BO.BlDoesNotExistException("Volunteer not found.");
-            }
-
-            double volunteerLatitude = volunteer.Latitude ?? 0;
-            double volunteerLongitude = volunteer.Longitude ?? 0;
-
-            // שלב 3: חישוב המרחק בין המתנדב לקריאה לכל קריאה
-            foreach (var call in openCalls)
-            {
-                call.VolunteerResponseDistance = Helpers.Tools.CalculateDistance(
-                    volunteerLatitude,
-                    volunteerLongitude,
-                    call.Latitude,  // קואורדינטות הקריאה (נניח שנמצאות ב-DAL)
-                    call.Longitude);
-            }
-
             // שלב 4: סינון לפי סוג הקריאה (אם לא null)
-            if (callType.HasValue)
-            {
-                openCalls = openCalls.Where(c => c.MyCallType == callType.Value);
-            }
+            return sortField.HasValue
+            ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+            : openCalls.OrderBy(c => c.Id);
 
-            // שלב 5: מיון הרשימה
-            if (sortField.HasValue)
-            {
-                openCalls = sortField.Value switch
-                {
-                    BO.Status.Opened => openCalls.OrderBy(c => c.VolunteerResponseDistance), // מיון לפי מרחק
-                    BO.Status.AtRisk => openCalls.OrderBy(c => c.OpenTime), // מיון לפי זמן פתיחה
-                    _ => openCalls.OrderBy(c => c.CallId) // ברירת מחדל
-                };
-            }
-            else
-            {
-                openCalls = openCalls.OrderBy(c => c.CallId); // מיון לפי מזהה הקריאה כברירת מחדל
-            }
-
-            return openCalls!;
         }
         catch (Exception ex)
         {
