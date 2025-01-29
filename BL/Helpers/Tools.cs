@@ -92,59 +92,7 @@ internal static class Tools
         return r * c;
     }
 
-    //private static readonly string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
-    //private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
-
-    //private static readonly string apiUrl = "https://us1.locationiq.com/v1/search.php?key={0}&q={1}&format=json";
-
-    //public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string? address = null)
-    //{
-    //    try
-    //    {
-    //        if (string.IsNullOrWhiteSpace(address))
-    //        {
-    //            return (null, null);
-
-    //        }
-
-    //        // Create URL for the API request
-    //        string url = string.Format(apiUrl, apiKey, Uri.EscapeDataString(address));
-
-    //        using (HttpClient client = new HttpClient())
-    //        {
-    //            // Make the synchronous API request
-    //            HttpResponseMessage response = client.GetAsync(url).Result;
-    //            // Check if the API request was successful
-    //            if (response.IsSuccessStatusCode)
-    //            {
-    //                string jsonResponse = response.Content.ReadAsStringAsync().Result;
-    //                // Parse the JSON response
-    //                JArray jsonArray = JArray.Parse(jsonResponse);
-    //                // If there are results, return the coordinates
-    //                if (jsonArray.Count > 0)
-    //                {
-    //                    var firstResult = jsonArray[0];
-    //                    double latitude = (double)firstResult["lat"];
-    //                    double longitude = (double)firstResult["lon"];
-    //                    return (latitude, longitude);
-    //                }
-    //                else
-    //                {
-    //                    throw new GeolocationNotFoundException(address);
-    //                }
-    //            }
-    //            else
-    //            {
-    //                throw new Exception(response.StatusCode.ToString());
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception("Error occurred while fetching coordinates for the address. ", ex);
-    //    }
-
-    //}
+    
     private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
     private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
 
@@ -161,7 +109,7 @@ internal static class Tools
     {
         if (string.IsNullOrWhiteSpace(address))
         {
-            throw new InvalidAddressException(address); // חריגה אם הכתובת לא תקינה
+            throw new BlInvalidFormatException(address); // חריגה אם הכתובת לא תקינה
         }
 
         try
@@ -192,19 +140,75 @@ internal static class Tools
                     }
                     else
                     {
-                        throw new GeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
+                        throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
                     }
                 }
                 else
                 {
-                    throw new ApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
+                    throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
                 }
             }
         }
         catch (Exception ex)
         {
             // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
-            throw new ApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
+            throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
         }
     }
 }
+
+
+
+//private static readonly string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
+//private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
+
+//private static readonly string apiUrl = "https://us1.locationiq.com/v1/search.php?key={0}&q={1}&format=json";
+
+//public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string? address = null)
+//{
+//    try
+//    {
+//        if (string.IsNullOrWhiteSpace(address))
+//        {
+//            return (null, null);
+
+//        }
+
+//        // Create URL for the API request
+//        string url = string.Format(apiUrl, apiKey, Uri.EscapeDataString(address));
+
+//        using (HttpClient client = new HttpClient())
+//        {
+//            // Make the synchronous API request
+//            HttpResponseMessage response = client.GetAsync(url).Result;
+//            // Check if the API request was successful
+//            if (response.IsSuccessStatusCode)
+//            {
+//                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+//                // Parse the JSON response
+//                JArray jsonArray = JArray.Parse(jsonResponse);
+//                // If there are results, return the coordinates
+//                if (jsonArray.Count > 0)
+//                {
+//                    var firstResult = jsonArray[0];
+//                    double latitude = (double)firstResult["lat"];
+//                    double longitude = (double)firstResult["lon"];
+//                    return (latitude, longitude);
+//                }
+//                else
+//                {
+//                    throw new GeolocationNotFoundException(address);
+//                }
+//            }
+//            else
+//            {
+//                throw new Exception(response.StatusCode.ToString());
+//            }
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+//        throw new Exception("Error occurred while fetching coordinates for the address. ", ex);
+//    }
+
+//}
