@@ -215,11 +215,7 @@ internal class CallImplementation : BlApi.ICall
     //צריך לעדכן אתהENUN שלCallSortField
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
     {
-        tryublic IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(
-        int volunteerId,
-        BO.CallType ? callStatus = null,
-        BO.FinishCallType ? sortField = null
-    );
+        try
         {
             // שלוף את כל ההקצאות של המתנדב
             var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime != null)
