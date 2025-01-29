@@ -20,7 +20,8 @@ internal class CallImplementation : BlApi.ICall
     }
 
     // לבדוק עם מישהי מה יש בRETURN
-    public IEnumerable<CallInList> GetCallList(BO.CallType? filterField = null, object? filterValue = null, Status? sortField = null)
+    
+    public IEnumerable<BO.CallInList> GetCallList(BO.CallType? filterField = null, object? filterValue = null, Status? sortField = null)
     {
         var calls = _dal.Call.ReadAll();
         if (filterField.HasValue && filterValue != null)
@@ -215,7 +216,11 @@ internal class CallImplementation : BlApi.ICall
     //צריך לעדכן אתהENUN שלCallSortField
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortBy = null)
     {
-        try
+        tryublic IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(
+        int volunteerId,
+        BO.CallType ? callStatus = null,
+        BO.FinishCallType ? sortField = null
+    );
         {
             // שלוף את כל ההקצאות של המתנדב
             var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime != null)
@@ -286,7 +291,7 @@ internal class CallImplementation : BlApi.ICall
             // שלב 3: חישוב המרחק בין המתנדב לקריאה לכל קריאה
             foreach (var call in openCalls)
             {
-                call.VolunteerResponseDistance = Helpers.Tools.CalculateDistance(
+                call.VolunteerResponseDistance = Tools.CalculateDistance(
                     volunteerLatitude,
                     volunteerLongitude,
                     call.Latitude,  // קואורדינטות הקריאה (נניח שנמצאות ב-DAL)
