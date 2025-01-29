@@ -33,10 +33,9 @@ internal class AdminImplementation : IAdmin
         return (int)_dal.Config.RiskRange.TotalMinutes;
     }
 
-    public void SetMaxRange(int maxRange)
+    public void SetMaxRange(TimeSpan maxRange)
     {
-        TimeSpan timeSpan = TimeSpan.FromMinutes(maxRange);
-        _dal.Config.RiskRange = timeSpan;
+        _dal.Config.RiskRange = maxRange;
     }
 
     public void ResetDB()
