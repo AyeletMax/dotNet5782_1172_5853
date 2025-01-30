@@ -136,7 +136,7 @@ namespace Helpers
                 (DO.DistanceType)boVolunteer.MyDistanceType
             );
         }
-        internal static (double? Latitude, double? Longitude) logicalChecking(BO.Volunteer boVolunteer)
+        internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
         {
             IsPasswordStrong(boVolunteer.Password);
             return Tools.GetCoordinatesFromAddress(boVolunteer.Address);

@@ -1,13 +1,8 @@
-﻿
-namespace BlImplementation;
+﻿namespace BlImplementation;
 using BlApi;
 using BO;
 using DO;
 using Helpers;
-using System.Numerics;
-using System.Xml.Linq;
-
-
 
 internal class VolunteerImplementation : IVolunteer
 {
@@ -21,7 +16,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
 
-            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password)) ??
+            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
                 throw new BO.BlDoesNotExistException("Incorrect username or password.");
             return (BO.Role)matchingVolunteer.MyRole;
         }
@@ -69,16 +64,16 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
 
-            var doVolunteer = _dal.Volunteer.Read(v => v.Id == volunteerId)??
+            var doVolunteer = _dal.Volunteer.Read(volunteerId)??
                throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
-
-            var currentAssignment = _dal.Assignment.Read(a => a.VolunteerId == volunteerId && a.ExitTime == null);
+            var assigments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
+            var currentAssignment = assigments.FirstOrDefault(a => a.ExitTime == null);
             BO.CallInProgress? callInProgress = null;
             if (currentAssignment != null)
             {
                 var callDetails = _dal.Call.Read(currentAssignment.CallId);
                 if (callDetails != null) {
-                    callInProgress = new CallInProgress
+                    callInProgress = new BO.CallInProgress
                     {
                         Id = currentAssignment.Id,
                         CallId = currentAssignment.CallId,
@@ -93,7 +88,6 @@ internal class VolunteerImplementation : IVolunteer
                     };
                 }
             }
-            //יש עוד דברים שצריך להחזיר
             return new BO.Volunteer
             {
                 Id = volunteerId,
@@ -108,10 +102,10 @@ internal class VolunteerImplementation : IVolunteer
                 Latitude = doVolunteer.Latitude,
                 LargestDistance = doVolunteer.LargestDistance,
                 MyDistanceType = (BO.DistanceType)doVolunteer.MyDistanceType,
-                   // public int TotalCallsHandled { get; init; }
-                   //public int TotalCallsCancelled { get; init; }
-                   //public int TotalExpiredCallsChosen { get; init; 
-               CurrentCallInProgress = callInProgress
+                TotalCallsHandled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf),
+                TotalCallsCancelled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByVolunteer),
+                TotalExpiredCallsChosen = assigments.Count(a => a.FinishCallType == DO.FinishCallType.Expired),
+                CurrentCallInProgress = callInProgress
 
             };
         }
@@ -129,11 +123,9 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
            VolunteerManager.ValidateInputFormat(boVolunteer);
-
-            var coordinates = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            (double? Latitude, double? Longitude) coordinates = VolunteerManager.LogicalChecking(boVolunteer);
             //if (coordinates == null)
             //    throw new BO.GeolocationNotFoundException($"Invalid address: {boVolunteer.Address}");
-
             boVolunteer.Latitude = coordinates.Latitude;
             boVolunteer.Longitude = coordinates.Longitude;
             VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
@@ -162,7 +154,7 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
-            IEnumerable<Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
+            IEnumerable<DO.Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
             if (assignmentsWithVolunteer.Any())
             {
                 throw new BO.BlDeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
@@ -186,10 +178,10 @@ internal class VolunteerImplementation : IVolunteer
             var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
             if (existingVolunteer != null)
             {
-                throw new DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
+                throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(boVolunteer);
-            var (latitude, longitude) = VolunteerManager.logicalChecking(boVolunteer);
+            var (latitude, longitude) = VolunteerManager.LogicalChecking(boVolunteer);
             if (latitude != null && longitude != null)
             {
                 boVolunteer.Latitude = latitude;
