@@ -271,7 +271,7 @@ namespace BlTest
                                             Longitude = longitude,
                                             OpenTime = DateTime.Now,
                                             //לבדוק מה קורה עם הסטטוס של קריאה
-                                            MyStatus = BO.CallStatus.Open
+                                            //MyStatus = BO.CallStatus.Open
                                         };
                                         s_bl.Call.AddCall(call);
                                         Console.WriteLine("Call added.");
