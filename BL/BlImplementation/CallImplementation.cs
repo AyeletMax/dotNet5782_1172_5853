@@ -149,12 +149,7 @@ internal class CallImplementation : BlApi.ICall
         try
         {
             //var call = DataAccess.GetCall(callId);
-            var call = _dal.Call.Read(callId); // Fetch the call details
-
-            if (call == null)
-            {
-                throw new ArgumentException("The call with the specified ID does not exist.");
-            }
+            var call = _dal.Call.Read(callId) ?? throw new ArgumentException("The call with the specified ID does not exist."); // Fetch the call details
 
             // Step 2: Fetch the latest assignment for the call
             var latestAssignment = _dal.Assignment.ReadAll() // Get all assignments
@@ -293,11 +288,7 @@ internal class CallImplementation : BlApi.ICall
         try
         {
             // שליפת ההקצאה מתוך מאגר הנתונים
-            var assignment = _dal.Assignment.Read(assignmentId);
-            if (assignment == null)
-            {
-                throw new BO.BlDoesNotExistException($"Assignment with ID {assignmentId} not found.");
-            }
+            var assignment = _dal.Assignment.Read(assignmentId) ?? throw new BO.BlDoesNotExistException($"Assignment with ID {assignmentId} not found.");
 
             // בדיקה אם המתנדב המבצע את הבקשה הוא המתנדב שההקצאה רשומה עליו
             if (assignment.VolunteerId != volunteerId)
