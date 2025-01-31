@@ -146,36 +146,43 @@ internal class CallImplementation : BlApi.ICall
     // Delete a call
     public void DeleteCall(int callId)
     {
-        //var call = DataAccess.GetCall(callId);
-        var call = _dal.Call.Read(callId); // Fetch the call details
-
-        if (call == null)
+        try
         {
-            throw new ArgumentException("The call with the specified ID does not exist.");
+            //var call = DataAccess.GetCall(callId);
+            var call = _dal.Call.Read(callId); // Fetch the call details
+
+            if (call == null)
+            {
+                throw new ArgumentException("The call with the specified ID does not exist.");
+            }
+
+            // Step 2: Fetch the latest assignment for the call
+            var latestAssignment = _dal.Assignment.ReadAll() // Get all assignments
+                .Where(a => a.CallId == callId) // Filter by CallId
+                .OrderByDescending(a => a.EntranceTime) // Get the latest by EntryTime
+                .FirstOrDefault(); // May return null if no assignments exist
+
+            // Step 3: Calculate the status using the helper method
+            var status = Helpers.CallManager.GetCallStatus(call.Id, _dal);
+
+            // Step 4: Check if the call can be deleted
+            if (status != Status.Opened)
+            {
+                throw new BO.BlDeletionException("The call cannot be deleted because it is not in an open state.");
+            }
+
+            if (latestAssignment != null)
+            {
+                throw new BO.BlDeletionException("The call cannot be deleted because it has been assigned to a volunteer.");
+            }
+
+            // Step 5: Attempt to delete the call
+            _dal.Call.Delete(callId);
         }
-
-        // Step 2: Fetch the latest assignment for the call
-        var latestAssignment = _dal.Assignment.ReadAll() // Get all assignments
-            .Where(a => a.CallId == callId) // Filter by CallId
-            .OrderByDescending(a => a.EntranceTime) // Get the latest by EntryTime
-            .FirstOrDefault(); // May return null if no assignments exist
-
-        // Step 3: Calculate the status using the helper method
-        var status = Helpers.CallManager.GetCallStatus(call.Id, _dal);
-
-        // Step 4: Check if the call can be deleted
-        if (status != Status.Opened)
+        catch (Exception ex) 
         {
-            throw new BO.BlDeletionException("The call cannot be deleted because it is not in an open state.");
+            throw new BO.BlGeneralDatabaseException("An unexpected error occurred while deleting.", ex);
         }
-
-        if (latestAssignment != null)
-        {
-            throw new BO.BlDeletionException("The call cannot be deleted because it has been assigned to a volunteer.");
-        }
-
-        // Step 5: Attempt to delete the call
-        _dal.Call.Delete(callId);
     }
 
     public void AddCall(BO.Call call)
