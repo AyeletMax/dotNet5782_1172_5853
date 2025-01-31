@@ -1,8 +1,9 @@
 ﻿using System;
 using BlApi;
 using BO;
-using DO;
 
+using DO;
+///לבדוק מה עם כל הזריקות שיש פה
 namespace BlTest
 {
     class Program
@@ -22,31 +23,36 @@ namespace BlTest
                     Console.WriteLine("0. Exit");
                     Console.Write("Choose an option: ");
 
-                    if (!int.TryParse(Console.ReadLine(), out int choice))
-                        throw new BO.BlInvalidFormatException("The sub menu choice is not valid.");
-
-                    switch (choice)
+                    if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-                        case 1:
-                            AdminMenu();
-                            break;
-                        case 2:
-                            VolunteerMenu();
-                            break;
-                        case 3:
-                            CallMenu();
-                            break;
-                        case 0:
-                            return;
-                        default:
-                            Console.WriteLine("Invalid choice. Try again.");
-                            break;
+
+                        switch (choice)
+                        {
+                            case 1:
+                                AdminMenu();
+                                break;
+                            case 2:
+                                VolunteerMenu();
+                                break;
+                            case 3:
+                                CallMenu();
+                                break;
+                            case 0:
+                                return;
+                            default:
+                                Console.WriteLine("Invalid choice. Try again.");
+                                break;
+                        }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (BO.BlInvalidFormatException ex)
             {
-                throw new BO.BlGeneralDatabaseException("A custom error occurred in Initialization.", ex);
+                Console.WriteLine("The sub menu choice is not valid.", ex);
+            }
+            catch (BO.BlGeneralDatabaseException ex)
+            {
+                Console.WriteLine("A custom error occurred in Initialization.", ex);
             }
         }
 
@@ -108,10 +114,10 @@ namespace BlTest
                                 Console.WriteLine("Risk time range updated.");
                             }
                             //אולי צריך לזרוק שגיאה
-                            else
-                            {
-                                Console.WriteLine("Invalid time format.");
-                            }
+                            //else
+                            //{
+                            //    Console.WriteLine("Invalid time format.");
+                            //}
                             break;
                         case 0:
                             return;
@@ -120,23 +126,29 @@ namespace BlTest
                             break;
                     }
                 }
-                catch (Exception ex)
+                catch (BO.BlInvalidFormatException ex)
                 {
-                    throw new BO.BlGeneralDatabaseException("A custom error occurred in AdminMenu.", ex);
+                    Console.WriteLine("Invalid time format.");
+                }
+                catch (BO.BlGeneralDatabaseException ex)
+                {
+                    Console.WriteLine("A custom error occurred in AdminMenu.", ex);
                 }
             }
         }
 
         static void VolunteerMenu()
         {
-            //אין את כל הפונקציות של מתנדב
             while (true)
             {
                 Console.WriteLine("\n--- Volunteer Management ---");
-                Console.WriteLine("1. List Volunteers");
-                Console.WriteLine("2. Read Volunteer by ID");
-                Console.WriteLine("3. Add Volunteer");
-                Console.WriteLine("4. Remove Volunteer");
+                Console.WriteLine("1. Login");
+                Console.WriteLine("2. List Volunteers");
+                Console.WriteLine("3. Get Filter/Sort volunteer");
+                Console.WriteLine("4. Read Volunteer by ID");
+                Console.WriteLine("5. Add Volunteer");
+                Console.WriteLine("6. Remove Volunteer");
+                Console.WriteLine("7. UpDate Volunteer");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -146,58 +158,105 @@ namespace BlTest
                 switch (choice)
                 {
                     case 1:
-                        //צריך לאפשר גם את כל המיון?
+                        try
+                        {
+                            Console.WriteLine("Please log in.");
+                            Console.Write("Username: ");
+                            string username = Console.ReadLine()!;
+
+                            Console.Write("Console.Write(\"Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): \");");
+                            string password = Console.ReadLine()!;
+
+                            BO.Role userRole = s_bl.Volunteer.Login(username, password);
+                            Console.WriteLine($"Login successful! Your role is: {userRole}");
+                        }
+                        catch (BO.BlDoesNotExistException ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                        catch (BO.BlGeneralDatabaseException ex)
+                        {
+                            Console.WriteLine($"System Error: {ex.Message}");
+                        }
+                        break;
+                    case 2:
                         foreach (var volunteer in s_bl.Volunteer.GetVolunteersList())
                             Console.WriteLine(volunteer);
                         break;
-                    case 2:
-                        Console.Write("Enter Volunteer ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int volunteerId))
-                        {
-                            var volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
-                            Console.WriteLine(volunteer);
-                        }
-                        else
-                        //לא צריך לעשות את זה בזריקה?
-                        {
-                            Console.WriteLine("Invalid ID.");
-                        }
-                        break;
                     case 3:
-                        //להוסיף עוד שדות
-                        Console.Write("Enter Full Name: ");
-                        string fullName = Console.ReadLine()!;
-                        Console.Write("Enter Phone Number: ");
-                        string phoneNumber = Console.ReadLine()!;
-                        Console.Write("Enter Email: ");
-                        string email = Console.ReadLine()!;
-                        Console.Write("Enter Role (Manager, Volunteer): ");
-                        if (Enum.TryParse(Console.ReadLine(), out BO.Role role))
-                        {
-                            var volunteer = new BO.Volunteer
-                            {
-                                Name = fullName,
-                                Phone = phoneNumber,
-                                Email = email,
-                                MyRole = role,
-                                Active = true
-                            };
-                            s_bl.Volunteer.AddVolunteer(volunteer);
-                            Console.WriteLine("Volunteer added.");
-                        }
+                        bool? isActive;
+                        BO.VolunteerSortField? sortBy;
+                        GetVolunteerFilterAndSortCriteria(out isActive, out sortBy);
+                        var volunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
+                        if (volunteersList != null)
+                            foreach (var volunteer in volunteersList)
+                                Console.WriteLine(volunteer);
+                        else
+                            Console.WriteLine("No volunteers found matching the criteria.");
                         break;
                     case 4:
-                        Console.Write("Enter Volunteer ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int vId))
+                        try
                         {
-                            s_bl.Volunteer.DeleteVolunteer(vId);
-                            Console.WriteLine("Volunteer removed.");
+                            Console.Write("Enter Volunteer ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int volunteerId))
+                            {
+                                var volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
+                                Console.WriteLine(volunteer);
+                            }
                         }
-                        //לזרוק חריגה אולי
-                        else
+                        catch (BO.BlAlreadyExistsException ex)
                         {
-                            Console.WriteLine("Invalid ID.");
+                            Console.WriteLine($"Error: {ex.Message}");
                         }
+                        break;
+                    case 5:
+                        try
+                        {
+                            BO.Volunteer volunteer = CreateVolunteer();
+                            Console.WriteLine("Enter Volunteer details:");
+                            Console.Write("ID: ");
+                            if (!int.TryParse(Console.ReadLine(), out int id))
+                            {
+                                volunteer.Id = id;
+                                s_bl.Volunteer.AddVolunteer(volunteer);
+                                Console.WriteLine("Volunteer created successfully!");
+                            }
+                           
+                        }
+                        catch (BO.BlAlreadyExistsException ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
+                        catch (BO.BlInvalidFormatException ex)
+                        {
+                            Console.WriteLine($"Input Error: {ex.Message}");
+                        }
+                        catch (BO.BlGeneralDatabaseException ex)
+                        {
+                            Console.WriteLine("An unexpected error occurred.");
+                        }
+                        break;
+                    case 6:
+                        try
+                        {
+                            Console.Write("Enter Volunteer ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int vId))
+                            {
+                                s_bl.Volunteer.DeleteVolunteer(vId);
+                                Console.WriteLine("Volunteer removed.");
+                            }
+                        //    else
+                        //    {
+                        //        throw new ArgumentException("Invalid ID format. Please enter a valid numeric ID.");
+                        //    }
+                        }
+                        catch (BO.BlInvalidFormatException ex)
+                        {
+                            Console.WriteLine("Invalid ID format. Please enter a valid numeric ID.");
+                        }
+                        break;
+                    case 7:
+                        UpDateVolunteer();
                         break;
                     case 0:
                         return;
@@ -208,6 +267,190 @@ namespace BlTest
                 }
             }
         }
+        public static void GetVolunteerFilterAndSortCriteria(out bool? isActive, out BO.VolunteerSortField? sortBy)
+        {
+            isActive = null;
+            sortBy = null;
+
+            try
+            {
+
+                Console.WriteLine("Is the volunteer active? (yes/no or leave blank for null): ");
+                string activeInput = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(activeInput))
+                {
+                    if (activeInput.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                        isActive = true;
+                    else if (activeInput.Equals("no", StringComparison.OrdinalIgnoreCase))
+                        isActive = false;
+                    else
+                        Console.WriteLine("Invalid input for active status. Defaulting to null.");
+                }
+
+                Console.WriteLine("Choose how to sort the volunteers by: ");
+                Console.WriteLine("1. ID");
+                Console.WriteLine("2. Name");
+                Console.WriteLine("3. Total Responses Handled");
+                Console.WriteLine("4. Total Responses Cancelled");
+                Console.WriteLine("5. Total Expired Responses");
+                Console.WriteLine("6. Sum of Calls");
+                Console.WriteLine("7. Sum of Cancellations");
+                Console.WriteLine("8. Sum of Expired Calls");
+                Console.WriteLine("Select sorting option by number: ");
+                string sortInput = Console.ReadLine();
+
+                if (int.TryParse(sortInput, out int sortOption))
+                {
+                    switch (sortOption)
+                    {
+                        case 1:
+                            sortBy = BO.VolunteerSortField.Id;
+                            break;
+                        case 2:
+                            sortBy = BO.VolunteerSortField.Name;
+                            break;
+                        case 3:
+                            sortBy = BO.VolunteerSortField.TotalResponsesHandled;
+                            break;
+                        case 4:
+                            sortBy = BO.VolunteerSortField.TotalResponsesCancelled;
+                            break;
+                        case 5:
+                            sortBy = BO.VolunteerSortField.TotalExpiredResponses;
+                            break;
+                        case 6:
+                            sortBy = BO.VolunteerSortField.SumOfCalls;
+                            break;
+                        case 7:
+                            sortBy = BO.VolunteerSortField.SumOfCancellation;
+                            break;
+                        case 8:
+                            sortBy = BO.VolunteerSortField.SumOfExpiredCalls;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid selection. Defaulting to sorting by ID.");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input for sorting option. Defaulting to sorting by ID.");
+                }
+            }
+            catch (BO.BlGeneralDatabaseException ex)
+            {
+                Console.WriteLine($"Exception: {ex.GetType().Name}");
+                Console.WriteLine($"Message: {ex.Message}");
+            }
+        }
+        //מה לעשות עם כל הTRY ועם הזריקות
+        static BO.Volunteer CreateVolunteer()
+        {
+ 
+             Console.Write("Name: ");
+             string? name = Console.ReadLine();
+
+             Console.Write("Phone Number: ");
+             string? phoneNumber = Console.ReadLine();
+
+             Console.Write("Email: ");
+             string? email = Console.ReadLine();
+
+             Console.Write("IsActive? (true/false): ");
+             if (!bool.TryParse(Console.ReadLine(), out bool active))
+                 throw new BO.BlInvalidFormatException("Invalid input for IsActive.");
+
+             Console.WriteLine("Please enter Role: 'Manager' or 'Volunteer'.");
+             if (!Enum.TryParse(Console.ReadLine(), out BO.Role role))
+                 throw new BO.BlInvalidFormatException("Invalid role.");
+
+             Console.Write("Password: ");
+             string? password = Console.ReadLine();
+
+             Console.Write("Address: ");
+             string? address = Console.ReadLine();
+
+             Console.WriteLine("Enter location details:");
+             Console.Write("Latitude: ");
+             if (!double.TryParse(Console.ReadLine(), out double latitude))
+                 throw new BO.BlInvalidFormatException("Invalid latitude format.");
+
+             Console.Write("Longitude: ");
+             if (!double.TryParse(Console.ReadLine(), out double longitude))
+                 throw new BO.BlInvalidFormatException("Invalid longitude format.");
+
+             Console.Write("Largest Distance: ");
+             if (!double.TryParse(Console.ReadLine(), out double largestDistance))
+                 throw new BO.BlInvalidFormatException("Invalid largest distance format.");
+
+             Console.Write("Distance Type (Air, Drive or Walk): ");
+             if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType myDistanceType))
+                 throw new BO.BlInvalidFormatException("Invalid distance type.");
+
+             return new BO.Volunteer
+             {
+                 Name = name,
+                 Phone = phoneNumber,
+                 Email = email,
+                 Active = active,
+                 MyRole = role,
+                 Password = password,
+                 Address = address,
+                 Latitude = latitude,
+                 Longitude = longitude,
+                 LargestDistance = largestDistance,
+                 MyDistanceType = myDistanceType,
+                 TotalCallsHandled = 0,
+                 TotalCallsCancelled = 0,
+                 TotalExpiredCallsChosen = 0,
+                 CurrentCallInProgress = null
+             };
+
+             
+           
+          
+        }
+        //לדעת לטפל בזריקות עם כל הTRY
+        static void UpDateVolunteer()
+        {
+
+            //מה עושים עם כל אלה בעדכון?
+            //TotalCallsHandled = 0,
+            //     TotalCallsCancelled = 0,
+            //     TotalExpiredCallsChosen = 0,
+            try
+            {
+                BO.Volunteer boVolunteer = CreateVolunteer();
+                Console.Write("Enter requester ID: ");
+                if (int.TryParse(Console.ReadLine(), out int requesterId))
+                {
+                    s_bl.Volunteer.UpdateVolunteer(requesterId, boVolunteer);
+                    Console.WriteLine("Volunteer updated successfully.");
+                }
+            }
+            catch (BO.BlDoesNotExistException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (BO.BlUnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (BO.BlInvalidFormatException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (BO.BlGeneralDatabaseException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            }
+        }
+
 
         static void CallMenu()
         {

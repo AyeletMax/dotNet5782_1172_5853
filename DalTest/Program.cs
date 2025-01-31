@@ -237,7 +237,7 @@ namespace DalTest
             double longitude = double.Parse(Console.ReadLine()!);
             Console.Write("Largest Distance: ");
             double largestDistance = double.Parse(Console.ReadLine()!);
-            Console.Write("Distance Type (Air or Walk): ");
+            Console.Write("Distance Type (Air, Drive or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
             // Creates the Volunteer using provided details.
             s_dal!.Volunteer.Create(new(id, name, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));

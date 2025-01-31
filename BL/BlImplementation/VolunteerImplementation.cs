@@ -38,17 +38,17 @@ internal class VolunteerImplementation : IVolunteer
 
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {
-                BO.VolunteerSortField.Name => volunteerList.OrderBy(v => v.Name).ToList(),
-                BO.VolunteerSortField.TotalResponsesHandled => volunteerList.OrderByDescending(v => v.TotalResponsesHandled).ToList(),
-                BO.VolunteerSortField.TotalResponsesCancelled => volunteerList.OrderByDescending(v => v.TotalResponsesCancelled).ToList(),
-                BO.VolunteerSortField.TotalExpiredResponses => volunteerList.OrderByDescending(v => v.TotalExpiredResponses).ToList(),
-                BO.VolunteerSortField.SumOfCalls => volunteerList.OrderBy(v => v.TotalResponsesHandled).ToList(),
-                BO.VolunteerSortField.SumOfCancellation => volunteerList.OrderBy(v => v.TotalResponsesCancelled).ToList(),
-                BO.VolunteerSortField.SumOfExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredResponses).ToList(),
-                _ => volunteerList.OrderBy(v => v.Id).ToList()
-            } : volunteerList.OrderBy(v => v.Id).ToList();
+                BO.VolunteerSortField.Name => volunteerList.OrderBy(v => v.Name),
+                BO.VolunteerSortField.TotalResponsesHandled => volunteerList.OrderByDescending(v => v.TotalResponsesHandled),
+                BO.VolunteerSortField.TotalResponsesCancelled => volunteerList.OrderByDescending(v => v.TotalResponsesCancelled),
+                BO.VolunteerSortField.TotalExpiredResponses => volunteerList.OrderByDescending(v => v.TotalExpiredResponses),
+                BO.VolunteerSortField.SumOfCalls => volunteerList.OrderBy(v => v.TotalResponsesHandled),
+                BO.VolunteerSortField.SumOfCancellation => volunteerList.OrderBy(v => v.TotalResponsesCancelled),
+                BO.VolunteerSortField.SumOfExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredResponses),
+                _ => volunteerList.OrderBy(v => v.Id)
+            } : volunteerList.OrderBy(v => v.Id);
 
-            return volunteerList.ToList();
+            return volunteerList;
         }
         catch (DO.DalDoesNotExistException ex)
         {
