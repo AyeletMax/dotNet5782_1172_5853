@@ -18,9 +18,9 @@ public static class Initialization
             "0504561239","0548551329","0548425138","0583282450","0583232333","0548482197",
             "0583265120","0548533173","0583292455","0583262639" 
         };
-        string[] passwords = { "pass123", "eli2023", "yair007", "ariela456", "dina789", "shira101",
-            "123asd","a1b2c3","hello123","AaBbCc112233","abc123!@#","meMyselfAndI","ayelet@@@234","951A","HiHello!!" 
-        }; 
+        string[] passwords = { "A1b@D2eF", "X3y#Z9aH", "P@ssw0rD1", "T#4oP@r7", "M1n#0F8z", "G#tX9jQ2", "L8!mT9uB", "D9v@Zq7X", "B5a#cG3e", "K#p9J1xQ",
+            "Q8@tW5oP", "R3v@C9fX", "S4z#D8oY", "N7f#L9pB", "C3uZ#hT1" };
+
         string[] addresses = {
                 "9 Weizman St, Tel Aviv, Israel", "40 Jabotinsky St, Petah Tikva, Israel", "Ein Kerem 5, Jerusalem, Israel", 
                 "Tel Hashomer 6, Ramat Gan, Israel", "20 Yirmiyahu St, Jerusalem, Israel","128 Kaplan St, Tel Aviv, Israel", 

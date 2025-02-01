@@ -181,19 +181,19 @@ namespace Helpers
             return true; 
         }
         //לבדוק אם צריך אותה
-        //internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-        //{
-        //    return new BO.Volunteer
-        //    {
-        //        Id = volunteer.Id,
-        //        Name = volunteer.Name,
-        //        Phone = volunteer.Phone,
-        //        Email = volunteer.Email,
-        //        Active = volunteer.Active,
-        //        MyRole = (BO.Role)volunteer.MyRole,
+        internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
+        {
+            return new BO.Volunteer
+            {
+                Id = volunteer.Id,
+                Name = volunteer.Name,
+                Phone = volunteer.Phone,
+                Email = volunteer.Email,
+                Active = volunteer.Active,
+                MyRole = (BO.Role)volunteer.MyRole,
 
-        //    };
-        //}
+            };
+        }
 
 
 

@@ -40,9 +40,14 @@ internal class VolunteerImplementation : IVolunteer
     /// Reads a volunteer by ID.
     /// <param name="id">The ID of the volunteer to read.</param>
     /// <returns>The volunteer with the specified ID, or null if not found.</returns>
+    //public Volunteer? Read(int id)
+    //{
+    //    return DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
+    //}
     public Volunteer? Read(int id)
     {
-        return DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
+        var volunteer = DataSource.Volunteers.FirstOrDefault(item => item.Id == id);
+        return volunteer;
     }
 
     /// Reads all volunteers, optionally filtering them.

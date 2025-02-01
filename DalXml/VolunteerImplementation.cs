@@ -15,8 +15,7 @@ internal class VolunteerImplementation : IVolunteer
         return new DO.Volunteer()
         {
             Id = v.ToIntNullable("Id") ?? throw new FormatException("can't convert id"),
-            FirstName = (string?)v.Element("FirstName") ?? "",
-            LastName = (string?)v.Element("LastName") ?? "",
+            Name = (string?)v.Element("Name") ?? "",
             Phone = (string?)v.Element("Phone") ?? "",
             Email = (string?)v.Element("Email") ?? "",
             Active = (bool?)v.Element("IsActive") ?? false,
@@ -42,8 +41,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         return new XElement("Volunteer",
             new XElement("Id", item.Id),
-            new XElement("FirstName", item.FirstName),
-            new XElement("LastName", item.LastName),
+            new XElement("Name", item.Name),
             new XElement("Phone", item.Phone),
             new XElement("Email", item.Email),
             new XElement("IsActive", item.Active),
@@ -98,8 +96,7 @@ internal class VolunteerImplementation : IVolunteer
             .Select(v => new Volunteer
             {
                 Id = (int)v.Element("Id")!,
-                FirstName = (string)v.Element("FirstName")!,
-                LastName = (string)v.Element("LastName")!,
+                Name = (string)v.Element("Name")!,
                 Phone = (string)v.Element("Phone")!,
                 Email = (string)v.Element("Email")!,
                 Active = (bool)v.Element("IsActive")!,

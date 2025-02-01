@@ -14,13 +14,16 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
 
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
+            //Console.WriteLine($"Found {volunteers.Count()} volunteers.");
             DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
                 throw new BO.BlDoesNotExistException("Incorrect username or password.");
+            //Console.WriteLine($"Found  volunteers.");
+            BO.Volunteer mappedVolunteer = VolunteerManager.MapVolunteer(matchingVolunteer);
             return (BO.Role)matchingVolunteer.MyRole;
         }
-
+       
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
@@ -52,7 +55,7 @@ internal class VolunteerImplementation : IVolunteer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlGeneralDatabaseException("Error accessing data.", ex);
+            throw new BO.BlDoesNotExistException("Error accessing data.", ex);
         }
         catch (Exception ex)
         {
@@ -65,7 +68,7 @@ internal class VolunteerImplementation : IVolunteer
         {
 
             var doVolunteer = _dal.Volunteer.Read(volunteerId)??
-               throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
+               throw new DO.DalDoesNotExistException ($"Volunteer with ID={volunteerId} does not exist");
             var assigments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
             var currentAssignment = assigments.FirstOrDefault(a => a.ExitTime == null);
             BO.CallInProgress? callInProgress = null;
