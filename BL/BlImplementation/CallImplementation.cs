@@ -13,13 +13,20 @@ internal class CallImplementation : BlApi.ICall
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public int[] GetCallQuantitiesByStatus()
     {
-        var calls = _dal.Call.ReadAll();
-        return calls.GroupBy(call => CallManager.GetCallStatus(call.Id, _dal))
-                    .OrderBy(g => g.Key)
-                    .Select(g => g.Count())
-                    .ToArray();
+        try
+        {
+            var counts = new int[Enum.GetValues(typeof(BO.Status)).Length];
+            _dal.Call.ReadAll()
+                .GroupBy(call => (int)CallManager.GetCallStatus(call.Id))
+                .ToList()
+                .ForEach(g => counts[g.Key] = g.Count());
+            return counts;
+        }
+        catch (Exception ex) 
+        { 
+            throw new BlGeneralDatabaseException("Failed to retrieve calls list", ex);
+        }
     }
-
     public IEnumerable<CallInList> GetCallList(BO.CallSortField? filterField = null, object? filterValue = null, BO.CallSortField? sortField = null)
     {
         try
@@ -36,7 +43,7 @@ internal class CallImplementation : BlApi.ICall
                         TotalAllocations = assignments.Count(),
                         CallId = c.Id,
                         CallType = (BO.CallType)c.MyCallType,
-                        MyStatus = CallManager.GetCallStatus(c.Id, _dal),
+                        MyStatus = CallManager.GetCallStatus(c.Id),
                         Id = c.Id,
                         OpenTime = c.OpenTime,
                         TimeRemainingToCall = c.MaxFinishTime?.Subtract(_dal.Config.Clock),
@@ -89,7 +96,7 @@ internal class CallImplementation : BlApi.ICall
                 Longitude = call.Longitude,
                 OpenTime = call.OpenTime,
                 MaxFinishTime = call.MaxFinishTime,
-                MyStatus = Helpers.CallManager.GetCallStatus(callId, _dal),
+                MyStatus = Helpers.CallManager.GetCallStatus(callId),
                 callAssignments = callAssignments
             };
      
@@ -106,30 +113,27 @@ internal class CallImplementation : BlApi.ICall
         try
         {
             Helpers.CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Helpers.CallManager.logicalChecking(call);
-
+            var (latitude, longitude) = Helpers.Tools.GetCoordinatesFromAddress(call.Address);
             if (latitude is null || longitude is null)
             {
                 throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
             }
-
-            // Update the properties of the updatedCall instance
             call.Latitude = latitude.Value;
             call.Longitude = longitude.Value;
+            DO.Call callToUpdate=CallManager.ConvertBoCallToDoCall(call);
 
             // Convert BO.Call to DO.Call for data layer update
-            DO.Call callToUpdate = new DO.Call
-            {
-                Id = call.Id,
-                MyCallType = (DO.CallType)call.MyCallType,
-                VerbalDescription = call.VerbalDescription,
-                Address = call.Address,
-                Latitude = call.Latitude,
-                Longitude = call.Longitude,
-                OpenTime = call.OpenTime,
-                MaxFinishTime = call.MaxFinishTime
-            };
-            // Attempt to update the call in the data layer
+            //DO.Call callToUpdate = new()
+            //{
+            //    Id = call.Id,
+            //    MyCallType = (DO.CallType)call.MyCallType,
+            //    VerbalDescription = call.VerbalDescription,
+            //    Address = call.Address,
+            //    Latitude = latitude.Value,
+            //    Longitude = longitude.Value,
+            //    OpenTime = call.OpenTime,
+            //    MaxFinishTime = call.MaxFinishTime
+            //};
             _dal.Call.Update(callToUpdate);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -138,7 +142,6 @@ internal class CallImplementation : BlApi.ICall
         }
         catch (Exception ex)
         {
-            // Catch the data layer exception and rethrow a custom exception to the UI layer
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while update.", ex);
         }
     }
@@ -148,28 +151,16 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
-            //var call = DataAccess.GetCall(callId);
-            var call = _dal.Call.Read(callId) ?? throw new ArgumentException("The call with the specified ID does not exist."); // Fetch the call details
-
-            // Step 2: Fetch the latest assignment for the call
-            var latestAssignment = _dal.Assignment.ReadAll() // Get all assignments
-                .Where(a => a.CallId == callId) // Filter by CallId
-                .OrderByDescending(a => a.EntranceTime) // Get the latest by EntryTime
-                .FirstOrDefault(); // May return null if no assignments exist
+            var call = _dal.Call.Read(callId) ?? throw new BlDoesNotExistException("The call with the specified ID does not exist.");
 
             // Step 3: Calculate the status using the helper method
-            var status = Helpers.CallManager.GetCallStatus(call.Id, _dal);
+            var status = Helpers.CallManager.GetCallStatus(call.Id);
 
             // Step 4: Check if the call can be deleted
-            if (status != Status.Opened)
+            if ((status != Status.Opened && status != Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
             {
-                throw new BO.BlDeletionException("The call cannot be deleted because it is not in an open state.");
-            }
-
-            if (latestAssignment != null)
-            {
-                throw new BO.BlDeletionException("The call cannot be deleted because it has been assigned to a volunteer.");
-            }
+                throw new BO.BlDeletionException($"The call with ID:{callId}cannot be deleted.");
+            }                
 
             // Step 5: Attempt to delete the call
             _dal.Call.Delete(callId);
@@ -184,24 +175,15 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
-            Helpers.CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Helpers.CallManager.logicalChecking(call);
+            CallManager.ValidateCallDetails(call);
+            var (latitude, longitude) = Helpers.Tools.GetCoordinatesFromAddress(call.Address);
             if (latitude is null || longitude is null)
             {
                 throw new BO.BlInvalidFormatException("The address must be valid and resolvable to latitude and longitude.");
             }
             call.Latitude = latitude.Value;
             call.Longitude = longitude.Value;
-            var dataCall = new DO.Call
-            {
-                MyCallType = (DO.CallType)call.MyCallType,
-                VerbalDescription = call.VerbalDescription,
-                Address = call.Address,
-                Latitude = call.Latitude,
-                Longitude = call.Longitude,
-                OpenTime = call.OpenTime,
-                MaxFinishTime = call.MaxFinishTime
-            };
+            DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Create(dataCall);
         }
         catch (DO.DalAlreadyExistsException)
@@ -221,7 +203,7 @@ internal class CallImplementation : BlApi.ICall
         {
             // שלוף את כל ההקצאות של המתנדב
             var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime != null)
-                .Where(a => callType == null || (BO.CallType)_dal.Call.Read(a.CallId).MyCallType == callType)
+                .Where(a => callType is null || (BO.CallType)_dal.Call.Read(a.CallId).MyCallType == callType)
                 .Select(a =>
                 {
                     var call = _dal.Call.Read(a.CallId);
@@ -247,9 +229,7 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the closed calls list.", ex);
         }
     }
-      
-
-
+     
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
     {
         try
@@ -259,7 +239,7 @@ internal class CallImplementation : BlApi.ICall
             var openCalls = _dal.Call.ReadAll()
                 .Where(c =>                
                 // מחשבים סטטוס של כל קריאה
-                (CallManager.GetCallStatus(c.Id, _dal) == BO.Status.Opened || CallManager.GetCallStatus(c.Id, _dal) == BO.Status.AtRisk)) // הפשטת הבדיקה
+                (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk)) // הפשטת הבדיקה
                 .Select(c => new BO.OpenCallInList
                 {
                     Id = volunteerId, // ת.ז של המתנדב
@@ -333,7 +313,7 @@ internal class CallImplementation : BlApi.ICall
             }
 
             // 4. בדיקת סטטוס ההקצאה: לוודא שהיא פתוחה ולא טופלה
-            var status = CallManager.GetCallStatus(assignment.CallId, _dal);
+            var status = CallManager.GetCallStatus(assignment.CallId);
 
             if (status == Status.Expired || status == Status.Closed)
             {
@@ -370,7 +350,7 @@ internal class CallImplementation : BlApi.ICall
         try
         {
             var call = _dal.Call.Read(callId) ?? throw new BO.BlInvalidOperationException($"Call with ID {callId} not found.");
-            var status = CallManager.GetCallStatus(callId, _dal);
+            var status = CallManager.GetCallStatus(callId);
 
             if (status == Status.Expired || status == Status.Closed || (status == Status.InProgress && _dal.Assignment.Read(callId)!=null))
             {
@@ -399,6 +379,41 @@ internal class CallImplementation : BlApi.ICall
 
 }
 
+
+
+
+//public int[] GetCallQuantitiesByStatus()
+//var calls = _dal.Call.ReadAll();
+//return calls.GroupBy(call => CallManager.GetCallStatus(call.Id, _dal))
+//            .OrderBy(g => g.Key)
+//            .Select(g => g.Count())
+//            .ToArray();
+
+
+//var calls = _dal.Call.ReadAll();
+//int[] callQuantities = new int[Enum.GetValues(typeof(BO.Status)).Length];
+
+//var groupedCalls = calls
+//    .GroupBy(call => CallManager.GetCallStatus(call.Id))
+//    .ToDictionary(g => g.Key, g => g.Count());
+//foreach (var entry in groupedCalls)
+//{
+//    callQuantities[(int)entry.Key] = entry.Value;
+//}
+//return callQuantities;
+
+
+
+//var dataCall = new DO.Call
+//{
+//    MyCallType = (DO.CallType)call.MyCallType,
+//    VerbalDescription = call.VerbalDescription,
+//    Address = call.Address,
+//    Latitude = latitude.Value,
+//    Longitude = longitude.Value,
+//    OpenTime = call.OpenTime,
+//    MaxFinishTime = call.MaxFinishTime
+//};
 
 
 //// Calculate average handling time for closed calls

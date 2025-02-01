@@ -117,7 +117,7 @@ internal static class Tools
             // יצירת ה-URL לפנייה ל-API
             string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
 
-            using (HttpClient client = new HttpClient())
+            using (HttpClient client = new())
             {
                 // בקשה סינכרונית ל-API
                 HttpResponseMessage response = client.GetAsync(url).Result;
