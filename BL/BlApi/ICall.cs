@@ -8,9 +8,9 @@ public interface ICall
 
     // מתודת בקשת רשימת קריאות
     public IEnumerable<BO.CallInList> GetCallList(
-        BO.CallSortField? filterField = null,
+        BO.CallInListFields? filterField = null,
         object? filterValue = null,
-        BO.CallSortField? sortField = null
+        BO.CallInListFields? sortField = null
     );
 
     // מתודת בקשת פרטי קריאה
@@ -29,14 +29,14 @@ public interface ICall
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(
         int volunteerId,
         BO.CallType? callStatus = null,
-        BO.CallSortField? sortField = null
+        BO.ClosedCallInListFields? sortField = null
     );
 
     // מתודת בקשת רשימת קריאות פתוחות לבחירה על ידי מתנדב
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(
         int volunteerId,
         BO.CallType? callType = null,
-        BO.CallSortField? sortField = null
+        BO.OpenCallInListFields? sortField = null
     );
 
     // מתודת עדכון "סיום טיפול" בקריאה

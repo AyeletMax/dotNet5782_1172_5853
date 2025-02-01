@@ -27,7 +27,7 @@ internal class CallImplementation : BlApi.ICall
             throw new BlGeneralDatabaseException("Failed to retrieve calls list", ex);
         }
     }
-    public IEnumerable<CallInList> GetCallList(BO.CallSortField? filterField = null, object? filterValue = null, BO.CallSortField? sortField = null)
+    public IEnumerable<CallInList> GetCallList(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortField = null)
     {
         try
         {
@@ -197,13 +197,13 @@ internal class CallImplementation : BlApi.ICall
     }
 
     //צריך לעדכן אתהENUN שלCallSortField
-    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
+    public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callTypeFilter = null, BO.ClosedCallInListFields? sortField = null)
     {
         try
         {
             // שלוף את כל ההקצאות של המתנדב
             var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime != null)
-                .Where(a => callType is null || (BO.CallType)_dal.Call.Read(a.CallId).MyCallType == callType)
+                .Where(a => callTypeFilter is null || (BO.CallType)_dal.Call.Read(a.CallId).MyCallType == callTypeFilter)
                 .Select(a =>
                 {
                     var call = _dal.Call.Read(a.CallId);
@@ -230,7 +230,7 @@ internal class CallImplementation : BlApi.ICall
         }
     }
      
-    public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.CallSortField? sortField = null)
+    public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
     {
         try
         {
