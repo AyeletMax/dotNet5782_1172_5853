@@ -58,16 +58,17 @@ public enum VolunteerSortField
     SumOfExpiredCalls
 }
 
+
 public enum CallInListFields
 {
     CallId,
     CallType,
-    Opening_time,
-    TimeLeft,
-    LastVolunteerName,
-    TotalTime,
-    CallStatus,
-    TotalAssignments,
+    OpenTime,
+    TimeRemainingToCall,
+    LastVolunteer,
+    CompletionTime,
+    MyStatus,
+    TotalAllocations,
 }
 
 public enum OpenCallInListFields

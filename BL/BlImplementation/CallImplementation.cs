@@ -31,13 +31,11 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
-            // קריאה לכל הקריאות ממסד הנתונים
             var calls = _dal.Call.ReadAll()
                 .Select(c =>
                 {
                     var assignments = _dal.Assignment.ReadAll(a => a.CallId == c.Id);
                     var lastAssignment = assignments.OrderByDescending(a => a.EntranceTime).FirstOrDefault();
-
                     return new BO.CallInList
                     {
                         TotalAllocations = assignments.Count(),
@@ -48,26 +46,49 @@ internal class CallImplementation : BlApi.ICall
                         OpenTime = c.OpenTime,
                         TimeRemainingToCall = c.MaxFinishTime?.Subtract(_dal.Config.Clock),
                         LastVolunteer = lastAssignment != null ? _dal.Volunteer.Read(lastAssignment.VolunteerId)?.Name : null,
-                        CompletionTime = lastAssignment?.ExitTime.HasValue == true
-                            ? lastAssignment.ExitTime.Value - lastAssignment.EntranceTime
-                            : null,
+                        CompletionTime = lastAssignment?.ExitTime.HasValue == true ? lastAssignment.ExitTime.Value - lastAssignment.EntranceTime : null,
                     };
                 });
             if (filterField.HasValue && filterValue != null)
             {
-                calls = calls.Where(c => c.GetType().GetProperty(filterField.ToString())?.GetValue(c)?.Equals(filterValue) == true);
+                var prop = typeof(BO.CallInList).GetProperty(filterField.ToString());
+                if (prop != null)
+                {
+                    if (prop.PropertyType.IsEnum)
+                    {
+                        var enumValue = Enum.Parse(prop.PropertyType, filterValue.ToString());
+                        calls = calls.Where(c => prop.GetValue(c)?.Equals(enumValue) == true);
+                    }
+                    else
+                    {
+                        var convertedValue = Convert.ChangeType(filterValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                        calls = calls.Where(c => prop.GetValue(c)?.Equals(convertedValue) == true);
+                    }
+                }
             }
 
             return sortField.HasValue
-                ? calls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+                ? calls.OrderBy(c => typeof(BO.CallInList).GetProperty(sortField.ToString())?.GetValue(c))
                 : calls.OrderBy(c => c.CallId);
 
+            //if (filterField.HasValue && filterValue != null)
+            //{
+            //    var propertyName = Enum.GetName(typeof(BO.CallInListFields), filterField);
+            //    var propertyInfo = typeof(BO.CallInList).GetProperty(propertyName);
+            //    var convertedValue = Convert.ChangeType(filterValue, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
+            //    calls = calls.Where(c => propertyInfo.GetValue(c)?.Equals(convertedValue) == true);
+            //}
+
+            //return sortField.HasValue
+            //    ? calls.OrderBy(c => typeof(BO.CallInList).GetProperty(Enum.GetName(typeof(BO.CallInListFields), sortField))?.GetValue(c))
+            //    : calls.OrderBy(c => c.CallId);
         }
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("Failed to retrieve calls list", ex);
         }
     }
+
 
 
     public BO.Call GetCallDetails(int callId)
@@ -481,6 +502,65 @@ internal class CallImplementation : BlApi.ICall
 //        throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the closed calls list.", ex);
 //    }
 //}
+
+
+
+
+//public IEnumerable<CallInList> GetCallList(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortField = null)
+//{
+//    try
+//    {
+//        // קריאה לכל הקריאות ממסד הנתונים
+//        var calls = _dal.Call.ReadAll()
+//            .Select(c =>
+//            {
+//                var assignments = _dal.Assignment.ReadAll(a => a.CallId == c.Id);
+//                var lastAssignment = assignments.OrderByDescending(a => a.EntranceTime).FirstOrDefault();
+
+//                return new BO.CallInList
+//                {
+//                    TotalAllocations = assignments.Count(),
+//                    CallId = c.Id,
+//                    CallType = (BO.CallType)c.MyCallType,
+//                    MyStatus = CallManager.GetCallStatus(c.Id),
+//                    Id = c.Id,
+//                    OpenTime = c.OpenTime,
+//                    TimeRemainingToCall = c.MaxFinishTime?.Subtract(_dal.Config.Clock),
+//                    LastVolunteer = lastAssignment != null ? _dal.Volunteer.Read(lastAssignment.VolunteerId)?.Name : null,
+//                    CompletionTime = lastAssignment?.ExitTime.HasValue == true
+//                        ? lastAssignment.ExitTime.Value - lastAssignment.EntranceTime
+//                        : null,
+//                };
+//            });
+
+//        if (filterField.HasValue && filterValue != null)
+//        {
+//            var propertyInfo = typeof(BO.CallInList).GetProperty(filterField.ToString()) ?? throw new BlInvalidFormatException($"Invalid filter field: {filterField}");
+
+//            var targetType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+//            var convertedValue = Convert.ChangeType(filterValue, targetType);
+//            calls = calls.Where(c => propertyInfo.GetValue(c)?.Equals(convertedValue) == true);
+//            //calls = calls.Where(c => c.GetType().GetProperty(filterField.ToString())?.GetValue(c)?.Equals(filterValue) == true);
+//        }
+
+//        return sortField.HasValue
+//            ? calls.OrderBy(c =>
+//            {
+//                var propertyInfo = typeof(BO.CallInList).GetProperty(sortField.ToString());
+//                return propertyInfo?.GetValue(c);
+//            })
+//        : calls.OrderBy(c => c.CallId);
+//        //? calls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c)??0)
+//        //: calls.OrderBy(c => c.CallId);
+
+//    }
+//    catch (Exception ex)
+//    {
+//        throw new BO.BlGeneralDatabaseException("Failed to retrieve calls list", ex);
+//    }
+//}
+
+
 
 
 ////לבדוק עם מישהי מה יש בRETURN

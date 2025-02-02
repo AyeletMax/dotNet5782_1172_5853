@@ -548,7 +548,7 @@ namespace BlTest
                         case 3:
                             try
                             {
-                                Console.WriteLine("Enter sort field (CallId, CallType, Opening_time, TimeLeft, LastVolunteerName, TotalTime, CallStatus, TotalAssignments) or press Enter to skip:");
+                                Console.WriteLine("Enter sort field (CallId, CallType, OpenTime, TimeRemainingToCall, LastVolunteer, CompletionTime, MyStatus, TotalAllocations) or press Enter to skip:");
                                 string? filterFieldInput = Console.ReadLine();
                                 BO.CallInListFields? filterField = Enum.TryParse(filterFieldInput, out BO.CallInListFields parsedFilterField) ? parsedFilterField : null;
 
@@ -559,7 +559,7 @@ namespace BlTest
                                     filterValue = Console.ReadLine();
                                 }
 
-                                Console.WriteLine("Enter sort field (CallId, CallType, Opening_time, TimeLeft, LastVolunteerName, TotalTime, CallStatus, TotalAssignments) or press Enter to skip:");
+                                Console.WriteLine("Enter sort field (CallId, CallType, OpenTime, TimeRemainingToCall, LastVolunteer, CompletionTime, MyStatus, TotalAllocations) or press Enter to skip:");
                                 string? sortFieldInput = Console.ReadLine();
                                 BO.CallInListFields? sortField = Enum.TryParse(sortFieldInput, out BO.CallInListFields parsedSortField) ? parsedSortField : null;
 
