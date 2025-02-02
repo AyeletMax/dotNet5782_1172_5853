@@ -96,14 +96,14 @@ internal class CallImplementation : BlApi.ICall
                 Longitude = call.Longitude,
                 OpenTime = call.OpenTime,
                 MaxFinishTime = call.MaxFinishTime,
-                MyStatus = Helpers.CallManager.GetCallStatus(callId),
+                MyStatus = CallManager.GetCallStatus(callId),
                 callAssignments = callAssignments
             };
      
         }
         catch (Exception ex)
         {
-            throw new Exception("An error occurred while fetching call details.", ex);
+            throw new BO.BlGeneralDatabaseException("An error occurred while fetching call details.", ex);
         }
     }
 
@@ -112,8 +112,8 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
-            Helpers.CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Helpers.Tools.GetCoordinatesFromAddress(call.Address);
+            CallManager.ValidateCallDetails(call);
+            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
             if (latitude is null || longitude is null)
             {
                 throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
@@ -154,7 +154,7 @@ internal class CallImplementation : BlApi.ICall
             var call = _dal.Call.Read(callId) ?? throw new BlDoesNotExistException("The call with the specified ID does not exist.");
 
             // Step 3: Calculate the status using the helper method
-            var status = Helpers.CallManager.GetCallStatus(call.Id);
+            var status = CallManager.GetCallStatus(call.Id);
 
             // Step 4: Check if the call can be deleted
             if ((status != Status.Opened && status != Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
@@ -176,7 +176,7 @@ internal class CallImplementation : BlApi.ICall
         try
         {
             CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Helpers.Tools.GetCoordinatesFromAddress(call.Address);
+            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
             if (latitude is null || longitude is null)
             {
                 throw new BO.BlInvalidFormatException("The address must be valid and resolvable to latitude and longitude.");

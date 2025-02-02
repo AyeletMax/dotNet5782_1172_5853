@@ -10,7 +10,7 @@ internal static class CallManager
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
     public static Status GetCallStatus(int callId)
     {
-        var call = s_dal.Call.Read(callId) ?? throw new KeyNotFoundException($"Call with ID {callId} not found.");
+        var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
         TimeSpan? timeLeft = call.MaxFinishTime - ClockManager.Now;
 

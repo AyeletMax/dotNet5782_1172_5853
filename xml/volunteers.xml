@@ -224,4 +224,18 @@
     <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
+  <Volunteer>
+    <Id>123456782</Id>
+    <Name>John Doe</Name>
+    <Phone>0501234567</Phone>
+    <Email>john.doe@example.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>sGkmdQ0agHRx7dcfrHIfSqS5gAES5sDfyLvN+EWdKHE=</Password>
+    <Address>1600 Amphitheatre Parkway, Mountain View, CA</Address>
+    <Latitude>35</Latitude>
+    <Longitude>34</Longitude>
+    <LargestDistance>5</LargestDistance>
+    <DistanceType>Air</DistanceType>
+  </Volunteer>
 </ArrayOfVolunteer>

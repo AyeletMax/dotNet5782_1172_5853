@@ -15,6 +15,7 @@ namespace Helpers
             var encryptedPassword = EncryptPassword(enteredPassword);
             return encryptedPassword == storedPassword;
         }
+
         internal static string EncryptPassword(string password)
         {
             using var sha256 = SHA256.Create();
@@ -138,7 +139,9 @@ namespace Helpers
         }
         internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
         {
-            IsPasswordStrong(boVolunteer.Password);
+            if (!IsPasswordStrong(boVolunteer.Password))
+                throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
+
             return Tools.GetCoordinatesFromAddress(boVolunteer.Address);
         }
 
@@ -181,19 +184,19 @@ namespace Helpers
             return true; 
         }
         //לבדוק אם צריך אותה
-        internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-        {
-            return new BO.Volunteer
-            {
-                Id = volunteer.Id,
-                Name = volunteer.Name,
-                Phone = volunteer.Phone,
-                Email = volunteer.Email,
-                Active = volunteer.Active,
-                MyRole = (BO.Role)volunteer.MyRole,
+        //internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
+        //{
+        //    return new BO.Volunteer
+        //    {
+        //        Id = volunteer.Id,
+        //        Name = volunteer.Name,
+        //        Phone = volunteer.Phone,
+        //        Email = volunteer.Email,
+        //        Active = volunteer.Active,
+        //        MyRole = (BO.Role)volunteer.MyRole,
 
-            };
-        }
+        //    };
+        //}
 
 
 

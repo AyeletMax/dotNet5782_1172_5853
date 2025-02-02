@@ -8,7 +8,7 @@ internal class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
-
+    //מה עושים עם מה שנמצא בDO ולא מוצפן??
 
     public BO.Role Login(string username, string password)
     {
@@ -16,14 +16,10 @@ internal class VolunteerImplementation : IVolunteer
         {
 
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
-            //Console.WriteLine($"Found {volunteers.Count()} volunteers.");
             DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
-                throw new BO.BlDoesNotExistException("Incorrect username or password.");
-            //Console.WriteLine($"Found  volunteers.");
-            BO.Volunteer mappedVolunteer = VolunteerManager.MapVolunteer(matchingVolunteer);
+            throw new BO.BlDoesNotExistException("Incorrect username or password.");
             return (BO.Role)matchingVolunteer.MyRole;
         }
-       
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);

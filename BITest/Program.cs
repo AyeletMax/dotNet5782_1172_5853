@@ -251,7 +251,7 @@ namespace BlTest
                         }
                         catch (BO.BlAlreadyExistsException ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            Console.WriteLine($"Error BlAlreadyExistsException: {ex.Message}");
                         }
                         catch (BO.BlInvalidFormatException ex)
                         {
@@ -259,15 +259,15 @@ namespace BlTest
                         }
                         catch (BO.BlApiRequestException ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            Console.WriteLine($"Error BlApiRequestException: {ex.Message}");
                         }
                         catch (BO.BlGeolocationNotFoundException ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            Console.WriteLine($"Error BlGeolocationNotFoundException: {ex.Message}");
                         }
                         catch (BO.BlGeneralDatabaseException ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            Console.WriteLine($"Error BlGeneralDatabaseException: {ex.Message}");
                         }
                         break;
                     case 6:
@@ -500,10 +500,13 @@ namespace BlTest
                 while (true)
                 {
                     Console.WriteLine("\n--- Call Management ---");
-                    Console.WriteLine("1. Show All Calls");
-                    Console.WriteLine("2. Read Call by ID");
-                    Console.WriteLine("3. Add Call");
-                    Console.WriteLine("4. Remove Call");
+                    Console.WriteLine("1. Get call quantities by status");
+                    Console.WriteLine("2. Show All Calls");
+                    Console.WriteLine("3. Get Filter / Sort Call");
+                    Console.WriteLine("4. Read Call by ID");
+                    Console.WriteLine("5. Add Call");
+                    Console.WriteLine("6. Remove Call");
+                    Console.WriteLine("7. Update Call");
                     Console.WriteLine("0. Back");
                     Console.Write("Choose an option: ");
 
@@ -513,78 +516,161 @@ namespace BlTest
                     switch (choice)
                     {
                         case 1:
-                            foreach (var call in s_bl.Call.GetCallList())
-                                Console.WriteLine(call);
+                            try
+                            {
+                                int[] callQuantities = s_bl.Call.GetCallQuantitiesByStatus();
+                                Console.WriteLine("Call quantities by status:");
+
+                                foreach (BO.Status status in Enum.GetValues(typeof(BO.Status)))
+                                {
+                                    Console.WriteLine($"{status}: {callQuantities[(int)status]}");
+                                }
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                                if (ex.InnerException != null)
+                                {
+                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
+                                }
+                            }
                             break;
                         case 2:
-                            Console.Write("Enter Call ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int callId))
-                            {
-                                var call = s_bl.Call.GetCallDetails(callId);
+                            try { 
+                            foreach (var call in s_bl.Call.GetCallList())
                                 Console.WriteLine(call);
                             }
-                            else
+                            catch (BO.BlGeneralDatabaseException ex)
                             {
-                                throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                                Console.WriteLine($"Error: {ex.GetType().Name} - {ex.Message}");
                             }
                             break;
                         case 3:
-                            //צריך לעשות את כל השדות
-                            Console.Write("Enter Call Type (Emergency, Assistance, etc.): ");
-                            if (Enum.TryParse(Console.ReadLine(), out BO.CallType callType))
+                            try
                             {
-                                Console.Write("Enter Description: ");
-                                string description = Console.ReadLine()!;
-                                Console.Write("Enter Address: ");
-                                string address = Console.ReadLine()!;
+                                Console.WriteLine("Enter sort field (CallId, CallType, Opening_time, TimeLeft, LastVolunteerName, TotalTime, CallStatus, TotalAssignments) or press Enter to skip:");
+                                string? filterFieldInput = Console.ReadLine();
+                                BO.CallInListFields? filterField = Enum.TryParse(filterFieldInput, out BO.CallInListFields parsedFilterField) ? parsedFilterField : null;
 
-                                Console.Write("Enter Latitude: ");
-                                if (double.TryParse(Console.ReadLine(), out double latitude))
+                                object? filterValue = null;
+                                if (filterField.HasValue)
                                 {
-                                    Console.Write("Enter Longitude: ");
-                                    if (double.TryParse(Console.ReadLine(), out double longitude))
-                                    {
-                                        var call = new BO.Call
-                                        {
-                                            MyCallType = callType,
-                                            VerbalDescription = description,
-                                            Address = address,
-                                            Latitude = latitude,
-                                            Longitude = longitude,
-                                            OpenTime = DateTime.Now,
-                                            //לבדוק מה קורה עם הסטטוס של קריאה
-                                            //MyStatus = BO.CallStatus.Open
-                                        };
-                                        s_bl.Call.AddCall(call);
-                                        Console.WriteLine("Call added.");
-                                    }
-                                    else
-                                    {
-                                        throw new FormatException("Invalid longitude format.");
-                                    }
+                                    Console.WriteLine("Enter filter value:");
+                                    filterValue = Console.ReadLine();
+                                }
+
+                                Console.WriteLine("Enter sort field (CallId, CallType, Opening_time, TimeLeft, LastVolunteerName, TotalTime, CallStatus, TotalAssignments) or press Enter to skip:");
+                                string? sortFieldInput = Console.ReadLine();
+                                BO.CallInListFields? sortField = Enum.TryParse(sortFieldInput, out BO.CallInListFields parsedSortField) ? parsedSortField : null;
+
+                                var callList = s_bl.Call.GetCallList(filterField, filterValue, sortField);
+
+                                foreach (var call in callList)
+                                    Console.WriteLine(call);
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Exception: {ex.GetType().Name} - {ex.Message}");
+                                if (ex.InnerException != null)
+                                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                            }
+                            break;
+                        case 4:
+                            try
+                            {
+                                Console.Write("Enter Call ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int callId))
+                                {
+                                    var call = s_bl.Call.GetCallDetails(callId);
+                                    Console.WriteLine(call);
                                 }
                                 else
                                 {
-                                    throw new FormatException("Invalid latitude format.");
+                                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
                                 }
                             }
-                            else
+                            catch (BO.BlDoesNotExistException ex)
                             {
-                                throw new FormatException("Invalid call type.");
+                                Console.WriteLine($"Error: {ex.Message}");
                             }
-
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
                             break;
-                        case 4:
-                            Console.Write("Enter Call ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int cId))
+                        case 5:
+                            try
                             {
-                                s_bl.Call.DeleteCall(cId);
-                                Console.WriteLine("Call removed.");
+                                Console.WriteLine("Enter Call details:");
+                                Console.Write("ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int id))
+                                {
+                                    BO.Call call = CreateCall(id);
+                                    s_bl.Call.AddCall(call);
+                                    Console.WriteLine("Call created successfully!");
+                                }
+                                else
+                                    throw new FormatException("Invalid input. Cll ID must be a number.");
                             }
-                            else
+                            catch (BO.BlDoesNotExistException ex)
                             {
-                                throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
                             }
+                            catch (BO.BlInvalidOperationException ex)
+                            {
+                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
+                            }
+                            catch (BO.BlInvalidFormatException ex)
+                            {
+                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
+                            }
+                            catch (BO.BlAlreadyExistsException ex)
+                            {
+                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
+                                if (ex.InnerException != null)
+                                {
+                                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                            }
+                            ;
+                            break;
+                        case 6:
+                            try
+                            {
+                                Console.Write("Enter Call ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int cId))
+                                {
+                                    s_bl.Call.DeleteCall(cId);
+                                    Console.WriteLine("Call removed.");
+                                }
+                                else
+                                {
+                                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                                }
+                            }
+                            catch (BlDoesNotExistException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BlDeletionException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            break;
+                        case 7:
+                            UpDateCall();
                             break;
                         case 0:
                             return;
@@ -599,5 +685,79 @@ namespace BlTest
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+        static BO.Call CreateCall(int id)
+        {
+                Console.WriteLine("Enter the call type (0 for None, 1 for MusicPerformance, 2 for MusicTherapy, 3 for SingingAndEmotionalSupport, 4 for GroupActivities, 5 for PersonalizedMusicCare):");
+                if (!Enum.TryParse(Console.ReadLine(), out BO.CallType callType))
+                {
+                    throw new FormatException("Invalid call type.");
+                }
+
+                Console.WriteLine("Enter the verbal description:");
+                string verbalDescription = Console.ReadLine();
+
+                Console.WriteLine("Enter the address:");
+                string address = Console.ReadLine();
+
+                Console.WriteLine("Enter the latitude:");
+                if (!double.TryParse(Console.ReadLine(), out double latitude))
+                {
+                    throw new FormatException("Invalid latitude value.");
+                }
+
+                Console.WriteLine("Enter the longitude:");
+                if (!double.TryParse(Console.ReadLine(), out double longitude))
+                {
+                    throw new FormatException("Invalid longitude value.");
+                }
+
+
+                Console.WriteLine("Enter the max finish time (yyyy-mm-dd) or leave empty:");
+                string maxFinishTimeInput = Console.ReadLine();
+                DateTime? maxFinishTime = string.IsNullOrEmpty(maxFinishTimeInput) ? null : DateTime.Parse(maxFinishTimeInput);
+
+                Console.WriteLine("Enter the status (0 for InProgress, 1 for AtRisk, 2 for InProgressAtRisk, 3 for Opened, 4 for Closed, 5 for Expired):");
+                if (!Enum.TryParse(Console.ReadLine(), out Status status))
+                {
+                    throw new FormatException("Invalid status.");
+                }
+
+               return new BO.Call
+               {
+                    Id = id,
+                    MyCallType = callType,
+                    VerbalDescription = verbalDescription,
+                    Address = address,
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    //האם זה הזמן הנוכחי?
+                    OpenTime = DateTime.Now,
+                    MaxFinishTime = maxFinishTime,
+                    MyStatus = status,
+                    callAssignments = null
+               };
+            
+           
+        }
+       //אני באמצע הפונ
+       //למה היא לא מקבלת ID?
+        static void UpDateCall()
+        {
+
+            try
+            {
+                Console.Write("Enter requester ID: ");
+                if (int.TryParse(Console.ReadLine(), out int requesterId))
+                {
+                    //BO.Call boCall = CreateCall(requesterId);
+                    //s_bl.Call.UpdateCallDetails(requesterId, boCall);
+                    Console.WriteLine("Volunteer updated successfully.");
+                }
+                else
+                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
+            }
+            catch { }
+            }
     }
 }
+
