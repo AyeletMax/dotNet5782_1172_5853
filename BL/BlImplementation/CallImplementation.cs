@@ -122,6 +122,10 @@ internal class CallImplementation : BlApi.ICall
             };
      
         }
+        catch (BlDoesNotExistException)
+        {
+            throw; 
+        }
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An error occurred while fetching call details.", ex);
@@ -206,6 +210,10 @@ internal class CallImplementation : BlApi.ICall
             call.Longitude = longitude.Value;
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Create(dataCall);
+        }
+        catch (BlInvalidFormatException)
+        {
+            throw;
         }
         catch (DO.DalAlreadyExistsException)
         {
