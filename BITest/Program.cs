@@ -550,14 +550,14 @@ namespace BlTest
                             }
                             break;
                         case 2:
-                            try { 
-                            foreach (var call in s_bl.Call.GetCallList())
-                                Console.WriteLine(call);
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.GetType().Name} - {ex.Message}");
-                            }
+                            //try { 
+                            //foreach (var call in s_bl.Call.GetCallList())
+                            //    Console.WriteLine(call);
+                            //}
+                            //catch (BO.BlGeneralDatabaseException ex)
+                            //{
+                            //    Console.WriteLine($"Error: {ex.GetType().Name} - {ex.Message}");
+                            //}
                             break;
                         case 3:
                             try
