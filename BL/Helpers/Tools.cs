@@ -92,10 +92,10 @@ internal static class Tools
         return r * c;
     }
 
-    
-    private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
-    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
 
+    //private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
+    private static readonly string apiKey = "pk.75af8008d03ff3161df4583252c484f2";
+    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
     /// <summary>
     /// Retrieves coordinates (latitude and longitude) for a given address.
     /// If the address is invalid or the API request fails, an appropriate exception is thrown.
@@ -112,7 +112,7 @@ internal static class Tools
         {
             throw new BlInvalidFormatException(address); // חריגה אם הכתובת לא תקינה
         }
-        Console.WriteLine("12 מרחק טעות");
+        //Console.WriteLine("12 מרחק טעות");
         try
         {
             // יצירת ה-URL לפנייה ל-API

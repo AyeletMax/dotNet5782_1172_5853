@@ -15,7 +15,7 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
-            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
+            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => !VolunteerManager.VerifyPassword(password, v.Password!)) ??
             throw new BO.BlDoesNotExistException("Incorrect username or password.");
             return (BO.Role)matchingVolunteer.MyRole;
         }

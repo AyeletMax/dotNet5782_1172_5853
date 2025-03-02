@@ -713,18 +713,17 @@ namespace BlTest
                 Console.WriteLine("Enter the address:");
                 string address = Console.ReadLine();
 
-                Console.WriteLine("Enter the latitude:");
-                if (!double.TryParse(Console.ReadLine(), out double latitude))
-                {
-                    throw new FormatException("Invalid latitude value.");
-                }
+                //Console.WriteLine("Enter the latitude:");
+                //if (!double.TryParse(Console.ReadLine(), out double latitude))
+                //{
+                //    throw new FormatException("Invalid latitude value.");
+                //}
 
-                Console.WriteLine("Enter the longitude:");
-                if (!double.TryParse(Console.ReadLine(), out double longitude))
-                {
-                    throw new FormatException("Invalid longitude value.");
-                }
-
+                //Console.WriteLine("Enter the longitude:");
+                //if (!double.TryParse(Console.ReadLine(), out double longitude))
+                //{
+                //    throw new FormatException("Invalid longitude value.");
+                //}
 
                 Console.WriteLine("Enter the max finish time (yyyy-mm-dd) or leave empty:");
                 string maxFinishTimeInput = Console.ReadLine();
@@ -742,10 +741,10 @@ namespace BlTest
                     MyCallType = callType,
                     VerbalDescription = verbalDescription,
                     Address = address,
-                    Latitude = latitude,
-                    Longitude = longitude,
-                    //האם זה הזמן הנוכחי?
-                    OpenTime = DateTime.Now,
+                   Latitude =0,
+                   Longitude = 0,
+                   //האם זה הזמן הנוכחי?
+                   OpenTime = DateTime.Now,
                };
             
            
