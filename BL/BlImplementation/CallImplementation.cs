@@ -138,28 +138,30 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
+            var existingCall = _dal.Call.Read(call.Id) ?? throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exist");
             CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
-            if (latitude is null || longitude is null)
+            if (call.Address != "No Address")
             {
-                throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
+                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address!);
+                if (latitude is null || longitude is null)
+                    throw new BO.BlInvalidFormatException($"Invalid address: {call.Address}");
+                call.Latitude = latitude.Value;
+                call.Longitude = longitude.Value;
             }
-            call.Latitude = latitude.Value;
-            call.Longitude = longitude.Value;
-            DO.Call callToUpdate=CallManager.ConvertBoCallToDoCall(call);
-
-            // Convert BO.Call to DO.Call for data layer update
-            //DO.Call callToUpdate = new()
+            else
+            {
+                call.Address = existingCall.Address;
+                call.Latitude = existingCall.Latitude;
+                call.Longitude = existingCall.Longitude;
+            }
+            //var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
+            //if (latitude is null || longitude is null)
             //{
-            //    Id = call.Id,
-            //    MyCallType = (DO.CallType)call.MyCallType,
-            //    VerbalDescription = call.VerbalDescription,
-            //    Address = call.Address,
-            //    Latitude = latitude.Value,
-            //    Longitude = longitude.Value,
-            //    OpenTime = call.OpenTime,
-            //    MaxFinishTime = call.MaxFinishTime
-            //};
+            //    throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
+            //}
+            //call.Latitude = latitude.Value;
+            //call.Longitude = longitude.Value;
+            DO.Call callToUpdate=CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Update(callToUpdate);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -183,13 +185,17 @@ internal class CallImplementation : BlApi.ICall
             var status = CallManager.GetCallStatus(call.Id);
 
             // Step 4: Check if the call can be deleted
-            if ((status != Status.Opened && status != Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
+            if ((status == Status.Opened && status == Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
             {
-                throw new BO.BlDeletionException($"The call with ID:{callId}cannot be deleted.");
+                throw new BO.BlDeletionException($"The call with ID:{callId} cannot be deleted.");
             }                
 
             // Step 5: Attempt to delete the call
             _dal.Call.Delete(callId);
+        }
+        catch (BlDeletionException)
+        {
+           throw;
         }
         catch (Exception ex) 
         {

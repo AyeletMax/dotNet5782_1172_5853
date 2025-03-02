@@ -1,7 +1,6 @@
 ﻿using System;
 using BlApi;
 using BO;
-
 using DO;
 ///לבדוק מה עם כל הזריקות שיש פה
 namespace BlTest
@@ -749,25 +748,56 @@ namespace BlTest
             
            
         }
-       //אני באמצע הפונ
-       //למה היא לא מקבלת ID?
+        //אני באמצע הפונ
+        //למה היא לא מקבלת ID?
         static void UpDateCall()
         {
-
+            Console.Write("Enter Call ID: ");
+            int.TryParse(Console.ReadLine(), out int callId);
+            Console.Write("Enter New Description (optional) : ");
+            string description = Console.ReadLine();
+            Console.Write("Enter New Full Address (optional) : ");
+            string address = Console.ReadLine();
+            Console.Write("Enter Call Type (optional) : ");
+            BO.CallType? callType = Enum.TryParse(Console.ReadLine(), out BO.CallType parsedType) ? parsedType : (BO.CallType?)null;
+            Console.Write("Enter Max Finish Time (hh:mm , (optional)): ");
+            TimeSpan? maxFinishTime = TimeSpan.TryParse(Console.ReadLine(), out TimeSpan parsedTime) ? parsedTime : (TimeSpan?)null;
             try
             {
-                Console.Write("Enter requester ID: ");
-                if (int.TryParse(Console.ReadLine(), out int requesterId))
+                var callToUpdate = s_bl.Call.GetCallDetails(callId);
+                if (callToUpdate == null)
+                    throw new BO.BlDoesNotExistException($"Call with ID{callId} does not exist!");
+                var newUpdatedCall = new BO.Call
                 {
-                    //BO.Call boCall = CreateCall(requesterId);
-                    //s_bl.Call.UpdateCallDetails(requesterId, boCall);
-                    Console.WriteLine("Volunteer updated successfully.");
-                }
-                else
-                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                    Id = callId,
+                    VerbalDescription = !string.IsNullOrWhiteSpace(description) ? description : callToUpdate.VerbalDescription,
+                    Address = !string.IsNullOrWhiteSpace(address) ? address : /*callToUpdate. FullAddress*/"No Address",
+                    OpenTime = callToUpdate.OpenTime,
+                    MaxFinishTime = (maxFinishTime.HasValue ? DateTime.Now.Date + maxFinishTime.Value : callToUpdate.MaxFinishTime),
+                    MyCallType = callType ?? callToUpdate.MyCallType
+                };
+                s_bl.Call.UpdateCallDetails(newUpdatedCall);
+                Console.WriteLine("Call updated successfully.");
             }
-            catch { }
+            catch (Exception ex) 
+            { 
+                Console.WriteLine($"Error: {ex.GetType().Name}, Message: {ex.Message}");
             }
+            //try
+            //{
+            //    Console.Write("Enter requester ID: ");
+            //    if (int.TryParse(Console.ReadLine(), out int requesterId))
+            //    {
+            //        //BO.Call boCall = CreateCall(requesterId);
+            //        //s_bl.Call.UpdateCallDetails(requesterId, boCall);
+            //        Console.WriteLine("Volunteer updated successfully.");
+            //    }
+            //    else
+            //        throw new FormatException("Invalid input. Volunteer ID must be a number.");
+            //}
+            //catch { }
+            //}
+        }
     }
 }
 

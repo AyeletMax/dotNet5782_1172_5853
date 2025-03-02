@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <Id>1</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
-    <Latitude>32.1098</Latitude>
-    <Longitude>34.7867</Longitude>
-    <OpenTime>2025-02-01T21:01:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:47:00</MaxFinishTime>
-    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
-  </Call>
-  <Call>
     <Id>2</Id>
     <MyCallType>GroupActivities</MyCallType>
     <Address>Eilat, Israel</Address>
@@ -499,5 +489,15 @@
     <OpenTime>2025-02-01T21:47:00</OpenTime>
     <MaxFinishTime>2025-02-01T23:05:00</MaxFinishTime>
     <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>1</Id>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Beer Sheva, Israel</Address>
+    <Latitude>32.1098</Latitude>
+    <Longitude>34.7867</Longitude>
+    <OpenTime>2025-02-01T21:01:00</OpenTime>
+    <MaxFinishTime>2025-02-01T23:47:00</MaxFinishTime>
+    <VerbalDescription>helloooooooooooo</VerbalDescription>
   </Call>
 </ArrayOfCall>
