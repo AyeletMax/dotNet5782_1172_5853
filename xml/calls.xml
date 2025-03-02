@@ -1,104 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
+    <Id>1</Id>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Jerusalem, Israel</Address>
+    <Latitude>32.1098</Latitude>
+    <Longitude>34.7867</Longitude>
+    <OpenTime>2025-03-02T17:05:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:01:00</MaxFinishTime>
+    <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
+  </Call>
+  <Call>
     <Id>2</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0869</Latitude>
     <Longitude>34.8045</Longitude>
-    <OpenTime>2025-02-01T22:15:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:28:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+    <OpenTime>2025-03-02T14:39:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:29:00</MaxFinishTime>
+    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
   </Call>
   <Call>
     <Id>3</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0727</Latitude>
     <Longitude>34.8067</Longitude>
-    <OpenTime>2025-02-01T19:52:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:56:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+    <OpenTime>2025-03-02T18:14:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:13:00</MaxFinishTime>
+    <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>4</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0715</Latitude>
     <Longitude>34.7895</Longitude>
-    <OpenTime>2025-02-01T20:41:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:28:00</MaxFinishTime>
-    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
+    <OpenTime>2025-03-02T16:08:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:11:00</MaxFinishTime>
+    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
   </Call>
   <Call>
     <Id>5</Id>
-    <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Haifa, Israel</Address>
-    <Latitude>32.0968</Latitude>
-    <Longitude>34.796</Longitude>
-    <OpenTime>2025-02-01T17:48:00</OpenTime>
-    <MaxFinishTime>2025-02-01T19:55:00</MaxFinishTime>
-    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>6</Id>
     <MyCallType>MusicTherapy</MyCallType>
     <Address>Tel Aviv, Israel</Address>
-    <Latitude>32.0805</Latitude>
-    <Longitude>34.7775</Longitude>
-    <OpenTime>2025-02-01T18:42:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:47:00</MaxFinishTime>
+    <Latitude>32.0968</Latitude>
+    <Longitude>34.796</Longitude>
+    <OpenTime>2025-03-02T15:59:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:05:00</MaxFinishTime>
     <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
   </Call>
   <Call>
+    <Id>6</Id>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Eilat, Israel</Address>
+    <Latitude>32.0805</Latitude>
+    <Longitude>34.7775</Longitude>
+    <OpenTime>2025-03-02T14:14:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:18:00</MaxFinishTime>
+    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+  </Call>
+  <Call>
     <Id>7</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Tel Aviv, Israel</Address>
     <Latitude>32.1027</Latitude>
     <Longitude>34.7729</Longitude>
-    <OpenTime>2025-02-01T19:38:00</OpenTime>
-    <MaxFinishTime>2025-02-02T01:34:00</MaxFinishTime>
-    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
+    <OpenTime>2025-03-02T19:02:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:04:00</MaxFinishTime>
+    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
   </Call>
   <Call>
     <Id>8</Id>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
+    <Address>Tel Aviv, Israel</Address>
     <Latitude>32.0972</Latitude>
     <Longitude>34.7915</Longitude>
-    <OpenTime>2025-02-01T19:25:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:46:00</MaxFinishTime>
-    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
+    <OpenTime>2025-03-02T14:39:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:21:00</MaxFinishTime>
+    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
   </Call>
   <Call>
     <Id>9</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0783</Latitude>
     <Longitude>34.8206</Longitude>
-    <OpenTime>2025-02-01T22:13:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:48:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
+    <OpenTime>2025-03-02T18:22:00</OpenTime>
+    <MaxFinishTime>2025-03-02T21:28:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>10</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Beer Sheva, Israel</Address>
     <Latitude>32.1019</Latitude>
     <Longitude>34.7769</Longitude>
-    <OpenTime>2025-02-01T19:23:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:02:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T14:59:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:11:00</MaxFinishTime>
+    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
   </Call>
   <Call>
     <Id>11</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Haifa, Israel</Address>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Rishon Lezion, Israel</Address>
     <Latitude>32.0916</Latitude>
     <Longitude>34.7618</Longitude>
-    <OpenTime>2025-02-01T20:29:00</OpenTime>
-    <MaxFinishTime>2025-02-02T01:17:00</MaxFinishTime>
-    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
+    <OpenTime>2025-03-02T14:47:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:51:00</MaxFinishTime>
+    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
   </Call>
   <Call>
     <Id>12</Id>
@@ -106,49 +116,49 @@
     <Address>Jerusalem, Israel</Address>
     <Latitude>32.0744</Latitude>
     <Longitude>34.7462</Longitude>
-    <OpenTime>2025-02-01T21:52:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:22:00</MaxFinishTime>
+    <OpenTime>2025-03-02T16:18:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:46:00</MaxFinishTime>
     <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>13</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0731</Latitude>
     <Longitude>34.7213</Longitude>
-    <OpenTime>2025-02-01T20:18:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:28:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T15:18:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:59:00</MaxFinishTime>
+    <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>14</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0915</Latitude>
     <Longitude>34.703</Longitude>
-    <OpenTime>2025-02-01T19:25:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:36:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T14:59:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:07:00</MaxFinishTime>
+    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
   </Call>
   <Call>
     <Id>15</Id>
-    <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Jerusalem, Israel</Address>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Eilat, Israel</Address>
     <Latitude>32.0818</Latitude>
     <Longitude>34.7225</Longitude>
-    <OpenTime>2025-02-01T22:12:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:51:00</MaxFinishTime>
-    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
+    <OpenTime>2025-03-02T16:01:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:58:00</MaxFinishTime>
+    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
   </Call>
   <Call>
     <Id>16</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0771</Latitude>
     <Longitude>34.8182</Longitude>
-    <OpenTime>2025-02-01T18:47:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:17:00</MaxFinishTime>
-    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
+    <OpenTime>2025-03-02T17:32:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:51:00</MaxFinishTime>
+    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
   </Call>
   <Call>
     <Id>17</Id>
@@ -156,8 +166,8 @@
     <Address>Eilat, Israel</Address>
     <Latitude>32.1013</Latitude>
     <Longitude>34.7879</Longitude>
-    <OpenTime>2025-02-01T21:47:00</OpenTime>
-    <MaxFinishTime>2025-02-02T01:42:00</MaxFinishTime>
+    <OpenTime>2025-03-02T15:36:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:55:00</MaxFinishTime>
     <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
   </Call>
   <Call>
@@ -166,139 +176,139 @@
     <Address>Tel Aviv, Israel</Address>
     <Latitude>32.1036</Latitude>
     <Longitude>34.7571</Longitude>
-    <OpenTime>2025-02-01T19:34:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:32:00</MaxFinishTime>
+    <OpenTime>2025-03-02T16:10:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:30:00</MaxFinishTime>
     <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
   </Call>
   <Call>
     <Id>19</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0863</Latitude>
     <Longitude>34.7898</Longitude>
-    <OpenTime>2025-02-01T17:05:00</OpenTime>
-    <MaxFinishTime>2025-02-01T19:14:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+    <OpenTime>2025-03-02T19:00:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:25:00</MaxFinishTime>
+    <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>20</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.1078</Latitude>
     <Longitude>34.7509</Longitude>
-    <OpenTime>2025-02-01T20:56:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:27:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T19:25:00</OpenTime>
+    <MaxFinishTime>2025-03-02T23:10:00</MaxFinishTime>
+    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
   </Call>
   <Call>
     <Id>21</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Beer Sheva, Israel</Address>
     <Latitude>32.0789</Latitude>
     <Longitude>34.8252</Longitude>
-    <OpenTime>2025-02-01T22:14:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:51:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T15:25:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:24:00</MaxFinishTime>
+    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
   </Call>
   <Call>
     <Id>22</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0934</Latitude>
     <Longitude>34.774</Longitude>
-    <OpenTime>2025-02-01T18:42:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:33:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+    <OpenTime>2025-03-02T15:03:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:32:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>23</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Eilat, Israel</Address>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>Tel Aviv, Israel</Address>
     <Latitude>32.1047</Latitude>
     <Longitude>34.7306</Longitude>
-    <OpenTime>2025-02-01T17:32:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:54:00</MaxFinishTime>
-    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+    <OpenTime>2025-03-02T14:23:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:28:00</MaxFinishTime>
+    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
   </Call>
   <Call>
     <Id>24</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Rishon Lezion, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0787</Latitude>
     <Longitude>34.7442</Longitude>
-    <OpenTime>2025-02-01T18:21:00</OpenTime>
-    <MaxFinishTime>2025-02-01T19:27:00</MaxFinishTime>
-    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
+    <OpenTime>2025-03-02T14:04:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:35:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>25</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0851</Latitude>
     <Longitude>34.7564</Longitude>
-    <OpenTime>2025-02-01T20:38:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:56:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
+    <OpenTime>2025-03-02T15:50:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:54:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>26</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.1033</Latitude>
     <Longitude>34.7549</Longitude>
-    <OpenTime>2025-02-01T17:18:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:26:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
+    <OpenTime>2025-03-02T15:12:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:11:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>27</Id>
-    <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Haifa, Israel</Address>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Eilat, Israel</Address>
     <Latitude>32.0781</Latitude>
     <Longitude>34.7326</Longitude>
-    <OpenTime>2025-02-01T21:44:00</OpenTime>
-    <MaxFinishTime>2025-02-02T03:00:00</MaxFinishTime>
-    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
+    <OpenTime>2025-03-02T14:08:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:21:00</MaxFinishTime>
+    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
   </Call>
   <Call>
     <Id>28</Id>
     <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Jerusalem, Israel</Address>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0861</Latitude>
     <Longitude>34.7718</Longitude>
-    <OpenTime>2025-02-01T18:29:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:37:00</MaxFinishTime>
-    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
+    <OpenTime>2025-03-02T16:59:00</OpenTime>
+    <MaxFinishTime>2025-03-02T21:37:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>29</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Eilat, Israel</Address>
     <Latitude>32.0951</Latitude>
     <Longitude>34.7864</Longitude>
-    <OpenTime>2025-02-01T17:14:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:54:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
+    <OpenTime>2025-03-02T18:21:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:24:00</MaxFinishTime>
+    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
   </Call>
   <Call>
     <Id>30</Id>
     <MyCallType>GroupActivities</MyCallType>
-    <Address>Haifa, Israel</Address>
+    <Address>Eilat, Israel</Address>
     <Latitude>32.1083</Latitude>
     <Longitude>34.7446</Longitude>
-    <OpenTime>2025-02-01T19:10:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:16:00</MaxFinishTime>
-    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
+    <OpenTime>2025-03-02T15:58:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:29:00</MaxFinishTime>
+    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
   </Call>
   <Call>
     <Id>31</Id>
     <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Jerusalem, Israel</Address>
+    <Address>Haifa, Israel</Address>
     <Latitude>32.0875</Latitude>
     <Longitude>34.7365</Longitude>
-    <OpenTime>2025-02-01T19:21:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:42:00</MaxFinishTime>
-    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
+    <OpenTime>2025-03-02T15:55:00</OpenTime>
+    <MaxFinishTime>2025-03-02T17:15:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>32</Id>
@@ -306,59 +316,59 @@
     <Address>Haifa, Israel</Address>
     <Latitude>32.0785</Latitude>
     <Longitude>34.7809</Longitude>
-    <OpenTime>2025-02-01T18:47:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:25:00</MaxFinishTime>
+    <OpenTime>2025-03-02T17:47:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:12:00</MaxFinishTime>
     <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>33</Id>
-    <MyCallType>SingingAndEmotionalSupport</MyCallType>
-    <Address>Jerusalem, Israel</Address>
-    <Latitude>32.0891</Latitude>
-    <Longitude>34.7989</Longitude>
-    <OpenTime>2025-02-01T19:30:00</OpenTime>
-    <MaxFinishTime>2025-02-02T01:06:00</MaxFinishTime>
-    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>34</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
-    <Latitude>32.0978</Latitude>
-    <Longitude>34.7588</Longitude>
-    <OpenTime>2025-02-01T20:40:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:25:00</MaxFinishTime>
-    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>35</Id>
     <MyCallType>GroupActivities</MyCallType>
     <Address>Haifa, Israel</Address>
-    <Latitude>32.0842</Latitude>
-    <Longitude>34.7545</Longitude>
-    <OpenTime>2025-02-01T17:47:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:48:00</MaxFinishTime>
+    <Latitude>32.0891</Latitude>
+    <Longitude>34.7989</Longitude>
+    <OpenTime>2025-03-02T18:28:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:35:00</MaxFinishTime>
     <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
   </Call>
   <Call>
-    <Id>36</Id>
+    <Id>34</Id>
     <MyCallType>SingingAndEmotionalSupport</MyCallType>
     <Address>Haifa, Israel</Address>
+    <Latitude>32.0978</Latitude>
+    <Longitude>34.7588</Longitude>
+    <OpenTime>2025-03-02T17:03:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:30:00</MaxFinishTime>
+    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>35</Id>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Rishon Lezion, Israel</Address>
+    <Latitude>32.0842</Latitude>
+    <Longitude>34.7545</Longitude>
+    <OpenTime>2025-03-02T14:26:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:34:00</MaxFinishTime>
+    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>36</Id>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Eilat, Israel</Address>
     <Latitude>32.1015</Latitude>
     <Longitude>34.7916</Longitude>
-    <OpenTime>2025-02-01T20:38:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:16:00</MaxFinishTime>
-    <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
+    <OpenTime>2025-03-02T18:31:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:19:00</MaxFinishTime>
+    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
   </Call>
   <Call>
     <Id>37</Id>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
+    <Address>Tel Aviv, Israel</Address>
     <Latitude>32.0994</Latitude>
     <Longitude>34.7919</Longitude>
-    <OpenTime>2025-02-01T22:45:00</OpenTime>
-    <MaxFinishTime>2025-02-02T02:44:00</MaxFinishTime>
-    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
+    <OpenTime>2025-03-02T17:35:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:22:00</MaxFinishTime>
+    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
   </Call>
   <Call>
     <Id>38</Id>
@@ -366,29 +376,29 @@
     <Address>Haifa, Israel</Address>
     <Latitude>32.095</Latitude>
     <Longitude>34.797</Longitude>
-    <OpenTime>2025-02-01T19:37:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:45:00</MaxFinishTime>
+    <OpenTime>2025-03-02T17:35:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:21:00</MaxFinishTime>
     <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
   </Call>
   <Call>
     <Id>39</Id>
-    <MyCallType>MusicTherapy</MyCallType>
+    <MyCallType>MusicPerformance</MyCallType>
     <Address>Tel Aviv, Israel</Address>
     <Latitude>32.084</Latitude>
     <Longitude>34.8047</Longitude>
-    <OpenTime>2025-02-01T21:47:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:36:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
+    <OpenTime>2025-03-02T16:46:00</OpenTime>
+    <MaxFinishTime>2025-03-02T21:35:00</MaxFinishTime>
+    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
   </Call>
   <Call>
     <Id>40</Id>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Rishon Lezion, Israel</Address>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0909</Latitude>
     <Longitude>34.8061</Longitude>
-    <OpenTime>2025-02-01T17:36:00</OpenTime>
-    <MaxFinishTime>2025-02-01T19:59:00</MaxFinishTime>
-    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
+    <OpenTime>2025-03-02T18:04:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:40:00</MaxFinishTime>
+    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
   </Call>
   <Call>
     <Id>41</Id>
@@ -396,108 +406,98 @@
     <Address>Jerusalem, Israel</Address>
     <Latitude>32.092</Latitude>
     <Longitude>34.8118</Longitude>
-    <OpenTime>2025-02-01T18:52:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:23:00</MaxFinishTime>
+    <OpenTime>2025-03-02T17:26:00</OpenTime>
+    <MaxFinishTime>2025-03-02T18:48:00</MaxFinishTime>
     <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>42</Id>
-    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <MyCallType>MusicTherapy</MyCallType>
     <Address>Jerusalem, Israel</Address>
     <Latitude>32.0955</Latitude>
     <Longitude>34.8051</Longitude>
-    <OpenTime>2025-02-01T18:32:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:02:00</MaxFinishTime>
-    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
+    <OpenTime>2025-03-02T19:10:00</OpenTime>
+    <MaxFinishTime>2025-03-03T00:07:00</MaxFinishTime>
+    <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
     <Id>43</Id>
     <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
+    <Address>Jerusalem, Israel</Address>
     <Latitude>32.0803</Latitude>
     <Longitude>34.7744</Longitude>
-    <OpenTime>2025-02-01T18:48:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:00:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>44</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
-    <Latitude>32.0877</Latitude>
-    <Longitude>34.8147</Longitude>
-    <OpenTime>2025-02-01T19:25:00</OpenTime>
-    <MaxFinishTime>2025-02-01T21:29:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>45</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
-    <Latitude>32.0774</Latitude>
-    <Longitude>34.7823</Longitude>
-    <OpenTime>2025-02-01T18:31:00</OpenTime>
-    <MaxFinishTime>2025-02-02T00:16:00</MaxFinishTime>
-    <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>46</Id>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
-    <Latitude>32.0979</Latitude>
-    <Longitude>34.7469</Longitude>
-    <OpenTime>2025-02-01T20:15:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:02:00</MaxFinishTime>
-    <VerbalDescription>Singing performance together with patients and caregivers</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>47</Id>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>Jerusalem, Israel</Address>
-    <Latitude>32.0905</Latitude>
-    <Longitude>34.7776</Longitude>
-    <OpenTime>2025-02-01T20:41:00</OpenTime>
-    <MaxFinishTime>2025-02-01T22:35:00</MaxFinishTime>
+    <OpenTime>2025-03-02T16:35:00</OpenTime>
+    <MaxFinishTime>2025-03-02T19:03:00</MaxFinishTime>
     <VerbalDescription>Soothing music for a patient after surgery</VerbalDescription>
   </Call>
   <Call>
-    <Id>48</Id>
+    <Id>44</Id>
     <MyCallType>MusicTherapy</MyCallType>
     <Address>Tel Aviv, Israel</Address>
-    <Latitude>32.0856</Latitude>
-    <Longitude>34.7995</Longitude>
-    <OpenTime>2025-02-01T19:36:00</OpenTime>
-    <MaxFinishTime>2025-02-01T20:21:00</MaxFinishTime>
+    <Latitude>32.0877</Latitude>
+    <Longitude>34.8147</Longitude>
+    <OpenTime>2025-03-02T16:50:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:15:00</MaxFinishTime>
     <VerbalDescription>Music therapy session for post-stroke rehabilitation patients</VerbalDescription>
   </Call>
   <Call>
-    <Id>49</Id>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Haifa, Israel</Address>
-    <Latitude>32.0912</Latitude>
-    <Longitude>34.7627</Longitude>
-    <OpenTime>2025-02-01T18:42:00</OpenTime>
-    <MaxFinishTime>2025-02-01T19:17:00</MaxFinishTime>
-    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
-  </Call>
-  <Call>
-    <Id>50</Id>
+    <Id>45</Id>
     <MyCallType>GroupActivities</MyCallType>
     <Address>Eilat, Israel</Address>
-    <Latitude>32.1074</Latitude>
-    <Longitude>34.8148</Longitude>
-    <OpenTime>2025-02-01T21:47:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:05:00</MaxFinishTime>
+    <Latitude>32.0774</Latitude>
+    <Longitude>34.7823</Longitude>
+    <OpenTime>2025-03-02T17:06:00</OpenTime>
+    <MaxFinishTime>2025-03-02T22:19:00</MaxFinishTime>
     <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
   </Call>
   <Call>
-    <Id>1</Id>
+    <Id>46</Id>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Eilat, Israel</Address>
+    <Latitude>32.0979</Latitude>
+    <Longitude>34.7469</Longitude>
+    <OpenTime>2025-03-02T18:35:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:23:00</MaxFinishTime>
+    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>47</Id>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Rishon Lezion, Israel</Address>
+    <Latitude>32.0905</Latitude>
+    <Longitude>34.7776</Longitude>
+    <OpenTime>2025-03-02T17:01:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:16:00</MaxFinishTime>
+    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>48</Id>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>Beer Sheva, Israel</Address>
-    <Latitude>32.1098</Latitude>
-    <Longitude>34.7867</Longitude>
-    <OpenTime>2025-02-01T21:01:00</OpenTime>
-    <MaxFinishTime>2025-02-01T23:47:00</MaxFinishTime>
-    <VerbalDescription>helloooooooooooo</VerbalDescription>
+    <Address>Tel Aviv, Israel</Address>
+    <Latitude>32.0856</Latitude>
+    <Longitude>34.7995</Longitude>
+    <OpenTime>2025-03-02T14:48:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:32:00</MaxFinishTime>
+    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>49</Id>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>Jerusalem, Israel</Address>
+    <Latitude>32.0912</Latitude>
+    <Longitude>34.7627</Longitude>
+    <OpenTime>2025-03-02T14:25:00</OpenTime>
+    <MaxFinishTime>2025-03-02T16:47:00</MaxFinishTime>
+    <VerbalDescription>Singing and reminiscence activity for seniors in a care home</VerbalDescription>
+  </Call>
+  <Call>
+    <Id>50</Id>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Eilat, Israel</Address>
+    <Latitude>32.1074</Latitude>
+    <Longitude>34.8148</Longitude>
+    <OpenTime>2025-03-02T15:28:00</OpenTime>
+    <MaxFinishTime>2025-03-02T20:27:00</MaxFinishTime>
+    <VerbalDescription>Songwriting therapy session for patients dealing with grief</VerbalDescription>
   </Call>
 </ArrayOfCall>

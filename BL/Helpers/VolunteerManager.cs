@@ -142,8 +142,8 @@ namespace Helpers
 
         internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
         {
-            bool isSelf = requesterId == boVolunteer.Id;
-            bool isAdmin = boVolunteer.MyRole == BO.Role.Manager;
+            bool isSelf = (requesterId == boVolunteer.Id);
+            bool isAdmin = (boVolunteer.MyRole == BO.Role.Manager);
 
             if (!isAdmin && !isSelf)
                 throw new BO.BlUnauthorizedAccessException("Only an admin or the volunteer themselves can perform this update.");

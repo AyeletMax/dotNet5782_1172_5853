@@ -254,8 +254,7 @@ namespace BlTest
                             Console.WriteLine("Enter Volunteer details:");
                             Console.Write("ID: ");
                             if (int.TryParse(Console.ReadLine(), out int id)) { 
-                                BO.Volunteer volunteer = CreateVolunteer();
-                                volunteer.Id = id;
+                                BO.Volunteer volunteer = CreateVolunteer(id);
                                 s_bl.Volunteer.AddVolunteer(volunteer);
                                 Console.WriteLine("Volunteer created successfully!");
                             }
@@ -396,7 +395,7 @@ namespace BlTest
             }
         }
         //מה לעשות עם כל הTRY ועם הזריקות
-        static BO.Volunteer CreateVolunteer()
+        static BO.Volunteer CreateVolunteer(int requesterId)
         {
  
              Console.Write("Name: ");
@@ -439,24 +438,25 @@ namespace BlTest
              if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType myDistanceType))
                 throw new FormatException("Invalid distance type.");
 
-             return new BO.Volunteer
-             {
-                 Name = name,
-                 Phone = phoneNumber,
-                 Email = email,
-                 Active = active,
-                 MyRole = role,
-                 Password = password,
-                 Address = address,
-                 Latitude = latitude,
-                 Longitude = longitude,
-                 LargestDistance = largestDistance,
-                 MyDistanceType = myDistanceType,
-                 TotalCallsHandled = 0,
-                 TotalCallsCancelled = 0,
-                 TotalExpiredCallsChosen = 0,
-                 CurrentCallInProgress = null
-             };
+            return new BO.Volunteer
+            {
+                Id = requesterId,
+                Name = name,
+                Phone = phoneNumber,
+                Email = email,
+                Active = active,
+                MyRole = role,
+                Password = password,
+                Address = address,
+                Latitude = latitude,
+                Longitude = longitude,
+                LargestDistance = largestDistance,
+                MyDistanceType = myDistanceType,
+                TotalCallsHandled = 0,
+                TotalCallsCancelled = 0,
+                TotalExpiredCallsChosen = 0,
+                CurrentCallInProgress = null
+            };  
 
              
            
@@ -472,15 +472,16 @@ namespace BlTest
             //     TotalExpiredCallsChosen = 0,
             try
             {
-                BO.Volunteer boVolunteer = CreateVolunteer();
                 Console.Write("Enter requester ID: ");
                 if (int.TryParse(Console.ReadLine(), out int requesterId))
                 {
+                    BO.Volunteer boVolunteer = CreateVolunteer(requesterId);
                     s_bl.Volunteer.UpdateVolunteer(requesterId, boVolunteer);
                     Console.WriteLine("Volunteer updated successfully.");
                 }
                 else
                     throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                
             }
             catch (BO.BlDoesNotExistException ex)
             {
