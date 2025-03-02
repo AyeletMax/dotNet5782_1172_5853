@@ -515,12 +515,16 @@ namespace BlTest
                 {
                     Console.WriteLine("\n--- Call Management ---");
                     Console.WriteLine("1. Get call quantities by status");
-                    Console.WriteLine("2. Show All Calls");
-                    Console.WriteLine("3. Get Filter / Sort Call");
+                    Console.WriteLine("2. Get Closed Calls Handled By Volunteer");
+                    Console.WriteLine("3. Show All Callsl");
                     Console.WriteLine("4. Read Call by ID");
                     Console.WriteLine("5. Add Call");
                     Console.WriteLine("6. Remove Call");
                     Console.WriteLine("7. Update Call");
+                    Console.WriteLine("8. Get Open Calls For Volunteer");
+                    Console.WriteLine("9. Mark Call As Canceled");
+                    Console.WriteLine("10. Mark Call As Completed");
+                    Console.WriteLine("11. Select Call For Treatment");
                     Console.WriteLine("0. Back");
                     Console.Write("Choose an option: ");
 
@@ -550,14 +554,40 @@ namespace BlTest
                             }
                             break;
                         case 2:
-                            //try { 
-                            //foreach (var call in s_bl.Call.GetCallList())
-                            //    Console.WriteLine(call);
-                            //}
-                            //catch (BO.BlGeneralDatabaseException ex)
-                            //{
-                            //    Console.WriteLine($"Error: {ex.GetType().Name} - {ex.Message}");
-                            //}
+                            try
+                            {
+                                Console.Write("Enter Volunteer ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int volunteerId))
+                                {
+                                    Console.WriteLine("Enter Call Type filter (or press Enter to skip):");
+                                    string? callTypeInput = Console.ReadLine();
+                                    BO.CallType? callTypeFilter = Enum.TryParse(callTypeInput, out BO.CallType parsedCallType) ? parsedCallType : null;
+
+                                    Console.WriteLine("Enter Sort Field (or press Enter to skip):");
+                                    string? sortFieldInput = Console.ReadLine();
+                                    BO.ClosedCallInListFields? sortField = Enum.TryParse(sortFieldInput, out BO.ClosedCallInListFields parsedSortField) ? parsedSortField : null;
+
+                                    var closedCalls = s_bl.Call.GetClosedCallsByVolunteer(volunteerId, callTypeFilter, sortField);
+
+                                    Console.WriteLine("\nClosed Calls Handled By Volunteer:");
+                                    foreach (var call in closedCalls)
+                                    {
+                                        Console.WriteLine(call);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new BO.BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
+                                }
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                                if (ex.InnerException != null)
+                                {
+                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
+                                }
+                            }
                             break;
                         case 3:
                             try
@@ -685,6 +715,145 @@ namespace BlTest
                             break;
                         case 7:
                             UpDateCall();
+                            break;
+                        case 8:
+                            try {
+                                Console.Write("Enter Volunteer ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int volunteerId))
+                                {
+                                    Console.WriteLine("Enter Call Type filter (or press Enter to skip):");
+                                    string? callTypeInput = Console.ReadLine();
+                                    BO.CallType? callTypeFilter = Enum.TryParse(callTypeInput, out BO.CallType parsedCallType) ? parsedCallType : null;
+
+                                    Console.WriteLine("Enter Sort Field (or press Enter to skip):");
+                                    string? sortFieldInput = Console.ReadLine();
+                                    BO.OpenCallInListFields? sortField = Enum.TryParse(sortFieldInput, out BO.OpenCallInListFields parsedSortField) ? parsedSortField : null;
+
+                                    var openCalls = s_bl.Call.GetOpenCallsForVolunteer(volunteerId, callTypeFilter, sortField);
+
+                                    Console.WriteLine("\nOpen Calls Available for Volunteer:");
+                                    foreach (var call in openCalls)
+                                    {
+                                        Console.WriteLine(call);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
+                                }
+                            }
+                            catch (BO.BlDoesNotExistException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                                if (ex.InnerException != null)
+                                {
+                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
+                                }
+                            }
+                            break;
+                        case 9:
+                            try
+                            {
+                                Console.Write("Enter Volunteer ID: ");
+                                if (!int.TryParse(Console.ReadLine(), out int volunteerId))
+                                    throw new BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
+
+                                Console.Write("Enter Assignment ID: ");
+                                if (!int.TryParse(Console.ReadLine(), out int assignmentId))
+                                    throw new BlInvalidFormatException("Invalid input. Assignment ID must be a number.");
+
+                                s_bl.Call.UpdateCallCancellation(volunteerId, assignmentId);
+                                Console.WriteLine("The call was successfully canceled.");
+                            }
+                            catch (BO.BlUnauthorizedAccessException ex)
+                            {
+                                Console.WriteLine($"Authorization Error: {ex.Message}");
+                            }
+                            catch (BO.BlInvalidOperationException ex)
+                            {
+                                Console.WriteLine($"Operation Error: {ex.Message}");
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Database Error: {ex.Message}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Unexpected error: {ex.Message}");
+                            }
+                            break;
+                        case 10:
+                            try
+                            {
+                                Console.Write("Enter Volunteer ID: ");
+                                string? volunteerInput = Console.ReadLine();
+                                if (!int.TryParse(volunteerInput, out int volunteerId))
+                                {
+                                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
+                                }
+
+                                Console.Write("Enter Assignment ID: ");
+                                string? assignmentInput = Console.ReadLine();
+                                if (!int.TryParse(assignmentInput, out int assignmentId))
+                                {
+                                    throw new FormatException("Invalid input. Assignment ID must be a number.");
+                                }
+
+                                s_bl.Call.UpdateCallCompletion(volunteerId, assignmentId);
+
+                                Console.WriteLine("Call completion updated successfully!");
+                            }
+                            catch (BO.BlDoesNotExistException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BO.BlUnauthorizedAccessException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BO.BlInvalidOperationException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
+                            break;
+                        case 11:
+                            try
+                            {
+                                Console.Write("Enter Volunteer ID: ");
+                                if (!int.TryParse(Console.ReadLine(), out int volunteerId))
+                                    throw new FormatException("Invalid input. Volunteer ID must be a number.");
+
+                                Console.Write("Enter Call ID: ");
+                                if (!int.TryParse(Console.ReadLine(), out int callId))
+                                    throw new FormatException("Invalid input. Call ID must be a number.");
+
+                                s_bl.Call.SelectCallForTreatment(volunteerId, callId);
+                                Console.WriteLine("The call has been successfully assigned to the volunteer.");
+                            }
+                            catch (FormatException ex)
+                            {
+                                Console.WriteLine($"Input Error: {ex.Message}");
+                            }
+                            catch (BO.BlInvalidOperationException ex)
+                            {
+                                Console.WriteLine($"Operation Error: {ex.Message}");
+                            }
+                            catch (BO.BlGeneralDatabaseException ex)
+                            {
+                                Console.WriteLine($"Database Error: {ex.Message}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Unexpected error: {ex.Message}");
+                            }
                             break;
                         case 0:
                             return;
