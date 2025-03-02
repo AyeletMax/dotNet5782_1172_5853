@@ -14,7 +14,6 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
             DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
             throw new BO.BlDoesNotExistException("Incorrect username or password.");
@@ -122,11 +121,12 @@ internal class VolunteerImplementation : IVolunteer
         try
         {
            VolunteerManager.ValidateInputFormat(boVolunteer);
-            (double? Latitude, double? Longitude) coordinates = VolunteerManager.LogicalChecking(boVolunteer);
+            //לבדוק מה עושים עם זה
+            //(double? Latitude, double? Longitude) coordinates = VolunteerManager.LogicalChecking(boVolunteer);
             //if (coordinates == null)
             //    throw new BO.GeolocationNotFoundException($"Invalid address: {boVolunteer.Address}");
-            boVolunteer.Latitude = coordinates.Latitude;
-            boVolunteer.Longitude = coordinates.Longitude;
+            //boVolunteer.Latitude = coordinates.Latitude;
+            //boVolunteer.Longitude = coordinates.Longitude;
             VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
 
             var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
@@ -180,12 +180,13 @@ internal class VolunteerImplementation : IVolunteer
                 throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(boVolunteer);
-            var (latitude, longitude) = VolunteerManager.LogicalChecking(boVolunteer);
-            if (latitude != null && longitude != null)
-            {
-                boVolunteer.Latitude = latitude;
-                boVolunteer.Longitude = longitude;
-            }
+            //לבדוק מה לעשות עם זה
+            //var (latitude, longitude) = VolunteerManager.LogicalChecking(boVolunteer);
+            //if (latitude != null && longitude != null)
+            //{
+            //    boVolunteer.Latitude = latitude;
+            //    boVolunteer.Longitude = longitude;
+            //}
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
             _dal.Volunteer.Create(doVolunteer);
         }

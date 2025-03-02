@@ -107,11 +107,12 @@ internal static class Tools
     /// <exception cref="GeolocationNotFoundException">Thrown when no geolocation is found for the address.</exception>
     public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
     {
+        
         if (string.IsNullOrWhiteSpace(address))
         {
             throw new BlInvalidFormatException(address); // חריגה אם הכתובת לא תקינה
         }
-
+        Console.WriteLine("12 מרחק טעות");
         try
         {
             // יצירת ה-URL לפנייה ל-API

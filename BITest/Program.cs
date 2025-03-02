@@ -14,6 +14,47 @@ namespace BlTest
         {
             try
             {
+                Console.WriteLine("Please log in.");
+                Console.Write("Username: ");
+                string username = Console.ReadLine()!;
+
+                Console.Write("Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): ");
+                string password = Console.ReadLine()!;
+
+                BO.Role userRole = s_bl.Volunteer.Login(username, password);
+                Console.WriteLine($"Login successful! Your role is: {userRole}");
+
+                // בדיקה אם התפקיד הוא Manager
+                if (userRole == BO.Role.Manager)
+                {
+                    // הכניסה ללולאת התפריט רק אם התפקיד הוא Manager
+                    ShowMenu();
+                }
+                else
+                {
+                    Console.WriteLine("UpDate Volunteer");
+                    UpDateVolunteer();
+                }
+            }
+            catch (BO.BlDoesNotExistException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (BO.BlInvalidFormatException ex)
+            {
+                Console.WriteLine("The sub menu choice is not valid.", ex);
+            }
+            catch (BO.BlGeneralDatabaseException ex)
+            {
+                Console.WriteLine($"System Error: {ex.Message}");
+            }
+
+        }
+
+        static void ShowMenu()
+        {
+            try
+            {
                 while (true)
                 {
                     Console.WriteLine("\n--- BL Test System ---");
@@ -25,7 +66,6 @@ namespace BlTest
 
                     if (int.TryParse(Console.ReadLine(), out int choice))
                     {
-
                         switch (choice)
                         {
                             case 1:
@@ -46,15 +86,12 @@ namespace BlTest
                     }
                 }
             }
-            catch (BO.BlInvalidFormatException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("The sub menu choice is not valid.", ex);
-            }
-            catch (BO.BlGeneralDatabaseException ex)
-            {
-                Console.WriteLine("A custom error occurred in Initialization.", ex);
+                Console.WriteLine("An error occurred while displaying the menu: " + ex.Message);
             }
         }
+
 
         static void AdminMenu()
         {
@@ -141,13 +178,12 @@ namespace BlTest
             while (true)
             {
                 Console.WriteLine("\n--- Volunteer Management ---");
-                Console.WriteLine("1. Login");
-                Console.WriteLine("2. List Volunteers");
-                Console.WriteLine("3. Get Filter/Sort volunteer");
-                Console.WriteLine("4. Read Volunteer by ID");
-                Console.WriteLine("5. Add Volunteer");
-                Console.WriteLine("6. Remove Volunteer");
-                Console.WriteLine("7. UpDate Volunteer");
+                Console.WriteLine("1. List Volunteers");
+                Console.WriteLine("2. Get Filter/Sort volunteer");
+                Console.WriteLine("3. Read Volunteer by ID");
+                Console.WriteLine("4. Add Volunteer");
+                Console.WriteLine("5. Remove Volunteer");
+                Console.WriteLine("6. UpDate Volunteer");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
@@ -158,28 +194,6 @@ namespace BlTest
                 switch (choice)
                 {
                     case 1:
-                        try
-                        {
-                            Console.WriteLine("Please log in.");
-                            Console.Write("Username: ");
-                            string username = Console.ReadLine()!;
-
-                            Console.Write("Console.Write(\"Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): \");");
-                            string password = Console.ReadLine()!;
-
-                            BO.Role userRole = s_bl.Volunteer.Login(username, password);
-                            Console.WriteLine($"Login successful! Your role is: {userRole}");
-                        }
-                        catch (BO.BlDoesNotExistException ex)
-                        {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                        catch (BO.BlGeneralDatabaseException ex)
-                        {
-                            Console.WriteLine($"System Error: {ex.Message}");
-                        }
-                        break;
-                    case 2:
                         try
                         {
                             foreach (var volunteer in s_bl.Volunteer.GetVolunteersList())
@@ -194,7 +208,7 @@ namespace BlTest
                             Console.WriteLine($"System Error: {ex.Message}");
                         }
                         break;
-                    case 3:
+                    case 2:
                         try { 
                         bool? isActive;
                         BO.VolunteerSortField? sortBy;
@@ -215,7 +229,7 @@ namespace BlTest
                             Console.WriteLine($"System Error: {ex.Message}");
                         }
                         break;
-                    case 4:
+                    case 3:
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
@@ -235,7 +249,7 @@ namespace BlTest
                             Console.WriteLine($"Error: {ex.Message}");
                         }
                         break;
-                    case 5:
+                    case 4:
                         try
                         {
                             Console.WriteLine("Enter Volunteer details:");
@@ -270,7 +284,7 @@ namespace BlTest
                             Console.WriteLine($"Error BlGeneralDatabaseException: {ex.Message}");
                         }
                         break;
-                    case 6:
+                    case 5:
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
@@ -293,7 +307,7 @@ namespace BlTest
                             Console.WriteLine($"Error: {ex.Message}");
                         }
                         break;
-                    case 7:
+                    case 6:
                         UpDateVolunteer();
                         break;
                     case 0:
@@ -732,9 +746,6 @@ namespace BlTest
                     Longitude = longitude,
                     //האם זה הזמן הנוכחי?
                     OpenTime = DateTime.Now,
-                    MaxFinishTime = maxFinishTime,
-                    MyStatus = status,
-                    callAssignments = null
                };
             
            

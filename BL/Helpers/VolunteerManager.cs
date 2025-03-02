@@ -19,7 +19,7 @@ namespace Helpers
         internal static string EncryptPassword(string password)
         {
             using var sha256 = SHA256.Create();
-            var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));;
             return Convert.ToBase64String(hashedBytes!);
         }
 
@@ -78,19 +78,14 @@ namespace Helpers
         {
             if (boVolunteer == null)
                 throw new BO.BlDoesNotExistException("Volunteer object cannot be null.");
-
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 throw new BO.BlInvalidFormatException("Invalid email format.");
-
             if (boVolunteer.Id < 0 || !IsValidId(boVolunteer.Id))
                 throw new BO.BlInvalidFormatException("Invalid ID format. ID must be a valid number with a correct checksum.");
-
             if (!System.Text.RegularExpressions.Regex.IsMatch(boVolunteer.Phone, @"^\d{10}$"))
                 throw new BO.BlInvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
-
             if (boVolunteer.Name.Length < 2)
                 throw new BO.BlInvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
-
             if (boVolunteer.Password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(boVolunteer.Password))
                 throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
         }
@@ -99,7 +94,6 @@ namespace Helpers
             string idStr = id.ToString().PadLeft(9, '0');
             if (idStr.Length != 9 || !int.TryParse(idStr, out _))
                 return false;
-
             int sum = 0;
 
             for (int i = 0; i < 9; i++)
@@ -112,7 +106,6 @@ namespace Helpers
 
                 sum += digit;
             }
-
             return sum % 10 == 0;
         }
 
@@ -137,13 +130,14 @@ namespace Helpers
                 (DO.DistanceType)boVolunteer.MyDistanceType
             );
         }
-        internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
-        {
-            if (!IsPasswordStrong(boVolunteer.Password))
-                throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
-
-            return Tools.GetCoordinatesFromAddress(boVolunteer.Address);
-        }
+        //להבין מה הולך פה ולסדר חייבים את זה!!!
+        //internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
+        //{
+        //    if (!IsPasswordStrong(boVolunteer.Password))
+        //        throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
+        //    //לעשות אחרי שברכה תסביר לי
+        //    return Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+        //}
 
 
         internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
