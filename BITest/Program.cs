@@ -762,9 +762,9 @@ namespace BlTest
                                 if (!int.TryParse(Console.ReadLine(), out int volunteerId))
                                     throw new BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
 
-                                Console.Write("Enter Assignment ID: ");
+                                Console.Write("Enter call ID: ");
                                 if (!int.TryParse(Console.ReadLine(), out int assignmentId))
-                                    throw new BlInvalidFormatException("Invalid input. Assignment ID must be a number.");
+                                    throw new BlInvalidFormatException("Invalid input. call ID must be a number.");
 
                                 s_bl.Call.UpdateCallCancellation(volunteerId, assignmentId);
                                 Console.WriteLine("The call was successfully canceled.");
