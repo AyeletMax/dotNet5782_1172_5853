@@ -139,6 +139,10 @@ internal class VolunteerImplementation : IVolunteer
 
             _dal.Volunteer.Update(doVolunteer);
         }
+        catch (BO.BlInvalidFormatException)
+        {
+            throw;
+        }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);

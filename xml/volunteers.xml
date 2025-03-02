@@ -210,4 +210,32 @@
     <LargestDistance>2</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
+  <Volunteer>
+    <Id>349733599</Id>
+    <Name>Avigail Frank</Name>
+    <Phone>0583262639</Phone>
+    <Email>0583262639@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>C3uZ#hT2</Password>
+    <Address>17 Heichal Shlomo St, Haifa, Israel</Address>
+    <Latitude>32.7682</Latitude>
+    <Longitude>34.9762</Longitude>
+    <LargestDistance>2</LargestDistance>
+    <DistanceType>Air</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>328178371</Id>
+    <Name>aa</Name>
+    <Phone>0548551329</Phone>
+    <Email>a@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk</Address>
+    <Latitude>32</Latitude>
+    <Longitude>35</Longitude>
+    <LargestDistance>10</LargestDistance>
+    <DistanceType>Air</DistanceType>
+  </Volunteer>
 </ArrayOfVolunteer>
