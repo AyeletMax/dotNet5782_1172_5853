@@ -198,6 +198,10 @@ internal class VolunteerImplementation : IVolunteer
         {
             throw new BO.BlAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
         }
+        catch (BO.BlInvalidFormatException) {
+            throw;
+        }
+
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);

@@ -23,7 +23,7 @@ namespace BlTest
                 BO.Role userRole = s_bl.Volunteer.Login(username, password);
                 Console.WriteLine($"Login successful! Your role is: {userRole}");
 
-                // בדיקה אם התפקיד הוא Manager
+                //בדיקה אם התפקיד הוא Manager
                 if (userRole == BO.Role.Manager)
                 {
                     // הכניסה ללולאת התפריט רק אם התפקיד הוא Manager
@@ -34,7 +34,7 @@ namespace BlTest
                     Console.WriteLine("UpDate Volunteer");
                     UpDateVolunteer();
                 }
-            }
+        }
             catch (BO.BlDoesNotExistException ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
@@ -253,7 +253,7 @@ namespace BlTest
                         {
                             Console.WriteLine("Enter Volunteer details:");
                             Console.Write("ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int id)) { 
+                            if (int.TryParse(Console.ReadLine(), out int id)) {
                                 BO.Volunteer volunteer = CreateVolunteer(id);
                                 s_bl.Volunteer.AddVolunteer(volunteer);
                                 Console.WriteLine("Volunteer created successfully!");
@@ -470,6 +470,7 @@ namespace BlTest
             //TotalCallsHandled = 0,
             //     TotalCallsCancelled = 0,
             //     TotalExpiredCallsChosen = 0,
+            //צריך פשוט לא לעדכן אותם
             try
             {
                 Console.Write("Enter requester ID: ");
