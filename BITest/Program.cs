@@ -26,14 +26,14 @@ namespace BlTest
                 //בדיקה אם התפקיד הוא Manager
                 if (userRole == BO.Role.Manager)
                 {
-                    // הכניסה ללולאת התפריט רק אם התפקיד הוא Manager
+                    //הכניסה ללולאת התפריט רק אם התפקיד הוא Manager
                     ShowMenu();
-                }
+            }
                 else
-                {
-                    Console.WriteLine("UpDate Volunteer");
-                    UpDateVolunteer();
-                }
+            {
+                Console.WriteLine("UpDate Volunteer");
+                UpDateVolunteer();
+            }
         }
             catch (BO.BlDoesNotExistException ex)
             {
