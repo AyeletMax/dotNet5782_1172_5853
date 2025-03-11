@@ -328,6 +328,14 @@ internal class CallImplementation : BlApi.ICall
             // שמירת השינויים
             _dal.Assignment.Update(updatedAssignment);
         }
+        catch (BlUnauthorizedAccessException)
+        {
+            throw;
+        }
+        catch (BlInvalidOperationException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An error occurred while updating the assignment completion.", ex);
