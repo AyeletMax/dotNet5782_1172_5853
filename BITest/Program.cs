@@ -161,13 +161,17 @@ namespace BlTest
                             break;
                     }
                 }
-                catch (BO.BlInvalidFormatException)
-                {
-                    Console.WriteLine("Invalid time format.");
-                }
-                catch (BO.BlGeneralDatabaseException ex)
-                {
-                    Console.WriteLine($"A database error occurred: {ex.Message}");
+                //catch (BO.BlInvalidFormatException)
+                //{
+                //    Console.WriteLine("Invalid time format.");
+                //}
+                //catch (BO.BlGeneralDatabaseException ex)
+                //{
+                //    Console.WriteLine($"A database error occurred: {ex.Message}");
+                //}
+                catch (Exception ex) 
+                { 
+                    HandleException(ex);
                 }
             }
         }
@@ -969,6 +973,36 @@ namespace BlTest
             //catch { }
             //}
         }
+        static void HandleException(Exception ex)
+        {
+            switch (ex)
+            {
+                case BO.BlDoesNotExistException _:
+                    Console.WriteLine($"Error: {ex.Message}");
+                    break;
+                case BO.BlUnauthorizedAccessException _:
+                    Console.WriteLine("Unauthorized access: You do not have permission.");
+                    break;
+                case BO.BlInvalidFormatException _:
+                    Console.WriteLine($"Invalid format: {ex.Message}");
+                    break;
+                case BO.BlAlreadyExistsException _:
+                    Console.WriteLine("The item already exists in the system.");
+                    break;
+                case BO.BlGeneralDatabaseException dbEx:
+                    Console.WriteLine($"Database error: {dbEx.Message}");
+                    if (dbEx.InnerException != null)
+                        Console.WriteLine($"Internal error: {dbEx.InnerException.Message}");
+                    break;
+                case FormatException _:
+                    Console.WriteLine("Input format is incorrect. Please try again.");
+                    break;
+                default:
+                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                    break;
+            }
+        }
     }
+
 }
 
