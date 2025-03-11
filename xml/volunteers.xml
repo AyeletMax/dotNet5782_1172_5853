@@ -210,4 +210,18 @@
     <LargestDistance>0</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
+  <Volunteer>
+    <Id>327605853</Id>
+    <Name>ayelet</Name>
+    <Phone>0583282450</Phone>
+    <Email>a@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>vhxcv</Address>
+    <Latitude>32</Latitude>
+    <Longitude>35</Longitude>
+    <LargestDistance>10</LargestDistance>
+    <DistanceType>Air</DistanceType>
+  </Volunteer>
 </ArrayOfVolunteer>

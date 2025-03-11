@@ -19,6 +19,10 @@ internal class VolunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Incorrect username or password.");
             return (BO.Role)matchingVolunteer.MyRole;
         }
+        catch (BO.BlDoesNotExistException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
