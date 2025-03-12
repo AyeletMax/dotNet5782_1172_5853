@@ -2,7 +2,6 @@
 using BlApi;
 using BO;
 using DO;
-///לבדוק מה עם כל הזריקות שיש פה
 namespace BlTest
 {
     class Program
@@ -119,14 +118,6 @@ namespace BlTest
                             break;
                     }
                 }
-                //catch (BO.BlInvalidFormatException)
-                //{
-                //    Console.WriteLine("Invalid time format.");
-                //}
-                //catch (BO.BlGeneralDatabaseException ex)
-                //{
-                //    Console.WriteLine($"A database error occurred: {ex.Message}");
-                //}
                 catch (Exception ex) 
                 { 
                     HandleException(ex);
@@ -150,7 +141,6 @@ namespace BlTest
                 Console.Write("Choose an option: ");
 
                 if (!int.TryParse(Console.ReadLine(), out int choice))
-                    //האם אפשר לעשות פה כזאת זריקה?
                     throw new FormatException("The volunteer menu choice is not valid.");
                 switch (choice)
                 {
@@ -349,7 +339,6 @@ namespace BlTest
                 Console.WriteLine($"Message: {ex.Message}");
             }
         }
-        //מה לעשות עם כל הTRY ועם הזריקות
         static BO.Volunteer CreateVolunteer(int requesterId)
         {
  
@@ -407,22 +396,10 @@ namespace BlTest
                 Longitude = longitude,
                 LargestDistance = largestDistance,
                 MyDistanceType = myDistanceType,
-                //האם צריך את זה?
-                //TotalCallsHandled = 0,
-                //TotalCallsCancelled = 0,
-                //TotalExpiredCallsChosen = 0,
-                //CurrentCallInProgress = null
             };  
         }
-        //לדעת לטפל בזריקות עם כל הTRY
         static void UpDateVolunteer()
         {
-
-            //מה עושים עם כל אלה בעדכון?
-            //TotalCallsHandled = 0,
-            //     TotalCallsCancelled = 0,
-            //     TotalExpiredCallsChosen = 0,
-            //צריך פשוט לא לעדכן אותם
             try
             {
                 Console.Write("Enter requester ID: ");
@@ -453,7 +430,7 @@ namespace BlTest
                     Console.WriteLine("\n--- Call Management ---");
                     Console.WriteLine("1. Get call quantities by status");
                     Console.WriteLine("2. Get Closed Calls Handled By Volunteer");
-                    Console.WriteLine("3. Show All Callsl");
+                    Console.WriteLine("3. Show All Calls");
                     Console.WriteLine("4. Read Call by ID");
                     Console.WriteLine("5. Add Call");
                     Console.WriteLine("6. Remove Call");
@@ -729,17 +706,7 @@ namespace BlTest
                 Console.WriteLine("Enter the address:");
                 string address = Console.ReadLine();
 
-                //Console.WriteLine("Enter the latitude:");
-                //if (!double.TryParse(Console.ReadLine(), out double latitude))
-                //{
-                //    throw new FormatException("Invalid latitude value.");
-                //}
-
-                //Console.WriteLine("Enter the longitude:");
-                //if (!double.TryParse(Console.ReadLine(), out double longitude))
-                //{
-                //    throw new FormatException("Invalid longitude value.");
-                //}
+ 
 
                 Console.WriteLine("Enter the max finish time (yyyy-mm-dd) or leave empty:");
                 string maxFinishTimeInput = Console.ReadLine();
@@ -751,22 +718,19 @@ namespace BlTest
                     throw new FormatException("Invalid status.");
                 }
 
-               return new BO.Call
-               {
-                    Id = id,
-                    MyCallType = callType,
-                    VerbalDescription = verbalDescription,
-                    Address = address,
-                   Latitude =0,
-                   Longitude = 0,
-                   //האם זה הזמן הנוכחי?
-                   OpenTime = DateTime.Now,
-               };
+            return new BO.Call
+            {
+                Id = id,
+                MyCallType = callType,
+                VerbalDescription = verbalDescription,
+                Address = address,
+                Latitude = 0,
+                Longitude = 0,
+                OpenTime = s_bl.Admin.GetClock()
+            };
             
            
         }
-        //אני באמצע הפונ
-        //למה היא לא מקבלת ID?
         static void UpDateCall()
         {
             Console.Write("Enter Call ID: ");
@@ -800,20 +764,6 @@ namespace BlTest
             { 
                 Console.WriteLine($"Error: {ex.GetType().Name}, Message: {ex.Message}");
             }
-            //try
-            //{
-            //    Console.Write("Enter requester ID: ");
-            //    if (int.TryParse(Console.ReadLine(), out int requesterId))
-            //    {
-            //        //BO.Call boCall = CreateCall(requesterId);
-            //        //s_bl.Call.UpdateCallDetails(requesterId, boCall);
-            //        Console.WriteLine("Volunteer updated successfully.");
-            //    }
-            //    else
-            //        throw new FormatException("Invalid input. Volunteer ID must be a number.");
-            //}
-            //catch { }
-            //}
         }
         static void HandleException(Exception ex)
         {
@@ -858,74 +808,8 @@ namespace BlTest
                     break;
             }
         }
-
-
-      
     }
 
 }
-//static void HandleException(Exception ex)
-//{
-//    switch (ex)
-//    {
-//        case BO.BlDoesNotExistException ex1:
-//            Console.WriteLine($"Exception: {ex1.GetType().Name}, Message: {ex1.Message}");
-//            break;
-//        case BO.BlInvalidOperationException ex2:
-//            Console.WriteLine($"Exception: {ex2.GetType().Name}, Message: {ex2.Message}");
-//            break;
-//        case BO.BlInvalidFormatException ex3:
-//            Console.WriteLine($"Exception: {ex3.GetType().Name}, Message: {ex3.Message}");
-//            break;
-//        case BO.BlAlreadyExistsException ex4:
-//            Console.WriteLine($"Exception: {ex4.GetType().Name}, Message: {ex4.Message}");
-//            break;
-//        case BO.BlGeneralDatabaseException ex5:
-//            Console.WriteLine($"Exception: {ex5.GetType().Name}, Message: {ex5.Message}");
-//            if (ex5.InnerException != null)
-//            {
-//                Console.WriteLine($"Inner Exception: {ex5.InnerException.Message}");
-//            }
-//            break;
-//        case BO.BlUnauthorizedAccessException ex7:
-//            Console.WriteLine($"Unauthorized Access: {ex7.Message}");
-//            break;
-//        case FormatException _:
-//            Console.WriteLine("Input format is incorrect. Please try again.");
-//            break;
 
-//        case Exception ex6:
-//            Console.WriteLine($"An unexpected error occurred: {ex6.Message}");
-//            break;
-//    }
-//}
-//static void HandleException(Exception ex)
-//{BlUnauthorizedAccessException
-//    switch (ex)
-//    {
-//        case BO.BlDoesNotExistException _:
-//            Console.WriteLine($"Error: {ex.Message}");
-//            break;
-//        case BO.BlUnauthorizedAccessException _:
-//            Console.WriteLine("Unauthorized access: You do not have permission.");
-//            break;
-//        case BO.BlInvalidFormatException _:
-//            Console.WriteLine($"Invalid format: {ex.Message}");
-//            break;
-//        case BO.BlAlreadyExistsException _:
-//            Console.WriteLine("The item already exists in the system.");
-//            break;
-//        case BO.BlGeneralDatabaseException dbEx:
-//            Console.WriteLine($"Database error: {dbEx.Message}");
-//            if (dbEx.InnerException != null)
-//                Console.WriteLine($"Internal error: {dbEx.InnerException.Message}");
-//            break;
-//        case FormatException _:
-//            Console.WriteLine("Input format is incorrect. Please try again.");
-//            break;
-//        default:
-//            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-//            break;
-//    }
-//}
 

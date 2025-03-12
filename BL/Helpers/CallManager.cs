@@ -76,49 +76,32 @@ internal static class CallManager
             throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
         }
     }
+    internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
+    {
+        List<DO.Call> expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
+
+        expiredCalls.ForEach(call =>
+        {
+            List<DO.Assignment> assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
+            if (!assignments.Any())
+                s_dal.Assignment.Create(new DO.Assignment(
+                CallId: call.Id,
+                VolunteerId: 0,
+                EntranceTime: ClockManager.Now,
+                ExitTime: ClockManager.Now,
+                FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
+            ));
+            List<DO.Assignment> assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
+            if (assignmentsWithNull.Any())
+                assignments.ForEach(assignment =>
+                    s_dal.Assignment.Update(assignment with
+                    {
+                        ExitTime = ClockManager.Now,
+                        FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
+                    }));
+        });
+
+    }
+    
 }
 
-
-//public static object GetFieldValue(Call call, string fieldName)
-//{
-//    return fieldName switch
-//    {
-//        nameof(Call.MyCallType) => call.MyCallType!,
-//        nameof(Call.Address) => call.Address!,
-//        nameof(Call.Latitude) => call.Latitude!,
-//        nameof(Call.Longitude) => call.Longitude!,
-//        nameof(Call.OpenTime) => call.OpenTime!,
-//        nameof(Call.MaxFinishTime) => call.MaxFinishTime!,
-//        nameof(Call.VerbalDescription) => call.VerbalDescription!,
-//        nameof(Call.MyStatus) => call.MyStatus!,
-//        _ => throw new ArgumentException("Invalid field name", nameof(fieldName))
-//    };
-//}
-
-//internal static BO.Call ConvertToBOCall(DO.Call call)
-//{
-//    return new BO.Call
-//    {
-//        Id = call.Id,
-//        Address = call.Address,
-//        Latitude = call.Latitude,
-//        Longitude = call.Longitude,
-//        OpenTime = call.OpenTime,
-//        MaxFinishTime = call.MaxFinishTime,
-//        VerbalDescription = call.VerbalDescription,
-//        // MyStatus = Status.InProgress // או סטטוס אחר אם יש לך לוגיקה אחרת
-//    };
-//}
-
-
-//internal static (double? Latitude, double? Longitude) logicalChecking(BO.Call boCall)
-//{
-//    //if (boCall.MaxFinishTime.HasValue && boCall.MaxFinishTime.Value <= boCall.OpenTime)
-//    //{
-//    //    throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
-//    //}
-//    //// Validate that the open time is not in the future
-//
-//
-//    return Tools.GetCoordinatesFromAddress(boCall.Address);
-//}

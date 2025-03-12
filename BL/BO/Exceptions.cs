@@ -49,11 +49,4 @@ public class BlInvalidOperationException : Exception
     public BlInvalidOperationException(string? message, Exception? innerException)
         : base(message, innerException) { }
 }
-//public class AssignmentNotFoundException : Exception
-//{
-//    public AssignmentNotFoundException(string? message) : base(message) { }    
-//}
-//public class InvalidAddressException : Exception
-//{
-//    public InvalidAddressException(string? message) : base(message) { }
-//}
+

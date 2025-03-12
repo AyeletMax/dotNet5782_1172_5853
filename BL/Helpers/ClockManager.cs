@@ -14,7 +14,18 @@ internal static class ClockManager //stage 4
     /// Property for providing current application's clock value for any BL class that may need it
     /// </summary>
     internal static DateTime Now { get => _dal.Config.Clock; } //stage 4
+    internal static void Reset()
+    {
+        // קריאה לאיפוס תצורת המערכת, לדוגמה:
+        _dal.Config.Reset();  // איפוס כל ערכי התצורה וההגדרות
 
+        // אם יש מערכים או משתנים נוספים שצריך לאפס ב-ClockManager, כאן המקום להוסיף.
+    }
+    internal static TimeSpan RiskRange
+    {
+        get => _dal.Config.RiskRange; // מחזירים את ערך טווח הזמן סיכון מתוך הגישה לנתונים
+        set => _dal.Config.RiskRange = value; // מעדכנים את ערך טווח הזמן סיכון דרך הגישה לנתונים
+    }
     /// <summary>
     /// Method to perform application's clock from any BL class as may be required
     /// </summary>
@@ -37,8 +48,8 @@ internal static class ClockManager //stage 4
         //for example, Periodic students' updates:
         //Go through all students to update properties that are affected by the clock update
         //(students becomes not active after 5 years etc.)
-        
-        //VolunteerManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
+
+        CallManager.PeriodicCallUpdates(oldClock, newClock);
         //etc ...
 
         //Calling all the observers of clock update

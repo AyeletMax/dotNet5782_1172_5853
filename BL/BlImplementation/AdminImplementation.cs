@@ -10,7 +10,6 @@ internal class AdminImplementation : IAdmin
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public DateTime GetClock()
     {
-        ClockManager.UpdateClock(ClockManager.Now.AddMinutes(1));
         return ClockManager.Now;
     }
     public void AdvanceClock(TimeUnit unit)
@@ -28,19 +27,20 @@ internal class AdminImplementation : IAdmin
         ClockManager.UpdateClock(newClock);
     }
 
-    public int GetMaxRange()
+    public TimeSpan GetMaxRange()
     {
-        return (int)_dal.Config.RiskRange.TotalMinutes;
+        return ClockManager.RiskRange;
     }
 
     public void SetMaxRange(TimeSpan maxRange)
     {
-        _dal.Config.RiskRange = maxRange;
+        ClockManager.RiskRange = maxRange;
     }
 
     public void ResetDB()
     {
-        _dal.Config.Reset(); 
+        _dal.ResetDB();
+        ClockManager.Reset();
     }
     public void InitializeDB() {
 

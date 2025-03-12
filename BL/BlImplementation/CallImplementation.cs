@@ -1,11 +1,7 @@
-﻿using BlApi;
+﻿
 using BO;
-using DalApi;
-using DO;
 using Helpers;
-using System.Globalization;
-using System.Threading.Channels;
-using Newtonsoft.Json.Linq;
+
 
 namespace BlImplementation;
 
@@ -71,18 +67,6 @@ internal class CallImplementation : BlApi.ICall
             return sortField.HasValue
                 ? calls.OrderBy(c => typeof(BO.CallInList).GetProperty(sortField.ToString())?.GetValue(c))
                 : calls.OrderBy(c => c.CallId);
-
-            //if (filterField.HasValue && filterValue != null)
-            //{
-            //    var propertyName = Enum.GetName(typeof(BO.CallInListFields), filterField);
-            //    var propertyInfo = typeof(BO.CallInList).GetProperty(propertyName);
-            //    var convertedValue = Convert.ChangeType(filterValue, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
-            //    calls = calls.Where(c => propertyInfo.GetValue(c)?.Equals(convertedValue) == true);
-            //}
-
-            //return sortField.HasValue
-            //    ? calls.OrderBy(c => typeof(BO.CallInList).GetProperty(Enum.GetName(typeof(BO.CallInListFields), sortField))?.GetValue(c))
-            //    : calls.OrderBy(c => c.CallId);
         }
         catch (Exception ex)
         {
@@ -107,7 +91,6 @@ internal class CallImplementation : BlApi.ICall
                                                  FinishCallType = (BO.FinishCallType?)a.FinishCallType
                                              })
                                              .ToList();
-            // Create the BO.Call object with the necessary details
             return new BO.Call
             {
                 Id = call.Id,
@@ -133,7 +116,6 @@ internal class CallImplementation : BlApi.ICall
         }
     }
 
-    // Update call details
     public void UpdateCallDetails(BO.Call call)
     {
         try
@@ -154,13 +136,6 @@ internal class CallImplementation : BlApi.ICall
                 call.Latitude = existingCall.Latitude;
                 call.Longitude = existingCall.Longitude;
             }
-            //var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
-            //if (latitude is null || longitude is null)
-            //{
-            //    throw new ArgumentException("The address must be valid and resolvable to latitude and longitude.");
-            //}
-            //call.Latitude = latitude.Value;
-            //call.Longitude = longitude.Value;
             DO.Call callToUpdate=CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Update(callToUpdate);
         }
@@ -232,12 +207,10 @@ internal class CallImplementation : BlApi.ICall
         }
     }
 
-    //צריך לעדכן אתהENUN שלCallSortField
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callTypeFilter = null, BO.ClosedCallInListFields? sortField = null)
     {
         try
         {
-            // שלוף את כל ההקצאות של המתנדב
             var assignments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId && a.ExitTime != null)
                 .Where(a => callTypeFilter is null || (BO.CallType)_dal.Call.Read(a.CallId).MyCallType == callTypeFilter)
                 .Select(a =>
@@ -255,7 +228,6 @@ internal class CallImplementation : BlApi.ICall
                     };
                 });
 
-            // אם נבחר שדה למיון, מיון לפי השדה הנבחר
             return sortField.HasValue
                 ? assignments.OrderBy(a => a.GetType().GetProperty(sortField.ToString())?.GetValue(a))
                 : assignments.OrderBy(a => a.Id);
@@ -278,12 +250,12 @@ internal class CallImplementation : BlApi.ICall
                 (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk)) // הפשטת הבדיקה
                 .Select(c => new BO.OpenCallInList
                 {
-                    Id = volunteerId, // ת.ז של המתנדב
-                    MyCallType = (BO.CallType)c.MyCallType, // סוג הקריאה
-                    VerbalDescription = c.VerbalDescription, // תיאור מילולי
-                    Address = c.Address, // כתובת הקריאה
-                    OpenTime = c.OpenTime, // זמן פתיחת הקריאה
-                    MaxFinishTime = c.MaxFinishTime, // זמן סיום משוער
+                    Id = volunteerId, 
+                    MyCallType = (BO.CallType)c.MyCallType,  
+                    VerbalDescription = c.VerbalDescription, 
+                    Address = c.Address, 
+                    OpenTime = c.OpenTime,   
+                    MaxFinishTime = c.MaxFinishTime, 
                     distanceFromVolunteerToCall = Tools.CalculateDistance(volunteer.Latitude,volunteer.Longitude, c.Latitude,c.Longitude)
                 });
 
@@ -402,7 +374,6 @@ internal class CallImplementation : BlApi.ICall
             }
 
             var newAssignment = new DO.Assignment(
-                Id: 0,
                 CallId: callId,
                 VolunteerId: volunteerId,
                 EntranceTime: ClockManager.Now,
@@ -418,7 +389,3 @@ internal class CallImplementation : BlApi.ICall
     }
 
 }
-
-
-
-

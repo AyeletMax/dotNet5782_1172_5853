@@ -12,7 +12,6 @@ namespace DO;
 /// <param name="MaxFinishTime">time (date and hour) that the call has to finish</param>
 public record Call
 (
-    int Id,
     CallType MyCallType,
     string Address,
     double Latitude,
@@ -22,9 +21,10 @@ public record Call
     string? VerbalDescription=null
 )
 {
-  
+    public int Id { get; init; }
+
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Call() : this(0, default(CallType), "", 0, 0, DateTime.MinValue) { }
+    public Call() : this( default(CallType), "", 0, 0, DateTime.MinValue) { }
 }

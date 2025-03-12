@@ -130,16 +130,6 @@ namespace Helpers
                 (DO.DistanceType)boVolunteer.MyDistanceType
             );
         }
-        //להבין מה הולך פה ולסדר חייבים את זה!!!
-        //internal static (double? Latitude, double? Longitude) LogicalChecking(BO.Volunteer boVolunteer)
-        //{
-        //    if (!IsPasswordStrong(boVolunteer.Password))
-        //        throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
-        //    //לעשות אחרי שברכה תסביר לי
-        //    return Tools.GetCoordinatesFromAddress(boVolunteer.Address);
-        //}
-
-
         internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
         {
             bool isSelf = (requesterId == boVolunteer.Id);
@@ -177,36 +167,6 @@ namespace Helpers
 
             return true; 
         }
-        //לבדוק אם צריך אותה
-        //internal static BO.Volunteer MapVolunteer(DO.Volunteer volunteer)
-        //{
-        //    return new BO.Volunteer
-        //    {
-        //        Id = volunteer.Id,
-        //        Name = volunteer.Name,
-        //        Phone = volunteer.Phone,
-        //        Email = volunteer.Email,
-        //        Active = volunteer.Active,
-        //        MyRole = (BO.Role)volunteer.MyRole,
-
-        //    };
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
 

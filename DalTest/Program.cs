@@ -261,7 +261,7 @@ namespace DalTest
             int volunteerId = volunteers[s_rand.Next(volunteers.Count)].Id;
             int callId = calls[s_rand.Next(calls.Count)].Id;
             int id = s_dal!.Config.NextAssignmentId;
-            s_dal.Assignment.Create(new Assignment(id, callId, volunteerId,  entranceTime, exitTime, finishCallType));
+            s_dal.Assignment.Create(new Assignment( callId, volunteerId,  entranceTime, exitTime, finishCallType));
             Console.WriteLine("Assignment created successfully!");
         }
         /// <summary>
@@ -285,7 +285,7 @@ namespace DalTest
             DateTime maxFinishTime = DateTime.Parse(Console.ReadLine()!);
             Console.Write("Verbal Description: ");
             string? verbalDescription = Console.ReadLine()!;
-            s_dal.Call.Create(new Call(id, myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
+            s_dal.Call.Create(new Call(myCallType, address, latitude, longitude, openTime, maxFinishTime, verbalDescription));
             Console.WriteLine("Call created successfully!");
         }
         /// <summary>
@@ -438,7 +438,7 @@ namespace DalTest
             Console.Write("Verbal Description: ");
             string? description = string.IsNullOrEmpty(Console.ReadLine()) ? existingCall.VerbalDescription : Console.ReadLine();
             int id = existingCall.Id;
-            return new Call(id, myCallType, address, latitude, longitude, openingTime, maxTime, description);
+            return new Call(myCallType, address, latitude, longitude, openingTime, maxTime, description);
             
         }
         /// <summary>
@@ -460,7 +460,7 @@ namespace DalTest
             Console.Write("Finish Call Type (TakenCareOf, CanceledByVolunteer, CanceledByManager, Expired): ");
             string endingTimeTypeInput = Console.ReadLine()!;
             FinishCallType? endingTimeType = string.IsNullOrEmpty(endingTimeTypeInput) ? existingAssignment.FinishCallType : (FinishCallType?)int.Parse(endingTimeTypeInput);
-            return new Assignment(Id, CallId, VolunteerId, entryTime, endingTime, endingTimeType);
+            return new Assignment( CallId, VolunteerId, entryTime, endingTime, endingTimeType);
             
         }
         /// <summary>

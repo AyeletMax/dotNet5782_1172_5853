@@ -107,7 +107,7 @@ public static class Initialization
             
             int startTime = s_rand.Next(range);
             int randIndex = s_rand.Next(verbalDescriptions.Length);
-            s_dal!.Call.Create(new Call(0,callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+            s_dal!.Call.Create(new Call(callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
         }
     }
     private static void createAssignment()
@@ -123,7 +123,7 @@ public static class Initialization
             TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
-            s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, randomTime, randomTime.AddHours(2),
+            s_dal!.Assignment.Create(new Assignment(callId, volunteerId, randomTime, randomTime.AddHours(2),
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }

@@ -1,10 +1,11 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
+using DalApi;
 using DO;
 using Helpers;
 
-internal class VolunteerImplementation : IVolunteer
+internal class VolunteerImplementation : BlApi.IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
@@ -124,18 +125,26 @@ internal class VolunteerImplementation : IVolunteer
     {
         try
         {
-           VolunteerManager.ValidateInputFormat(boVolunteer);
-            //לבדוק מה עושים עם זה
-            //(double? Latitude, double? Longitude) coordinates = VolunteerManager.LogicalChecking(boVolunteer);
-            //if (coordinates == null)
-            //    throw new BO.GeolocationNotFoundException($"Invalid address: {boVolunteer.Address}");
-            //boVolunteer.Latitude = coordinates.Latitude;
-            //boVolunteer.Longitude = coordinates.Longitude;
+            //var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
+            VolunteerManager.ValidateInputFormat(boVolunteer);
+            //if (boVolunteer.Address != null)
+            //{
+            //    var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
+            //    if (latitude is null || longitude is null)
+            //        throw new BO.BlInvalidFormatException($"Invalid address: {boVolunteer.Address}");
+            //    boVolunteer.Latitude = latitude.Value;
+            //    boVolunteer.Longitude = longitude.Value;
+            //}
+            //else
+            //{
+            //    boVolunteer.Address = existingVolunteer.Address;
+            //    boVolunteer.Latitude = existingVolunteer.Latitude;
+            //    boVolunteer.Longitude = existingVolunteer.Longitude;
+            //}
             VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
 
             var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
             var changedFields =VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
-            //צריך לבדוק איזה שדות עוד א"א לעדכן ולשנות בפונ ע"פ requesterId
             if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
 
@@ -168,6 +177,10 @@ internal class VolunteerImplementation : IVolunteer
             }
             _dal.Volunteer.Delete(volunteerId);
         }
+        catch (BO.BlDeletionException)
+        {
+            throw;
+        }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Error: Volunteer with ID {volunteerId} does not exist in the database.", ex);
@@ -188,13 +201,16 @@ internal class VolunteerImplementation : IVolunteer
                 throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(boVolunteer);
-            //לבדוק מה לעשות עם זה
-            //var (latitude, longitude) = VolunteerManager.LogicalChecking(boVolunteer);
-            //if (latitude != null && longitude != null)
+
+            //var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            //if (latitude is null || longitude is null)
             //{
-            //    boVolunteer.Latitude = latitude;
-            //    boVolunteer.Longitude = longitude;
+            //    throw new BO.BlInvalidFormatException("The address must be valid and resolvable to latitude and longitude.");
             //}
+            //boVolunteer.Latitude = latitude.Value;
+            //boVolunteer.Longitude = longitude.Value;
+
+         
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
             _dal.Volunteer.Create(doVolunteer);
         }
