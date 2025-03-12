@@ -8,50 +8,8 @@ namespace BlTest
     class Program
     {
         static readonly IBl s_bl = Factory.Get();
-
         static void Main()
-        {
-            try
-            {
-                Console.WriteLine("Please log in.");
-                Console.Write("Username: ");
-                string username = Console.ReadLine()!;
-
-                Console.Write("Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): ");
-                string password = Console.ReadLine()!;
-
-                BO.Role userRole = s_bl.Volunteer.Login(username, password);
-                Console.WriteLine($"Login successful! Your role is: {userRole}");
-
-                //בדיקה אם התפקיד הוא Manager
-                if (userRole == BO.Role.Manager)
-                {
-                    //הכניסה ללולאת התפריט רק אם התפקיד הוא Manager
-                    ShowMenu();
-            }
-                else
-            {
-                Console.WriteLine("UpDate Volunteer");
-                UpDateVolunteer();
-            }
-        }
-            catch (BO.BlDoesNotExistException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-            catch (BO.BlInvalidFormatException ex)
-            {
-                Console.WriteLine("The sub menu choice is not valid.", ex);
-            }
-            catch (BO.BlGeneralDatabaseException ex)
-            {
-                Console.WriteLine($"System Error: {ex.Message}");
-            }
-
-        }
-        
-        static void ShowMenu()
-        {
+    {
             try
             {
                 while (true)
@@ -181,58 +139,69 @@ namespace BlTest
             while (true)
             {
                 Console.WriteLine("\n--- Volunteer Management ---");
-                Console.WriteLine("1. List Volunteers");
-                Console.WriteLine("2. Get Filter/Sort volunteer");
-                Console.WriteLine("3. Read Volunteer by ID");
-                Console.WriteLine("4. Add Volunteer");
-                Console.WriteLine("5. Remove Volunteer");
-                Console.WriteLine("6. UpDate Volunteer");
+                Console.WriteLine("1. Login");
+                Console.WriteLine("2. List Volunteers");
+                Console.WriteLine("3. Get Filter/Sort volunteer");
+                Console.WriteLine("4. Read Volunteer by ID");
+                Console.WriteLine("5. Add Volunteer");
+                Console.WriteLine("6. Remove Volunteer");
+                Console.WriteLine("7. UpDate Volunteer");
                 Console.WriteLine("0. Back");
                 Console.Write("Choose an option: ");
 
                 if (!int.TryParse(Console.ReadLine(), out int choice))
                     //האם אפשר לעשות פה כזאת זריקה?
                     throw new FormatException("The volunteer menu choice is not valid.");
-
                 switch (choice)
                 {
                     case 1:
                         try
                         {
-                            foreach (var volunteer in s_bl.Volunteer.GetVolunteersList())
-                                Console.WriteLine(volunteer);
+                            Console.WriteLine("Please log in.");
+                            Console.Write("Username: ");
+                            string username = Console.ReadLine()!;
+
+                            Console.Write("Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): ");
+                            string password = Console.ReadLine()!;
+
+                            BO.Role userRole = s_bl.Volunteer.Login(username, password);
+                            Console.WriteLine($"Login successful! Your role is: {userRole}");
                         }
-                        catch (BO.BlDoesNotExistException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                        catch (BO.BlGeneralDatabaseException ex)
-                        {
-                            Console.WriteLine($"System Error: {ex.Message}");
+                            HandleException(ex);
                         }
                         break;
                     case 2:
-                        try { 
-                        bool? isActive;
-                        BO.VolunteerSortField? sortBy;
-                        GetVolunteerFilterAndSortCriteria(out isActive, out sortBy);
-                        var volunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
-                        if (volunteersList != null)
-                            foreach (var volunteer in volunteersList)
+                        try
+                        {
+                            foreach (var volunteer in s_bl.Volunteer.GetVolunteersList())
                                 Console.WriteLine(volunteer);
-                        else
-                            Console.WriteLine("No volunteers found matching the criteria.");
                         }
-                        catch (BO.BlDoesNotExistException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                        catch (BO.BlGeneralDatabaseException ex)
-                        {
-                            Console.WriteLine($"System Error: {ex.Message}");
+                            HandleException(ex);
                         }
                         break;
                     case 3:
+                        try
+                        {
+                            bool? isActive;
+                            BO.VolunteerSortField? sortBy;
+                            GetVolunteerFilterAndSortCriteria(out isActive, out sortBy);
+                            var volunteersList = s_bl.Volunteer.GetVolunteersList(isActive, sortBy);
+                            if (volunteersList != null)
+                                foreach (var volunteer in volunteersList)
+                                    Console.WriteLine(volunteer);
+                            else
+                                Console.WriteLine("No volunteers found matching the criteria.");
+                        }
+                        catch (Exception ex)
+                        {
+                            HandleException(ex);
+                        }
+                        break;
+                    case 4:
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
@@ -243,21 +212,19 @@ namespace BlTest
                             }
                             else
                                 throw new FormatException("Invalid input. Volunteer ID must be a number.");
-
-
-
                         }
-                        catch (BO.BlDoesNotExistException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            HandleException(ex);
                         }
                         break;
-                    case 4:
+                    case 5:
                         try
                         {
                             Console.WriteLine("Enter Volunteer details:");
                             Console.Write("ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int id)) {
+                            if (int.TryParse(Console.ReadLine(), out int id))
+                            {
                                 BO.Volunteer volunteer = CreateVolunteer(id);
                                 s_bl.Volunteer.AddVolunteer(volunteer);
                                 Console.WriteLine("Volunteer created successfully!");
@@ -265,28 +232,13 @@ namespace BlTest
                             else
                                 throw new FormatException("Invalid input. Volunteer ID must be a number.");
                         }
-                        catch (BO.BlAlreadyExistsException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"Error BlAlreadyExistsException: {ex.Message}");
-                        }
-                        catch (BO.BlInvalidFormatException ex)
-                        {
-                            Console.WriteLine($"Input Error: {ex.Message}");
-                        }
-                        catch (BO.BlApiRequestException ex)
-                        {
-                            Console.WriteLine($"Error BlApiRequestException: {ex.Message}");
-                        }
-                        catch (BO.BlGeolocationNotFoundException ex)
-                        {
-                            Console.WriteLine($"Error BlGeolocationNotFoundException: {ex.Message}");
-                        }
-                        catch (BO.BlGeneralDatabaseException ex)
-                        {
-                            Console.WriteLine($"Error BlGeneralDatabaseException: {ex.Message}");
+                            HandleException(ex);
                         }
                         break;
-                    case 5:
+
+                    case 6:
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
@@ -297,28 +249,27 @@ namespace BlTest
                             }
                             else
                             {
-                                throw new FormatException("Invalid input. Volunteer ID must be a number."); 
+                                throw new FormatException("Invalid input. Volunteer ID must be a number.");
                             }
                         }
-                        catch (BO.BlDoesNotExistException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                        catch (BO.BlGeneralDatabaseException ex)
-                        {
-                            Console.WriteLine($"Error: {ex.Message}");
+                            HandleException(ex);
                         }
                         break;
-                    case 6:
+
+                    case 7:
                         UpDateVolunteer();
                         break;
+
                     case 0:
                         return;
+
                     default:
-                        //כנל לבדיקה האם לזרוק פה
                         Console.WriteLine("Invalid choice. Try again.");
                         break;
-                }
+                }        
+   
             }
         }
         public static void GetVolunteerFilterAndSortCriteria(out bool? isActive, out BO.VolunteerSortField? sortBy)
@@ -456,15 +407,12 @@ namespace BlTest
                 Longitude = longitude,
                 LargestDistance = largestDistance,
                 MyDistanceType = myDistanceType,
-                TotalCallsHandled = 0,
-                TotalCallsCancelled = 0,
-                TotalExpiredCallsChosen = 0,
-                CurrentCallInProgress = null
+                //האם צריך את זה?
+                //TotalCallsHandled = 0,
+                //TotalCallsCancelled = 0,
+                //TotalExpiredCallsChosen = 0,
+                //CurrentCallInProgress = null
             };  
-
-             
-           
-          
         }
         //לדעת לטפל בזריקות עם כל הTRY
         static void UpDateVolunteer()
@@ -488,25 +436,9 @@ namespace BlTest
                     throw new FormatException("Invalid input. Volunteer ID must be a number.");
                 
             }
-            catch (BO.BlDoesNotExistException ex)
-            {
-                Console.WriteLine(ex);
-            }
-            catch (BO.BlUnauthorizedAccessException ex)
-            {
-                Console.WriteLine(ex);
-            }
-            catch (BO.BlInvalidFormatException ex)
-            {
-                Console.WriteLine(ex);
-            }
-            catch (BO.BlGeneralDatabaseException ex)
-            {
-                Console.WriteLine(ex);
-            }
             catch (Exception ex)
             {
-                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+                HandleException(ex);
             }
         }
 
@@ -549,13 +481,9 @@ namespace BlTest
                                     Console.WriteLine($"{status}: {callQuantities[(int)status]}");
                                 }
                             }
-                            catch (BO.BlGeneralDatabaseException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                                if (ex.InnerException != null)
-                                {
-                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
-                                }
+                                HandleException(ex);
                             }
                             break;
                         case 2:
@@ -585,13 +513,9 @@ namespace BlTest
                                     throw new BO.BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
                                 }
                             }
-                            catch (BO.BlGeneralDatabaseException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                                if (ex.InnerException != null)
-                                {
-                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
-                                }
+                                HandleException(ex);
                             }
                             break;
                         case 3:
@@ -617,11 +541,9 @@ namespace BlTest
                                 foreach (var call in callList)
                                     Console.WriteLine(call);
                             }
-                            catch (BO.BlGeneralDatabaseException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Exception: {ex.GetType().Name} - {ex.Message}");
-                                if (ex.InnerException != null)
-                                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 4:
@@ -638,13 +560,9 @@ namespace BlTest
                                     throw new FormatException("Invalid input. Volunteer ID must be a number.");
                                 }
                             }
-                            catch (BO.BlDoesNotExistException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 5:
@@ -661,33 +579,9 @@ namespace BlTest
                                 else
                                     throw new FormatException("Invalid input. Cll ID must be a number.");
                             }
-                            catch (BO.BlDoesNotExistException ex)
-                            {
-                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
-                            }
-                            catch (BO.BlInvalidOperationException ex)
-                            {
-                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
-                            }
-                            catch (BO.BlInvalidFormatException ex)
-                            {
-                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
-                            }
-                            catch (BO.BlAlreadyExistsException ex)
-                            {
-                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Exception: {ex.GetType().Name}, Message: {ex.Message}");
-                                if (ex.InnerException != null)
-                                {
-                                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                                }
-                            }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                                HandleException(ex);
                             }
                             ;
                             break;
@@ -705,17 +599,9 @@ namespace BlTest
                                     throw new FormatException("Invalid input. Volunteer ID must be a number.");
                                 }
                             }
-                            catch (BlDoesNotExistException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BlDeletionException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 7:
@@ -747,17 +633,9 @@ namespace BlTest
                                     throw new BlInvalidFormatException("Invalid input. Volunteer ID must be a number.");
                                 }
                             }
-                            catch (BO.BlDoesNotExistException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
-                                if (ex.InnerException != null)
-                                {
-                                    Console.WriteLine($"Internal error: {ex.InnerException.Message}");
-                                }
+                                HandleException(ex);
                             }
                             break;
                         case 9:
@@ -774,21 +652,9 @@ namespace BlTest
                                 s_bl.Call.UpdateCallCancellation(volunteerId, assignmentId);
                                 Console.WriteLine("The call was successfully canceled.");
                             }
-                            catch (BO.BlUnauthorizedAccessException ex)
-                            {
-                                Console.WriteLine($"Authorization Error: {ex.Message}");
-                            }
-                            catch (BO.BlInvalidOperationException ex)
-                            {
-                                Console.WriteLine($"Operation Error: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Database Error: {ex.Message}");
-                            }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Unexpected error: {ex.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 10:
@@ -812,21 +678,9 @@ namespace BlTest
 
                                 Console.WriteLine("Call completion updated successfully!");
                             }
-                            catch (BO.BlDoesNotExistException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BO.BlUnauthorizedAccessException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BO.BlInvalidOperationException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 11:
@@ -843,21 +697,9 @@ namespace BlTest
                                 s_bl.Call.SelectCallForTreatment(volunteerId, callId);
                                 Console.WriteLine("The call has been successfully assigned to the volunteer.");
                             }
-                            catch (FormatException ex)
-                            {
-                                Console.WriteLine($"Input Error: {ex.Message}");
-                            }
-                            catch (BO.BlInvalidOperationException ex)
-                            {
-                                Console.WriteLine($"Operation Error: {ex.Message}");
-                            }
-                            catch (BO.BlGeneralDatabaseException ex)
-                            {
-                                Console.WriteLine($"Database Error: {ex.Message}");
-                            }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Unexpected error: {ex.Message}");
+                                HandleException(ex);
                             }
                             break;
                         case 0:
@@ -973,36 +815,72 @@ namespace BlTest
             //catch { }
             //}
         }
+
         static void HandleException(Exception ex)
         {
             switch (ex)
             {
-                case BO.BlDoesNotExistException _:
-                    Console.WriteLine($"Error: {ex.Message}");
+                case BO.BlDoesNotExistException ex1:
+                    Console.WriteLine($"Exception: {ex1.GetType().Name}, Message: {ex1.Message}");
                     break;
-                case BO.BlUnauthorizedAccessException _:
-                    Console.WriteLine("Unauthorized access: You do not have permission.");
+                case BO.BlInvalidOperationException ex2:
+                    Console.WriteLine($"Exception: {ex2.GetType().Name}, Message: {ex2.Message}");
                     break;
-                case BO.BlInvalidFormatException _:
-                    Console.WriteLine($"Invalid format: {ex.Message}");
+                case BO.BlInvalidFormatException ex3:
+                    Console.WriteLine($"Exception: {ex3.GetType().Name}, Message: {ex3.Message}");
                     break;
-                case BO.BlAlreadyExistsException _:
-                    Console.WriteLine("The item already exists in the system.");
+                case BO.BlAlreadyExistsException ex4:
+                    Console.WriteLine($"Exception: {ex4.GetType().Name}, Message: {ex4.Message}");
                     break;
-                case BO.BlGeneralDatabaseException dbEx:
-                    Console.WriteLine($"Database error: {dbEx.Message}");
-                    if (dbEx.InnerException != null)
-                        Console.WriteLine($"Internal error: {dbEx.InnerException.Message}");
+                case BO.BlGeneralDatabaseException ex5:
+                    Console.WriteLine($"Exception: {ex5.GetType().Name}, Message: {ex5.Message}");
+                    if (ex5.InnerException != null)
+                    {
+                        Console.WriteLine($"Inner Exception: {ex5.InnerException.Message}");
+                    }
+                    break;
+                case BO.BlUnauthorizedAccessException ex7:
+                    Console.WriteLine($"Unauthorized Access: {ex7.Message}");
                     break;
                 case FormatException _:
                     Console.WriteLine("Input format is incorrect. Please try again.");
                     break;
-                default:
-                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+
+                case Exception ex6:
+                    Console.WriteLine($"An unexpected error occurred: {ex6.Message}");
                     break;
             }
         }
     }
 
 }
+//static void HandleException(Exception ex)
+//{BlUnauthorizedAccessException
+//    switch (ex)
+//    {
+//        case BO.BlDoesNotExistException _:
+//            Console.WriteLine($"Error: {ex.Message}");
+//            break;
+//        case BO.BlUnauthorizedAccessException _:
+//            Console.WriteLine("Unauthorized access: You do not have permission.");
+//            break;
+//        case BO.BlInvalidFormatException _:
+//            Console.WriteLine($"Invalid format: {ex.Message}");
+//            break;
+//        case BO.BlAlreadyExistsException _:
+//            Console.WriteLine("The item already exists in the system.");
+//            break;
+//        case BO.BlGeneralDatabaseException dbEx:
+//            Console.WriteLine($"Database error: {dbEx.Message}");
+//            if (dbEx.InnerException != null)
+//                Console.WriteLine($"Internal error: {dbEx.InnerException.Message}");
+//            break;
+//        case FormatException _:
+//            Console.WriteLine("Input format is incorrect. Please try again.");
+//            break;
+//        default:
+//            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+//            break;
+//    }
+//}
 
