@@ -815,7 +815,6 @@ namespace BlTest
             //catch { }
             //}
         }
-
         static void HandleException(Exception ex)
         {
             switch (ex)
@@ -839,21 +838,67 @@ namespace BlTest
                         Console.WriteLine($"Inner Exception: {ex5.InnerException.Message}");
                     }
                     break;
-                case BO.BlUnauthorizedAccessException ex7:
-                    Console.WriteLine($"Unauthorized Access: {ex7.Message}");
+                case BO.BlGeolocationNotFoundException ex6:
+                    Console.WriteLine($"Exception: {ex6.GetType().Name}, Message: {ex6.Message}");
+                    break;
+                case BO.BlDeletionException ex7:
+                    Console.WriteLine($"Exception: {ex7.GetType().Name}, Message: {ex7.Message}");
+                    break;
+                case BO.BlApiRequestException ex8:
+                    Console.WriteLine($"Exception: {ex8.GetType().Name}, Message: {ex8.Message}");
+                    break;
+                case BO.BlUnauthorizedAccessException ex9:
+                    Console.WriteLine($"Unauthorized Access: {ex9.Message}");
                     break;
                 case FormatException _:
                     Console.WriteLine("Input format is incorrect. Please try again.");
                     break;
-
-                case Exception ex6:
-                    Console.WriteLine($"An unexpected error occurred: {ex6.Message}");
+                case Exception ex10:
+                    Console.WriteLine($"An unexpected error occurred: {ex10.Message}");
                     break;
             }
         }
+
+
+      
     }
 
 }
+//static void HandleException(Exception ex)
+//{
+//    switch (ex)
+//    {
+//        case BO.BlDoesNotExistException ex1:
+//            Console.WriteLine($"Exception: {ex1.GetType().Name}, Message: {ex1.Message}");
+//            break;
+//        case BO.BlInvalidOperationException ex2:
+//            Console.WriteLine($"Exception: {ex2.GetType().Name}, Message: {ex2.Message}");
+//            break;
+//        case BO.BlInvalidFormatException ex3:
+//            Console.WriteLine($"Exception: {ex3.GetType().Name}, Message: {ex3.Message}");
+//            break;
+//        case BO.BlAlreadyExistsException ex4:
+//            Console.WriteLine($"Exception: {ex4.GetType().Name}, Message: {ex4.Message}");
+//            break;
+//        case BO.BlGeneralDatabaseException ex5:
+//            Console.WriteLine($"Exception: {ex5.GetType().Name}, Message: {ex5.Message}");
+//            if (ex5.InnerException != null)
+//            {
+//                Console.WriteLine($"Inner Exception: {ex5.InnerException.Message}");
+//            }
+//            break;
+//        case BO.BlUnauthorizedAccessException ex7:
+//            Console.WriteLine($"Unauthorized Access: {ex7.Message}");
+//            break;
+//        case FormatException _:
+//            Console.WriteLine("Input format is incorrect. Please try again.");
+//            break;
+
+//        case Exception ex6:
+//            Console.WriteLine($"An unexpected error occurred: {ex6.Message}");
+//            break;
+//    }
+//}
 //static void HandleException(Exception ex)
 //{BlUnauthorizedAccessException
 //    switch (ex)
