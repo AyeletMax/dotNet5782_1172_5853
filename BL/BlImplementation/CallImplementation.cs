@@ -1,7 +1,5 @@
-﻿
-using BO;
+﻿using BO;
 using Helpers;
-
 
 namespace BlImplementation;
 
