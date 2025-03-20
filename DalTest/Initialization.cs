@@ -2,6 +2,8 @@
 using DalApi;
 using DO;
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 
 public static class Initialization
 {
@@ -38,13 +40,38 @@ public static class Initialization
                32.1820, 31.6700, 32.9674, 32.0840, 32.3143, 32.7872,
                32.0167, 31.8015, 32.7682
         };
-        //s_dal!.Volunteer.Create(new Volunteer(s_rand.Next(200000000, 400000000), "Chen", "0583265482", "chen@gmail.com", true, Role.Manager, "chen!123", "Zhbotinski 15", 32.1, 32.8, 10));
         for (int i = 0; i < FullNames.Length; i++)
         {
-            s_dal!.Volunteer!.Create(new Volunteer(s_rand.Next(200000000, 400000000), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, passwords[i], addresses[i],
+            s_dal!.Volunteer!.Create(new Volunteer(GenerateValidIsraeliId(s_rand), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, EncryptPassword(passwords[i]), addresses[i],
                 latitudes[i], longitudes[i], s_rand.Next(0, 8)));
         }
-    }  
+    }
+    private static int GenerateValidIsraeliId(Random rand)
+    {
+        int idWithoutCheckDigit = rand.Next(10000000, 99999999); // מספר בן 8 ספרות בלבד
+        int checkDigit = CalculateIsraeliIdCheckDigit(idWithoutCheckDigit);
+        int finalId = unchecked(idWithoutCheckDigit * 10 + checkDigit); // לוודא שהתוצאה לא חורגת
+
+        return finalId >= 0 ? finalId : -finalId; // לוודא שהתוצאה חיובית
+    }
+
+    private static int CalculateIsraeliIdCheckDigit(int idWithoutCheckDigit)
+    {
+        int sum = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            int digit = (idWithoutCheckDigit / (int)Math.Pow(10, 7 - i)) % 10;
+            int weighted = digit * (i % 2 == 0 ? 1 : 2);
+            sum += (weighted > 9) ? weighted - 9 : weighted;
+        }
+        return (10 - (sum % 10)) % 10;
+    }
+    internal static string EncryptPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password)); ;
+        return Convert.ToBase64String(hashedBytes!);
+    }
     private static void createCall()
     {
         string[] verbalDescriptions = {
@@ -127,6 +154,7 @@ public static class Initialization
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }
+  
     //public static void DO(IDal dal)//stage 2
     public static void DO()//stage 4
     {
