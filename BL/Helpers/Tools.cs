@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Reflection;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using BO;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Mail;
+using System.Net;
+using Newtonsoft.Json;
+using DalApi;
 
 namespace Helpers;
 
@@ -154,6 +152,27 @@ internal static class Tools
         {
             // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
             throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
+        }
+    }
+    public static void SendEmail(string toEmail, string subject, string body)
+    {
+        var fromAddress = new MailAddress("makethemhappy979@gmail.com", "Make Them Happy");
+        var toAddress = new MailAddress(toEmail);
+
+        var smtpClient = new SmtpClient("smtp.gmail.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential("makethemhappy979@gmail.com", "046150"),
+            EnableSsl = true,
+        };
+
+        using (var message = new MailMessage(fromAddress, toAddress)
+        {
+            Subject = subject,
+            Body = body,
+        })
+        {
+            smtpClient.Send(message);
         }
     }
 }

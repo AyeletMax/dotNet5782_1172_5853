@@ -102,6 +102,25 @@ internal static class CallManager
         });
 
     }
-    
+
+
+    internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
+    {
+        var call = s_dal.Call.Read(assignment.CallId)!;
+        string subject = "הקצאה בוטלה";
+        string body = $"שלום {volunteer.Name},\n\n" +
+                      $"ההקצאה שלך לטיפול בקריאה {assignment.Id} בוטלה על ידי המנהל.\n" +
+                      $"פרטי הקריאה:\n" +
+                      $"קריאה: {assignment.CallId}\n" +
+                      $"סוג הקריאה: {call.MyCallType}\n" +
+                      $"כתובת הקריאה: {call.Address}\n" +
+                      $"זמן פתיחה: {call.OpenTime}\n" +
+                      $"תאור מילולי: {call.VerbalDescription}\n" +
+                      $"זמן כניסה טיפול : {assignment.EntranceTime}\n\n" +
+                      $"בברכה,\nמערכת ניהול קריאות";
+
+        Tools.SendEmail(volunteer.Email, subject, body);
+    }
+
 }
 
