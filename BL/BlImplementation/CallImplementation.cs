@@ -316,17 +316,14 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
-            // 1. פנייה לשכבת הנתונים להבאת ההקצאה לפי מזהה ההקצאה
             var assignment = _dal.Assignment.Read(assignmentId) ?? throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
 
-            // 3. בדיקת הרשאה לביטול (האם המבקש הוא מנהל או המתנדב עצמו)
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
             if (volunteer.MyRole!= DO.Role.Manager || assignment.VolunteerId != volunteerId)
             {
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to cancel this assignment.");
             }
 
-            // 4. בדיקת סטטוס ההקצאה: לוודא שהיא פתוחה ולא טופלה
             var status = CallManager.GetCallStatus(assignment.CallId);
 
             if (status == Status.Expired || status == Status.Closed)
@@ -334,14 +331,13 @@ internal class CallImplementation : BlApi.ICall
                 throw new BO.BlInvalidOperationException($"Cannot cancel an assignment that is {status}.");
             }
 
-            // 5. עדכון הנתונים של ההקצאה עם יצירת אובייקט חדש בעזרת 'with'
             assignment = assignment with
             {
-                ExitTime = ClockManager.Now, // עדכון ExitTime
+                ExitTime = ClockManager.Now, 
                 FinishCallType = (assignment.VolunteerId == volunteerId) ? DO.FinishCallType.CanceledByVolunteer : DO.FinishCallType.CanceledByManager
             };
-
-            // 7. עדכון ההקצאה בשכבת הנתונים
+            //פה הוספתי
+            CallManager.SendEmailToVolunteer(volunteer, assignment);
             _dal.Assignment.Update(assignment);
         }
         catch (KeyNotFoundException ex)
