@@ -5,6 +5,7 @@ namespace BlImplementation;
 
 internal class CallImplementation : BlApi.ICall
 {
+
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public int[] GetCallQuantitiesByStatus()
     {
@@ -123,10 +124,8 @@ internal class CallImplementation : BlApi.ICall
             if (call.Address != "No Address")
             {
                 var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address!);
-                if (latitude is null || longitude is null)
-                    throw new BO.BlInvalidFormatException($"Invalid address: {call.Address}");
-                call.Latitude = latitude.Value;
-                call.Longitude = longitude.Value;
+                call.Latitude = latitude;
+                call.Longitude = longitude;
             }
             else
             {
@@ -182,14 +181,12 @@ internal class CallImplementation : BlApi.ICall
         {
             CallManager.ValidateCallDetails(call);
             var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
-            if (latitude is null || longitude is null)
-            {
-                throw new BO.BlInvalidFormatException("The address must be valid and resolvable to latitude and longitude.");
-            }
-            call.Latitude = latitude.Value;
-            call.Longitude = longitude.Value;
+            call.Latitude = latitude;
+            call.Longitude = longitude;
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Create(dataCall);
+            CallManager.NotifyVolunteers(call);
+
         }
         catch (BlInvalidFormatException)
         {
@@ -347,6 +344,10 @@ internal class CallImplementation : BlApi.ICall
         catch (BO.BlUnauthorizedAccessException ex)
         {
             throw new BO.BlInvalidOperationException(ex.Message, ex);
+        }
+        catch(BlInvalidOperationException ex)
+        {
+            throw;
         }
         catch (Exception ex)
         {

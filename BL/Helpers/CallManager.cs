@@ -108,19 +108,41 @@ internal static class CallManager
     {
         var call = s_dal.Call.Read(assignment.CallId)!;
         string subject = "הקצאה בוטלה";
-        string body = $"שלום {volunteer.Name},\n\n" +
-                      $"ההקצאה שלך לטיפול בקריאה {assignment.Id} בוטלה על ידי המנהל.\n" +
-                      $"פרטי הקריאה:\n" +
-                      $"קריאה: {assignment.CallId}\n" +
-                      $"סוג הקריאה: {call.MyCallType}\n" +
-                      $"כתובת הקריאה: {call.Address}\n" +
-                      $"זמן פתיחה: {call.OpenTime}\n" +
-                      $"תאור מילולי: {call.VerbalDescription}\n" +
-                      $"זמן כניסה טיפול : {assignment.EntranceTime}\n\n" +
+        string body = $"Hello {volunteer.Name},\n\n" +
+                      $"Your allocation to handle the call {assignment.Id} has been canceled by the manager.\n" +
+                      $"Call Details:\n" +
+                      $"Call Number: {assignment.CallId}\n" +
+                      $"Call Type: {call.MyCallType}\n" +
+                      $"Call Address: {call.Address}\n" +
+                      $"Openning Time: {call.OpenTime}\n" +
+                      $"Verbal Description: {call.VerbalDescription}\n" +
+                      $"Call Entrance Time : {assignment.EntranceTime}\n\n" +
                       $"בברכה,\nמערכת ניהול קריאות";
 
         Tools.SendEmail(volunteer.Email, subject, body);
     }
 
+    internal static void NotifyVolunteers(BO.Call call)
+    {
+        List<DO.Volunteer> volunteers = s_dal.Volunteer.ReadAll().Where(v => v.Active).ToList();
+        foreach (var volunteer in volunteers)
+        {
+            if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
+            {
+                double distance = Tools.CalculateDistance(volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude, (BO.DistanceType)volunteer.MyDistanceType);
+                if (distance <= volunteer.LargestDistance.Value)
+                {
+                    string body = $"A new call is available near you: " +
+                        $"Call Type: {call.MyCallType}\n" +
+                        $"Verbal Description: {call.VerbalDescription}\n" +
+                       $"Call Address: {call.Address}\n" +
+                        $"Openning Time: {call.OpenTime}\n" +
+                        $"Call Status:{call.MyStatus}";
+
+                    Tools.SendEmail(volunteer.Email, "New Volunteer Call", $"A new call is available near you: {call}");
+                }
+            }
+        }
+    }
 }
 

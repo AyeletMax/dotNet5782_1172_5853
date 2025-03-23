@@ -365,15 +365,6 @@ namespace BlTest
              Console.Write("Address: ");
              string? address = Console.ReadLine();
 
-             Console.WriteLine("Enter location details:");
-             Console.Write("Latitude: ");
-             if (!double.TryParse(Console.ReadLine(), out double latitude))
-                throw new FormatException("Invalid latitude format.");
-
-             Console.Write("Longitude: ");
-             if (!double.TryParse(Console.ReadLine(), out double longitude))
-                throw new FormatException("Invalid longitude format.");
-
              Console.Write("Largest Distance: ");
              if (!double.TryParse(Console.ReadLine(), out double largestDistance))
                 throw new FormatException("Invalid largest distance format.");
@@ -392,8 +383,6 @@ namespace BlTest
                 MyRole = role,
                 Password = password,
                 Address = address,
-                Latitude = latitude,
-                Longitude = longitude,
                 LargestDistance = largestDistance,
                 MyDistanceType = myDistanceType,
             };  

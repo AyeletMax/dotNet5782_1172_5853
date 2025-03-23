@@ -125,22 +125,20 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-            //var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
+            var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
             VolunteerManager.ValidateInputFormat(boVolunteer);
-            //if (boVolunteer.Address != null)
-            //{
-            //    var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
-            //    if (latitude is null || longitude is null)
-            //        throw new BO.BlInvalidFormatException($"Invalid address: {boVolunteer.Address}");
-            //    boVolunteer.Latitude = latitude.Value;
-            //    boVolunteer.Longitude = longitude.Value;
-            //}
-            //else
-            //{
-            //    boVolunteer.Address = existingVolunteer.Address;
-            //    boVolunteer.Latitude = existingVolunteer.Latitude;
-            //    boVolunteer.Longitude = existingVolunteer.Longitude;
-            //}
+            if (boVolunteer.Address != null)
+            {
+                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
+                boVolunteer.Latitude = latitude;
+                boVolunteer.Longitude = longitude;
+            }
+            else
+            {
+                boVolunteer.Address = existingVolunteer.Address;
+                boVolunteer.Latitude = existingVolunteer.Latitude;
+                boVolunteer.Longitude = existingVolunteer.Longitude;
+            }
             VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
 
             var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
@@ -202,15 +200,12 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             }
             VolunteerManager.ValidateInputFormat(boVolunteer);
 
-            //var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
-            //if (latitude is null || longitude is null)
-            //{
-            //    throw new BO.BlInvalidFormatException("The address must be valid and resolvable to latitude and longitude.");
-            //}
-            //boVolunteer.Latitude = latitude.Value;
-            //boVolunteer.Longitude = longitude.Value;
+            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            
+            boVolunteer.Latitude = latitude;
+            boVolunteer.Longitude = longitude;
 
-         
+
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
             _dal.Volunteer.Create(doVolunteer);
         }
