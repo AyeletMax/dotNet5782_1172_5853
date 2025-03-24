@@ -250,8 +250,8 @@ internal class CallImplementation : BlApi.ICall
                     VerbalDescription = c.VerbalDescription, 
                     Address = c.Address, 
                     OpenTime = c.OpenTime,   
-                    MaxFinishTime = c.MaxFinishTime, 
-                    distanceFromVolunteerToCall = Tools.CalculateDistance(volunteer.Latitude,volunteer.Longitude, c.Latitude,c.Longitude)
+                    MaxFinishTime = c.MaxFinishTime,
+                    distanceFromVolunteerToCall = Tools.CalculateDistance(volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude)
                 });
 
             // שלב 4: סינון לפי סוג הקריאה (אם לא null)

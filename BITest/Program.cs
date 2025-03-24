@@ -372,7 +372,7 @@ namespace BlTest
              Console.Write("Distance Type (Air, Drive or Walk): ");
              if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType myDistanceType))
                 throw new FormatException("Invalid distance type.");
-
+             
             return new BO.Volunteer
             {
                 Id = requesterId,

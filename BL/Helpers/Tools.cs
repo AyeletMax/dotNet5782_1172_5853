@@ -9,14 +9,11 @@ using Newtonsoft.Json;
 using DalApi;
 using System.Text.Json;
 
+
 namespace Helpers;
 
 internal static class Tools
 {
-    public static double? DegreesToRadians(double? degrees)
-    {
-        return degrees is not null ? degrees * Math.PI / 180 : null;
-    }
     public static string ToStringProperty<T>(this T t)
     {
         if (t == null)
@@ -94,76 +91,8 @@ internal static class Tools
     //    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
     //    return r * c;
     //}
-    public static double CalculateDistance(double? latitudeV, double? longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
-    {
+   
 
-
-        if (mode != BO.DistanceType.Air)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                // הכנת המידע לשאילתה ב-JSON
-                var requestData = new
-                {
-                    coordinates = new[]
-                    {
-                        new double[] { (double)longitudeV!, (double)latitudeV! }, // תחילת מסלול
-                        new double[] { longitudeC, latitudeC }  // סוף מסלול
-                    }
-                };
-
-                // הגדרת כותרות הבקשה
-                client.DefaultRequestHeaders.Add("Authorization", apiKey);
-                string? modedistance = null;
-                switch (mode)
-                {
-                    case BO.DistanceType.Drive:
-                        modedistance = "driving-car";
-                        break;
-                    case BO.DistanceType.Walk:
-                        modedistance = "walking";
-                        break;
-
-
-                }
-                string url = string.Format(apiUrl, modedistance);
-
-
-                HttpResponseMessage response = client.PostAsync(url,
-                 new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
-
-
-                // קבלת התשובה
-                string responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                dynamic jsonResponse = JsonConvert.DeserializeObject(responseContent)!;
-
-
-                // קבלת המרחק במטרים
-                return jsonResponse.routes[0].segments[0].distance;
-
-            }
-        }
-        else
-        {
-            const double EarthRadiusKm = 6371;
-
-            double latVRad = (double)DegreesToRadians(latitudeV);
-            double lonVRad = (double)DegreesToRadians(longitudeV);
-            double latCRad = (double)DegreesToRadians(latitudeC);
-            double lonCRad = (double)DegreesToRadians(longitudeC);
-
-            double deltaLat = latCRad - latVRad;
-            double deltaLon = lonCRad - lonVRad;
-
-            double a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
-                       Math.Cos(latVRad) * Math.Cos(latCRad) *
-                       Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-            double distance = EarthRadiusKm * c;
-            return distance;
-        }
-    }
 
 
     ////private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
@@ -237,9 +166,9 @@ internal static class Tools
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential("makethemhappy979@gmail.com", "046150"),
+            Credentials = new NetworkCredential("makethemhappy979@gmail.com", "qrkf psyd jjzs gsmq"),
             EnableSsl = true,
-        };
+        }; 
 
         using (var message = new MailMessage(fromAddress, toAddress)
         {
@@ -285,6 +214,62 @@ internal static class Tools
 
         return (latitude, longitude);
     }
+
+    private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
+
+    public static double CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
+    {
+        if (mode == BO.DistanceType.Air)
+            return HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
+
+        using HttpClient client = new HttpClient();
+        string travelMode = mode == BO.DistanceType.Drive ? "car" : "pedestrian";
+        string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
+
+        try
+        {
+            HttpResponseMessage response = client.GetAsync(url).Result; // קריאה סינכרונית
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"API request failed: {response.StatusCode}");
+                return double.MaxValue; // להחזיר ערך גדול במקרה של כשל
+            }
+
+            string responseContent = response.Content.ReadAsStringAsync().Result;
+            using JsonDocument doc = JsonDocument.Parse(responseContent);
+
+            if (doc.RootElement.TryGetProperty("routes", out var routes) && routes.GetArrayLength() > 0)
+            {
+                var route = routes[0];
+                if (route.TryGetProperty("summary", out var summary) && summary.TryGetProperty("lengthInMeters", out var length))
+                {
+                    return length.GetDouble() / 1000.0; // להמיר לקילומטרים
+                }
+            }
+
+            return double.MaxValue; // אם לא נמצא מידע, להחזיר ערך גדול
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching distance: {ex.Message}");
+            return double.MaxValue;
+        }
+    }
+
+    private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double R = 6371; // רדיוס כדור הארץ בק"מ
+        double dLat = DegreesToRadians(lat2 - lat1);
+        double dLon = DegreesToRadians(lon2 - lon1);
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        return R * c;
+    }
+
+    private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
+
 
 
 }
