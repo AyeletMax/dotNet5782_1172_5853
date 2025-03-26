@@ -129,7 +129,7 @@ internal static class CallManager
         {
             if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
             {
-                double distance = Tools.CalculateDistance(volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude, (BO.DistanceType)volunteer.MyDistanceType);
+                double distance = Tools.CalculateDistance(volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude).Distance;
                 if (distance <= volunteer.LargestDistance.Value)
                 {
                     string body = $"A new call is available near you: " +
@@ -138,6 +138,7 @@ internal static class CallManager
                        $"Call Address: {call.Address}\n" +
                         $"Openning Time: {call.OpenTime}\n" +
                         $"Call Status:{call.MyStatus}";
+
 
                     Tools.SendEmail(volunteer.Email, "New Volunteer Call", $"A new call is available near you: {call}");
                 }

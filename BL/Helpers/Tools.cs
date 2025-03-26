@@ -215,25 +215,90 @@ internal static class Tools
         return (latitude, longitude);
     }
 
+    //private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
+
+    //public static double CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
+    //{
+    //    if (mode == BO.DistanceType.Air)
+    //        return HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
+
+    //    using HttpClient client = new HttpClient();
+    //    string travelMode = mode == BO.DistanceType.Drive ? "car" : "pedestrian";
+    //    string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
+
+    //    try
+    //    {
+    //        HttpResponseMessage response = client.GetAsync(url).Result; // קריאה סינכרונית
+    //        if (!response.IsSuccessStatusCode)
+    //        {
+    //            Console.WriteLine($"API request failed: {response.StatusCode}");
+    //            return double.MaxValue; // להחזיר ערך גדול במקרה של כשל
+    //        }
+
+    //        string responseContent = response.Content.ReadAsStringAsync().Result;
+    //        using JsonDocument doc = JsonDocument.Parse(responseContent);
+
+    //        if (doc.RootElement.TryGetProperty("routes", out var routes) && routes.GetArrayLength() > 0)
+    //        {
+    //            var route = routes[0];
+    //            if (route.TryGetProperty("summary", out var summary) && summary.TryGetProperty("lengthInMeters", out var length))
+    //            {
+    //                return length.GetDouble() / 1000.0; // להמיר לקילומטרים
+    //            }
+    //        }
+
+    //        return double.MaxValue; // אם לא נמצא מידע, להחזיר ערך גדול
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine($"Error fetching distance: {ex.Message}");
+    //        return double.MaxValue;
+    //    }
+    //}
+
+    //private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+    //{
+    //    const double R = 6371; // רדיוס כדור הארץ בק"מ
+    //    double dLat = DegreesToRadians(lat2 - lat1);
+    //    double dLon = DegreesToRadians(lon2 - lon1);
+    //    double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+    //               Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+    //               Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+    //    double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+    //    return R * c;
+    //}
+
+    //private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
+
     private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
 
-    public static double CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
+    public static (BO.DistanceType Type, double Distance) CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC)
     {
-        if (mode == BO.DistanceType.Air)
-            return HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
+        double airDistance = HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
 
+        double driveDistance = GetRouteDistance(latitudeV, longitudeV, latitudeC, longitudeC, "car");
+        double walkDistance = GetRouteDistance(latitudeV, longitudeV, latitudeC, longitudeC, "pedestrian");
+
+        // קביעת סוג המרחק המתאים ביותר
+        if (driveDistance < airDistance && driveDistance <= walkDistance)
+            return (BO.DistanceType.Drive, driveDistance);
+
+        if (walkDistance < airDistance && walkDistance <= driveDistance)
+            return (BO.DistanceType.Walk, walkDistance);
+        
+        return (BO.DistanceType.Air, airDistance);
+    }
+
+    private static double GetRouteDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, string travelMode)
+    {
         using HttpClient client = new HttpClient();
-        string travelMode = mode == BO.DistanceType.Drive ? "car" : "pedestrian";
         string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
 
         try
         {
-            HttpResponseMessage response = client.GetAsync(url).Result; // קריאה סינכרונית
+            HttpResponseMessage response = client.GetAsync(url).Result;
             if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"API request failed: {response.StatusCode}");
-                return double.MaxValue; // להחזיר ערך גדול במקרה של כשל
-            }
+                return double.MaxValue;
 
             string responseContent = response.Content.ReadAsStringAsync().Result;
             using JsonDocument doc = JsonDocument.Parse(responseContent);
@@ -242,23 +307,20 @@ internal static class Tools
             {
                 var route = routes[0];
                 if (route.TryGetProperty("summary", out var summary) && summary.TryGetProperty("lengthInMeters", out var length))
-                {
-                    return length.GetDouble() / 1000.0; // להמיר לקילומטרים
-                }
+                    return length.GetDouble() / 1000.0; // המרה לקילומטרים
             }
 
-            return double.MaxValue; // אם לא נמצא מידע, להחזיר ערך גדול
+            return double.MaxValue;
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"Error fetching distance: {ex.Message}");
             return double.MaxValue;
         }
     }
 
     private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
     {
-        const double R = 6371; // רדיוס כדור הארץ בק"מ
+        const double R = 6371;
         double dLat = DegreesToRadians(lat2 - lat1);
         double dLon = DegreesToRadians(lon2 - lon1);
         double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer>
   <Volunteer>
-    <Id>369809397</Id>
+    <Id>903689933</Id>
     <Name>Lior Ben-David</Name>
     <Phone>0501234567</Phone>
     <Email>0501234567@gmail.com</Email>
@@ -15,7 +15,7 @@
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>343216248</Id>
+    <Id>774299424</Id>
     <Name>Batya Hirsch</Name>
     <Phone>0529876543</Phone>
     <Email>0529876543@gmail.com</Email>
@@ -25,11 +25,11 @@
     <Address>40 Jabotinsky St, Petah Tikva, Israel</Address>
     <Latitude>32.085</Latitude>
     <Longitude>34.8778</Longitude>
-    <LargestDistance>7</LargestDistance>
+    <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>583240759</Id>
+    <Id>426421400</Id>
     <Name>Shimon Farkash</Name>
     <Phone>0541239876</Phone>
     <Email>0541239876@gmail.com</Email>
@@ -39,11 +39,11 @@
     <Address>Ein Kerem 5, Jerusalem, Israel</Address>
     <Latitude>31.7732</Latitude>
     <Longitude>35.2037</Longitude>
-    <LargestDistance>1</LargestDistance>
+    <LargestDistance>0</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>224880153</Id>
+    <Id>811729839</Id>
     <Name>Tzvi Berkovitz</Name>
     <Phone>0559871234</Phone>
     <Email>0559871234@gmail.com</Email>
@@ -53,11 +53,11 @@
     <Address>Tel Hashomer 6, Ramat Gan, Israel</Address>
     <Latitude>32.0735</Latitude>
     <Longitude>34.8011</Longitude>
-    <LargestDistance>1</LargestDistance>
+    <LargestDistance>2</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>582689162</Id>
+    <Id>986243384</Id>
     <Name>Meir Goldfarb</Name>
     <Phone>0533217654</Phone>
     <Email>0533217654@gmail.com</Email>
@@ -67,11 +67,11 @@
     <Address>20 Yirmiyahu St, Jerusalem, Israel</Address>
     <Latitude>31.7683</Latitude>
     <Longitude>35.1804</Longitude>
-    <LargestDistance>0</LargestDistance>
+    <LargestDistance>3</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>586662603</Id>
+    <Id>566602835</Id>
     <Name>Bat-Chen Shalom</Name>
     <Phone>0504561239</Phone>
     <Email>0504561239@gmail.com</Email>
@@ -81,11 +81,11 @@
     <Address>128 Kaplan St, Tel Aviv, Israel</Address>
     <Latitude>32.081</Latitude>
     <Longitude>34.7707</Longitude>
-    <LargestDistance>0</LargestDistance>
+    <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>321927881</Id>
+    <Id>500968342</Id>
     <Name>Yonatan Spector</Name>
     <Phone>0548551329</Phone>
     <Email>0548551329@gmail.com</Email>
@@ -95,11 +95,11 @@
     <Address>65 Jabotinsky St, Kfar Saba, Israel</Address>
     <Latitude>32.182</Latitude>
     <Longitude>34.8999</Longitude>
-    <LargestDistance>6</LargestDistance>
+    <LargestDistance>3</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>591812052</Id>
+    <Id>295300719</Id>
     <Name>Erez Gur</Name>
     <Phone>0548425138</Phone>
     <Email>0548425138@gmail.com</Email>
@@ -113,7 +113,7 @@
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>613177559</Id>
+    <Id>958493777</Id>
     <Name>Gal Zohar</Name>
     <Phone>0583282450</Phone>
     <Email>0583282450@gmail.com</Email>
@@ -123,11 +123,11 @@
     <Address>Ziv 6, Safed, Israel</Address>
     <Latitude>32.9674</Latitude>
     <Longitude>35.4884</Longitude>
-    <LargestDistance>7</LargestDistance>
+    <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>832593941</Id>
+    <Id>760584433</Id>
     <Name>Rachel Nachman</Name>
     <Phone>0583232333</Phone>
     <Email>0583232333@gmail.com</Email>
@@ -137,11 +137,11 @@
     <Address>11 Beilinson St, Tel Aviv, Israel</Address>
     <Latitude>32.084</Latitude>
     <Longitude>34.7746</Longitude>
-    <LargestDistance>3</LargestDistance>
+    <LargestDistance>5</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>640257804</Id>
+    <Id>571993229</Id>
     <Name>Yarden Levy</Name>
     <Phone>0548482197</Phone>
     <Email>0548482197@gmail.com</Email>
@@ -151,11 +151,11 @@
     <Address>13 Azrieli St, Netanya, Israel</Address>
     <Latitude>32.3143</Latitude>
     <Longitude>34.8446</Longitude>
-    <LargestDistance>4</LargestDistance>
+    <LargestDistance>1</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>436277750</Id>
+    <Id>194642575</Id>
     <Name>Doron Klein</Name>
     <Phone>0583265120</Phone>
     <Email>0583265120@gmail.com</Email>
@@ -165,25 +165,25 @@
     <Address>2 Kalay St, Haifa, Israel</Address>
     <Latitude>32.7872</Latitude>
     <Longitude>34.9796</Longitude>
-    <LargestDistance>6</LargestDistance>
+    <LargestDistance>1</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>967579822</Id>
+    <Id>525036430</Id>
     <Name>Yulia Shaked</Name>
     <Phone>0548533173</Phone>
     <Email>0548533173@gmail.com</Email>
     <IsActive>true</IsActive>
-    <Role>Manager</Role>
+    <Role>Volunteer</Role>
     <Password>8TVgXyewElBhAMIfvzvHJ6hPhguVCmyKLSL1HUdtViE=</Password>
     <Address>11 Wolfson St, Holon, Israel</Address>
     <Latitude>32.0167</Latitude>
     <Longitude>34.7673</Longitude>
-    <LargestDistance>3</LargestDistance>
+    <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>149781726</Id>
+    <Id>500704572</Id>
     <Name>Hila Shulman</Name>
     <Phone>0583292455</Phone>
     <Email>0583292455@gmail.com</Email>
@@ -197,7 +197,7 @@
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>107874489</Id>
+    <Id>626153357</Id>
     <Name>Avigail Frankel</Name>
     <Phone>0583262639</Phone>
     <Email>0583262639@gmail.com</Email>
@@ -207,7 +207,7 @@
     <Address>17 Heichal Shlomo St, Haifa, Israel</Address>
     <Latitude>32.7682</Latitude>
     <Longitude>34.9762</Longitude>
-    <LargestDistance>5</LargestDistance>
+    <LargestDistance>6</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
@@ -221,7 +221,35 @@
     <Address>druk 58 ramat shlomo jerusalem israel</Address>
     <Latitude>31.8139395</Latitude>
     <Longitude>35.216089</Longitude>
-    <LargestDistance>32</LargestDistance>
+    <LargestDistance>1</LargestDistance>
+    <DistanceType>Walk</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>328306550</Id>
+    <Name>Bracha</Name>
+    <Phone>0583282451</Phone>
+    <Email>bracharosenfeld@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk 12 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <LargestDistance>3</LargestDistance>
+    <DistanceType>Walk</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>214324998</Id>
+    <Name>dan</Name>
+    <Phone>0583282457</Phone>
+    <Email>ir5711228@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>15</LargestDistance>
     <DistanceType>Walk</DistanceType>
   </Volunteer>
 </ArrayOfVolunteer>
