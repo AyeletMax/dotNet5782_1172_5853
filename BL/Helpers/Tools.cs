@@ -77,87 +77,7 @@ internal static class Tools
         return Status.Closed;
     }
 
-    //public static double CalculateDistance(double? lat1, double? lon1, double lat2, double lon2)
-    //{
-    //    var lat1Value = lat1 ?? 0;
-    //    var lon1Value = lon1 ?? 0;
-
-    //    var r = 6371;
-    //    var dLat = (lat2 - lat1Value) * Math.PI / 180;
-    //    var dLon = (lon2 - lon1Value) * Math.PI / 180;
-    //    var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-    //            Math.Cos(lat1Value * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
-    //            Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-    //    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-    //    return r * c;
-    //}
-   
-
-
-
-    ////private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
-    //private static readonly string apiKey = "pk.75af8008d03ff3161df4583252c484f2";
-    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
-    ///// <summary>
-    ///// Retrieves coordinates (latitude and longitude) for a given address.
-    ///// If the address is invalid or the API request fails, an appropriate exception is thrown.
-    ///// </summary>
-    ///// <param name="address">The address for which coordinates are requested.</param>
-    ///// <returns>A tuple containing latitude and longitude of the address.</returns>
-    ///// <exception cref="InvalidAddressException">Thrown when the address is invalid or cannot be processed.</exception>
-    ///// <exception cref="ApiRequestException">Thrown when the API request fails.</exception>
-    ///// <exception cref="GeolocationNotFoundException">Thrown when no geolocation is found for the address.</exception>
-    //public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
-    //{
-
-    //    if (string.IsNullOrWhiteSpace(address))
-    //    {
-    //        throw new BlInvalidFormatException(address); // חריגה אם הכתובת לא תקינה
-    //    }
-    //    //Console.WriteLine("12 מרחק טעות");
-    //    try
-    //    {
-    //        // יצירת ה-URL לפנייה ל-API
-    //        string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
-
-    //        using (HttpClient client = new())
-    //        {
-    //            // בקשה סינכרונית ל-API
-    //            HttpResponseMessage response = client.GetAsync(url).Result;
-
-    //            // בדיקה אם הבקשה הצליחה
-    //            if (response.IsSuccessStatusCode)
-    //            {
-    //                string jsonResponse = response.Content.ReadAsStringAsync().Result;
-
-    //                // ניתוח התשובה כ-JSON
-    //                JArray jsonArray = JArray.Parse(jsonResponse);
-
-    //                // אם יש תוצאות, מחזירים את הקואורדינטות
-    //                if (jsonArray.Count > 0)
-    //                {
-    //                    var firstResult = jsonArray[0];
-    //                    double latitude = (double)firstResult["lat"];
-    //                    double longitude = (double)firstResult["lon"];
-    //                    return (latitude, longitude);
-    //                }
-    //                else
-    //                {
-    //                    throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
-    //                }
-    //            }
-    //            else
-    //            {
-    //                throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
-    //        throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
-    //    }
-    //}
+    
     public static void SendEmail(string toEmail, string subject, string body)
     {
         var fromAddress = new MailAddress("makethemhappy979@gmail.com", "Make Them Happy");
@@ -182,6 +102,7 @@ internal static class Tools
 
     private static string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
 
+    private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
 
     public static (double, double) GetCoordinatesFromAddress(string address)
     {
@@ -215,60 +136,7 @@ internal static class Tools
         return (latitude, longitude);
     }
 
-    //private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
-
-    //public static double CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
-    //{
-    //    if (mode == BO.DistanceType.Air)
-    //        return HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
-
-    //    using HttpClient client = new HttpClient();
-    //    string travelMode = mode == BO.DistanceType.Drive ? "car" : "pedestrian";
-    //    string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
-
-    //    try
-    //    {
-    //        HttpResponseMessage response = client.GetAsync(url).Result; // קריאה סינכרונית
-    //        if (!response.IsSuccessStatusCode)
-    //        {
-    //            Console.WriteLine($"API request failed: {response.StatusCode}");
-    //            return double.MaxValue; // להחזיר ערך גדול במקרה של כשל
-    //        }
-
-    //        string responseContent = response.Content.ReadAsStringAsync().Result;
-    //        using JsonDocument doc = JsonDocument.Parse(responseContent);
-
-    //        if (doc.RootElement.TryGetProperty("routes", out var routes) && routes.GetArrayLength() > 0)
-    //        {
-    //            var route = routes[0];
-    //            if (route.TryGetProperty("summary", out var summary) && summary.TryGetProperty("lengthInMeters", out var length))
-    //            {
-    //                return length.GetDouble() / 1000.0; // להמיר לקילומטרים
-    //            }
-    //        }
-
-    //        return double.MaxValue; // אם לא נמצא מידע, להחזיר ערך גדול
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"Error fetching distance: {ex.Message}");
-    //        return double.MaxValue;
-    //    }
-    //}
-
-    //private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
-    //{
-    //    const double R = 6371; // רדיוס כדור הארץ בק"מ
-    //    double dLat = DegreesToRadians(lat2 - lat1);
-    //    double dLon = DegreesToRadians(lon2 - lon1);
-    //    double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-    //               Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
-    //               Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-    //    double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-    //    return R * c;
-    //}
-
-    //private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
+   
 
     private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
 
@@ -332,8 +200,142 @@ internal static class Tools
 
     private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
 
-
-
 }
 
 
+//public static double CalculateDistance(double? lat1, double? lon1, double lat2, double lon2)
+//{
+//    var lat1Value = lat1 ?? 0;
+//    var lon1Value = lon1 ?? 0;
+
+//    var r = 6371;
+//    var dLat = (lat2 - lat1Value) * Math.PI / 180;
+//    var dLon = (lon2 - lon1Value) * Math.PI / 180;
+//    var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+//            Math.Cos(lat1Value * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
+//            Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+//    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+//    return r * c;
+//}
+
+
+
+
+////private static readonly string apiKey = "6797d44fa1ea4701946207wxvc2aa5e";
+//private static readonly string apiKey = "pk.75af8008d03ff3161df4583252c484f2";
+///// <summary>
+///// Retrieves coordinates (latitude and longitude) for a given address.
+///// If the address is invalid or the API request fails, an appropriate exception is thrown.
+///// </summary>
+///// <param name="address">The address for which coordinates are requested.</param>
+///// <returns>A tuple containing latitude and longitude of the address.</returns>
+///// <exception cref="InvalidAddressException">Thrown when the address is invalid or cannot be processed.</exception>
+///// <exception cref="ApiRequestException">Thrown when the API request fails.</exception>
+///// <exception cref="GeolocationNotFoundException">Thrown when no geolocation is found for the address.</exception>
+//public static (double? Latitude, double? Longitude) GetCoordinatesFromAddress(string address)
+//{
+
+//    if (string.IsNullOrWhiteSpace(address))
+//    {
+//        throw new BlInvalidFormatException(address); // חריגה אם הכתובת לא תקינה
+//    }
+//    //Console.WriteLine("12 מרחק טעות");
+//    try
+//    {
+//        // יצירת ה-URL לפנייה ל-API
+//        string url = string.Format(apiUrl, Uri.EscapeDataString(address), apiKey);
+
+//        using (HttpClient client = new())
+//        {
+//            // בקשה סינכרונית ל-API
+//            HttpResponseMessage response = client.GetAsync(url).Result;
+
+//            // בדיקה אם הבקשה הצליחה
+//            if (response.IsSuccessStatusCode)
+//            {
+//                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+
+//                // ניתוח התשובה כ-JSON
+//                JArray jsonArray = JArray.Parse(jsonResponse);
+
+//                // אם יש תוצאות, מחזירים את הקואורדינטות
+//                if (jsonArray.Count > 0)
+//                {
+//                    var firstResult = jsonArray[0];
+//                    double latitude = (double)firstResult["lat"];
+//                    double longitude = (double)firstResult["lon"];
+//                    return (latitude, longitude);
+//                }
+//                else
+//                {
+//                    throw new BlGeolocationNotFoundException(address); // חריגה אם לא נמצאה גיאוקולציה
+//                }
+//            }
+//            else
+//            {
+//                throw new BlApiRequestException($"API request failed with status code: {response.StatusCode}"); // חריגה אם הבקשה נכשלה
+//            }
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+//        // אם קרתה שגיאה כלשהי, זורקים חריגה עם פרטי השגיאה
+//        throw new BlApiRequestException($"Error occurred while fetching coordinates for the address. {ex.Message}");
+//    }
+//}
+
+
+//private static readonly string apiKey1 = "vaUo0LbTQF27M9LVCg8w2b35GKIAJJyl";
+
+//public static double CalculateDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, BO.DistanceType mode = BO.DistanceType.Air)
+//{
+//    if (mode == BO.DistanceType.Air)
+//        return HaversineDistance(latitudeV, longitudeV, latitudeC, longitudeC);
+
+//    using HttpClient client = new HttpClient();
+//    string travelMode = mode == BO.DistanceType.Drive ? "car" : "pedestrian";
+//    string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
+
+//    try
+//    {
+//        HttpResponseMessage response = client.GetAsync(url).Result; // קריאה סינכרונית
+//        if (!response.IsSuccessStatusCode)
+//        {
+//            Console.WriteLine($"API request failed: {response.StatusCode}");
+//            return double.MaxValue; // להחזיר ערך גדול במקרה של כשל
+//        }
+
+//        string responseContent = response.Content.ReadAsStringAsync().Result;
+//        using JsonDocument doc = JsonDocument.Parse(responseContent);
+
+//        if (doc.RootElement.TryGetProperty("routes", out var routes) && routes.GetArrayLength() > 0)
+//        {
+//            var route = routes[0];
+//            if (route.TryGetProperty("summary", out var summary) && summary.TryGetProperty("lengthInMeters", out var length))
+//            {
+//                return length.GetDouble() / 1000.0; // להמיר לקילומטרים
+//            }
+//        }
+
+//        return double.MaxValue; // אם לא נמצא מידע, להחזיר ערך גדול
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine($"Error fetching distance: {ex.Message}");
+//        return double.MaxValue;
+//    }
+//}
+
+//private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+//{
+//    const double R = 6371; // רדיוס כדור הארץ בק"מ
+//    double dLat = DegreesToRadians(lat2 - lat1);
+//    double dLon = DegreesToRadians(lon2 - lon1);
+//    double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+//               Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+//               Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+//    double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+//    return R * c;
+//}
+
+//private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;

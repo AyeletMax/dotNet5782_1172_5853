@@ -135,7 +135,7 @@ internal static class CallManager
                     string body = $"A new call is available near you: " +
                         $"Call Type: {call.MyCallType}\n" +
                         $"Verbal Description: {call.VerbalDescription}\n" +
-                       $"Call Address: {call.Address}\n" +
+                        $"Call Address: {call.Address}\n" +
                         $"Openning Time: {call.OpenTime}\n" +
                         $"Call Status:{call.MyStatus}";
 
