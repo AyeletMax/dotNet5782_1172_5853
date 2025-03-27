@@ -510,4 +510,74 @@
     <VerbalDescription>singing</VerbalDescription>
     <Id>51</Id>
   </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>fdf</VerbalDescription>
+    <Id>52</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>def</VerbalDescription>
+    <Id>53</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>fdfhhhhhhhhhhhhhhhhh</VerbalDescription>
+    <Id>54</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>fdg</VerbalDescription>
+    <Id>55</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>cds</VerbalDescription>
+    <Id>56</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>dsd</VerbalDescription>
+    <Id>57</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>dwfwef</VerbalDescription>
+    <Id>58</Id>
+  </Call>
 </ArrayOfCall>

@@ -238,4 +238,32 @@
     <LargestDistance>1</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
+  <Volunteer>
+    <Id>326772191</Id>
+    <Name>dan</Name>
+    <Phone>0583282450</Phone>
+    <Email>ayelet2450@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>7</LargestDistance>
+    <DistanceType>Drive</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>215553504</Id>
+    <Name>as</Name>
+    <Phone>0583282450</Phone>
+    <Email>ayelet2450@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Manager</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>7</LargestDistance>
+    <DistanceType>Walk</DistanceType>
+  </Volunteer>
 </ArrayOfVolunteer>

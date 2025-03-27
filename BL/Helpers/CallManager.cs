@@ -129,7 +129,7 @@ internal static class CallManager
         {
             if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
             {
-                double distance = Tools.CalculateDistance(volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude).Distance;
+                double distance = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude);
                 if (distance <= volunteer.LargestDistance.Value)
                 {
                     string body = $"A new call is available near you: " +

@@ -86,7 +86,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                         OpenTime = callDetails.OpenTime,
                         MaxFinishTime = callDetails.MaxFinishTime,
                         EntranceTime = currentAssignment.EntranceTime,
-                        VolunteerResponseDistance = Tools.CalculateDistance(doVolunteer.Latitude ?? double.MaxValue, doVolunteer.Longitude ?? double.MaxValue, callDetails.Latitude, callDetails.Longitude).Distance,
+                        VolunteerResponseDistance = Tools.CalculateDistance((BO.DistanceType)doVolunteer.MyDistanceType, doVolunteer.Latitude ?? double.MaxValue, doVolunteer.Longitude ?? double.MaxValue, callDetails.Latitude, callDetails.Longitude),
                         MyStatus = Tools.CalculateStatus(currentAssignment, callDetails, 30)
                     };
                 }
