@@ -532,7 +532,7 @@
   </Call>
   <Call>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Address>1 Hartom Jerusalem Israel</Address>
     <Latitude>31.759595</Latitude>
     <Longitude>35.215315</Longitude>
     <OpenTime>2025-03-26T19:19:21</OpenTime>
@@ -542,7 +542,7 @@
   </Call>
   <Call>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Address>1 Hartom Jerusalem Israel</Address>
     <Latitude>31.759595</Latitude>
     <Longitude>35.215315</Longitude>
     <OpenTime>2025-03-26T19:19:21</OpenTime>
@@ -552,7 +552,7 @@
   </Call>
   <Call>
     <MyCallType>MusicPerformance</MyCallType>
-    <Address>1 Hartom  Jerusalem Israel</Address>
+    <Address>1 Hartom Jerusalem Israel</Address>
     <Latitude>31.759595</Latitude>
     <Longitude>35.215315</Longitude>
     <OpenTime>2025-03-26T19:19:21</OpenTime>
@@ -579,5 +579,15 @@
     <MaxFinishTime xsi:nil="true" />
     <VerbalDescription>dwfwef</VerbalDescription>
     <Id>58</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>gregerg</VerbalDescription>
+    <Id>59</Id>
   </Call>
 </ArrayOfCall>

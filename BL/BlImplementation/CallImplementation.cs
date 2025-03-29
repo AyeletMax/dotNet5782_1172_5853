@@ -119,7 +119,7 @@ internal class CallImplementation : BlApi.ICall
                 OpenTime = call.OpenTime,
                 MaxFinishTime = call.MaxFinishTime,
                 MyStatus = CallManager.GetCallStatus(callId),
-                callAssignments = callAssignments
+                CallAssignments = callAssignments
             };
      
         }
