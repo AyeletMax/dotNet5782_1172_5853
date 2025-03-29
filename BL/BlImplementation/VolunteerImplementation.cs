@@ -9,8 +9,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
-    //מה עושים עם מה שנמצא בDO ולא מוצפן??
 
+    // Login function to authenticate a volunteer based on username and password.
+    // If the username exists and the password matches, return the volunteer's role
     public BO.Role Login(string username, string password)
     {
         try
@@ -29,6 +30,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
         }
     }
+    // Retrieve a list of volunteers, with optional filters for activity status and sorting criteria.
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null)
     {
        
@@ -62,6 +64,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while getting Volunteers.", ex);
         }
     }
+    // Retrieve detailed information for a specific volunteer by ID.
+    // Includes current assignments and calls in progress if any.
     public BO.Volunteer GetVolunteerDetails(int volunteerId)
     {
         try
@@ -121,6 +125,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while geting Volunteer details.", ex);
         }
     }
+
+    // Update the details of an existing volunteer.
+    // Verifies input format, validates permissions, and updates the volunteer in the database.
     public void UpdateVolunteer(int requesterId, BO.Volunteer boVolunteer)
     {
         try
@@ -163,6 +170,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
         }
     }
+    // Delete a volunteer from the system.
+    // Ensures the volunteer is not currently assigned to any tasks before deletion.
     public void DeleteVolunteer(int volunteerId)
     {
         try
@@ -189,6 +198,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
 
     }
+    // Add a new volunteer to the system.
+    // Ensures the volunteer doesn't already exist and validates the input format before adding.
     public void AddVolunteer(BO.Volunteer boVolunteer)
     {
         try

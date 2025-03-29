@@ -4,14 +4,23 @@ using DalApi;
 using Helpers;
 
 namespace BlImplementation;
-
+/// <summary>
+/// Implementation of the admin interface, including clock management, risk range management, and database management.
+/// </summary>
 internal class AdminImplementation : IAdmin
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    /// <summary>
+    /// Returns the current system clock time.
+    /// </summary>
     public DateTime GetClock()
     {
         return ClockManager.Now;
     }
+    /// <summary>
+    /// Advances the system clock by the specified time unit.
+    /// </summary>
+    /// <param name="unit">The time unit to add (minute, hour, day, month, year).</param>
     public void AdvanceClock(TimeUnit unit)
     {
         DateTime newClock = unit switch
@@ -26,22 +35,32 @@ internal class AdminImplementation : IAdmin
 
         ClockManager.UpdateClock(newClock);
     }
-
+    /// <summary>
+    /// Returns the maximum risk range in the system.
+    /// </summary>
     public TimeSpan GetMaxRange()
     {
         return ClockManager.RiskRange;
     }
-
+    /// <summary>
+    /// Sets the maximum risk range in the system.
+    /// </summary>
+    /// <param name="maxRange">The new risk range to be set.</param>
     public void SetMaxRange(TimeSpan maxRange)
     {
         ClockManager.RiskRange = maxRange;
     }
-
+    /// <summary>
+    /// Resets the database and system clock.
+    /// </summary>
     public void ResetDB()
     {
         _dal.ResetDB();
         ClockManager.Reset();
     }
+    /// <summary>
+    /// Initializes the database and updates the system clock.
+    /// </summary>
     public void InitializeDB() {
 
         DalTest.Initialization.DO();

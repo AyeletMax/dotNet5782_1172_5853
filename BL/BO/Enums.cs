@@ -1,15 +1,26 @@
 ﻿namespace BO;
+/// <summary>
+/// Defines different roles within the system.
+/// </summary>
 public enum Role
 {
     Manager,
     Volunteer
 }
+
+/// <summary>
+/// Represents different distance calculation methods.
+/// </summary>
 public enum DistanceType
 {
     Air,
     Walk,
     Drive
 }
+
+/// <summary>
+/// Represents the types of calls handled in the system.
+/// </summary>
 public enum CallType
 {
     None,
@@ -20,7 +31,9 @@ public enum CallType
     PersonalizedMusicCare
 }
 
-
+/// <summary>
+/// Represents the different ways a call can be finished.
+/// </summary>
 public enum FinishCallType
 {
     TakenCareOf,
@@ -28,6 +41,10 @@ public enum FinishCallType
     CanceledByManager,
     Expired
 }
+
+/// <summary>
+/// Represents the status of a call.
+/// </summary>
 public enum Status
 {
     InProgress,       
@@ -38,6 +55,9 @@ public enum Status
     Expired
 }
 
+/// <summary>
+/// Represents different time units used in the system.
+/// </summary>
 public enum TimeUnit
 {
     MINUTE,
@@ -46,6 +66,10 @@ public enum TimeUnit
     MONTH,
     YEAR
 }
+
+/// <summary>
+/// Defines the sorting fields for volunteers.
+/// </summary>
 public enum VolunteerSortField
 {
     Id,
@@ -58,7 +82,9 @@ public enum VolunteerSortField
     SumOfExpiredCalls
 }
 
-
+/// <summary>
+/// Defines the fields available for listing call entries.
+/// </summary>
 public enum CallInListFields
 {
     CallId,
@@ -71,6 +97,9 @@ public enum CallInListFields
     TotalAllocations,
 }
 
+/// <summary>
+/// Defines the fields available for listing open calls.
+/// </summary>
 public enum OpenCallInListFields
 {
     Id,
@@ -82,6 +111,10 @@ public enum OpenCallInListFields
     CallDistance,
 }
 
+
+/// <summary>
+/// Defines the fields available for listing closed calls.
+/// </summary>
 public enum ClosedCallInListFields
 {
     Id,

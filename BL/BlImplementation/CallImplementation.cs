@@ -2,11 +2,18 @@
 using Helpers;
 
 namespace BlImplementation;
-
+/// <summary>
+/// Initializes a new instance of the <see cref="CallImplementation"/> class.
+/// </summary>
+/// <param name="dataSource">The data source containing call records.</param>
 internal class CallImplementation : BlApi.ICall
 {
 
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    /// <summary>
+    /// Retrieves the quantities of calls grouped by their status.
+    /// </summary>
+    /// <returns>An array of call quantities for each status.</returns>
     public int[] GetCallQuantitiesByStatus()
     {
         try
@@ -23,6 +30,13 @@ internal class CallImplementation : BlApi.ICall
             throw new BlGeneralDatabaseException("Failed to retrieve calls list", ex);
         }
     }
+    /// <summary>
+    /// Retrieves a list of calls, optionally filtered and sorted by specified fields.
+    /// </summary>
+    /// <param name="filterField">Optional filter field for filtering the calls.</param>
+    /// <param name="filterValue">Optional filter value to filter calls by.</param>
+    /// <param name="sortField">Optional field to sort the calls by.</param>
+    /// <returns>An enumerable list of filtered and sorted calls.</returns>
     public IEnumerable<CallInList> GetCallList(BO.CallInListFields? filterField = null, object? filterValue = null, BO.CallInListFields? sortField = null)
     {
         try
@@ -74,7 +88,11 @@ internal class CallImplementation : BlApi.ICall
     }
 
 
-
+    /// <summary>
+    /// Retrieves the details of a specific call based on its ID.
+    /// </summary>
+    /// <param name="callId">The ID of the call to retrieve.</param>
+    /// <returns>A <see cref="BO.Call"/> object containing the details of the specified call.</returns>
     public BO.Call GetCallDetails(int callId)
     {
         try
@@ -114,7 +132,10 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while fetching call details.", ex);
         }
     }
-
+    /// <summary>
+    /// Updates the details of an existing call after validation.
+    /// </summary>
+    /// <param name="call">The updated call object.</param>
     public void UpdateCallDetails(BO.Call call)
     {
         try
@@ -145,24 +166,23 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while update.", ex);
         }
     }
-
-    // Delete a call
+    /// <summary>
+    /// Deletes a call from the system by its ID.
+    /// </summary>
+    /// <param name="callId">The ID of the call to delete.</param>
     public void DeleteCall(int callId)
     {
         try
         {
             var call = _dal.Call.Read(callId) ?? throw new BlDoesNotExistException("The call with the specified ID does not exist.");
 
-            // Step 3: Calculate the status using the helper method
             var status = CallManager.GetCallStatus(call.Id);
 
-            // Step 4: Check if the call can be deleted
             if ((status == Status.Opened && status == Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
             {
                 throw new BO.BlDeletionException($"The call with ID:{callId} cannot be deleted.");
             }                
 
-            // Step 5: Attempt to delete the call
             _dal.Call.Delete(callId);
         }
         catch (BlDeletionException)
@@ -174,7 +194,10 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while deleting.", ex);
         }
     }
-
+    /// <summary>
+    /// Adds a new call to the system after validating its details.
+    /// </summary>
+    /// <param name="call">The call object to add.</param>
     public void AddCall(BO.Call call)
     {
         try
@@ -201,7 +224,13 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while add.", ex);
         }
     }
-
+    /// <summary>
+    /// Retrieves the list of closed calls for a specific volunteer.
+    /// </summary>
+    /// <param name="volunteerId">The volunteer ID to filter closed calls by.</param>
+    /// <param name="callTypeFilter">Optional filter for call type.</param>
+    /// <param name="sortField">Optional field to sort the closed calls by.</param>
+    /// <returns>An enumerable list of closed calls for the volunteer.</returns>
     public IEnumerable<BO.ClosedCallInList> GetClosedCallsByVolunteer(int volunteerId, BO.CallType? callTypeFilter = null, BO.ClosedCallInListFields? sortField = null)
     {
         try
@@ -232,17 +261,22 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the closed calls list.", ex);
         }
     }
-     
+    /// <summary>
+    /// Retrieves a list of open calls assigned to a specific volunteer, with optional filters and sorting.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer.</param>
+    /// <param name="callType">Optional filter to return only specific call types.</param>
+    /// <param name="sortField">Optional field to sort the list of open calls.</param>
+    /// <returns>A sorted list of open calls assigned to the volunteer.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer does not exist.</exception>
+    /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while retrieving the list.</exception>
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
     {
         try
         {
-            // שלב 1: קבלת כל הקריאות הפתוחות או הפתוחות בסיכון מה-DAL
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
             var openCalls = _dal.Call.ReadAll()
-                .Where(c =>                
-                // מחשבים סטטוס של כל קריאה
-                (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk)) // הפשטת הבדיקה
+                .Where(c =>  (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk)) 
                 .Select(c => new BO.OpenCallInList
                 {
                     Id = volunteerId, 
@@ -253,8 +287,6 @@ internal class CallImplementation : BlApi.ICall
                     MaxFinishTime = c.MaxFinishTime,
                     distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
                 });
-
-            // שלב 4: סינון לפי סוג הקריאה (אם לא null)
             return sortField.HasValue
             ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
             : openCalls.OrderBy(c => c.Id);
@@ -265,34 +297,37 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
         }
     }
-    
+    /// <summary>
+    /// Updates the completion status of an assignment for a volunteer, marking it as completed.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer completing the assignment.</param>
+    /// <param name="assignmentId">The ID of the assignment being completed.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the assignment does not exist.</exception>
+    /// <exception cref="BO.BlUnauthorizedAccessException">Thrown if the volunteer is not authorized to complete the assignment.</exception>
+    /// <exception cref="BO.BlInvalidOperationException">Thrown if the assignment is already completed or canceled.</exception>
+    /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while updating the assignment completion.</exception>
     public void UpdateCallCompletion(int volunteerId, int assignmentId)
     {
         try
         {
-            // שליפת ההקצאה מתוך מאגר הנתונים
             var assignment = _dal.Assignment.Read(assignmentId) ?? throw new BO.BlDoesNotExistException($"Assignment with ID {assignmentId} not found.");
 
-            // בדיקה אם המתנדב המבצע את הבקשה הוא המתנדב שההקצאה רשומה עליו
             if (assignment.VolunteerId != volunteerId)
             {
                 throw new BO.BlUnauthorizedAccessException($"Volunteer with ID {volunteerId} is not authorized to complete this assignment.");
             }
 
-            // בדיקה שההקצאה פתוחה (לא טופלה, לא בוטלה, לא פג תוקף)
             if (assignment.FinishCallType!=null|| assignment.ExitTime!=null)
             {
                 throw new BO.BlInvalidOperationException("The assignment has already been completed or canceled.");
             }
 
-            // יצירת אובייקט חדש עם הערך המעודכן
             var updatedAssignment = assignment with
             {
-                FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf, // ערך הסיום
-                ExitTime = ClockManager.Now // זמן סיום
+                FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf, 
+                ExitTime = ClockManager.Now 
             };
 
-            // שמירת השינויים
             _dal.Assignment.Update(updatedAssignment);
         }
         catch (BlUnauthorizedAccessException)
@@ -308,7 +343,15 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while updating the assignment completion.", ex);
         }
     }
-
+    /// <summary>
+    /// Updates the cancellation status of an assignment for a volunteer, marking it as canceled.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer canceling the assignment.</param>
+    /// <param name="assignmentId">The ID of the assignment being canceled.</param>
+    /// <exception cref="ArgumentException">Thrown if the assignment or volunteer cannot be found.</exception>
+    /// <exception cref="BO.BlUnauthorizedAccessException">Thrown if the volunteer does not have permission to cancel the assignment.</exception>
+    /// <exception cref="BO.BlInvalidOperationException">Thrown if the assignment is already completed or in a non-cancellable state.</exception>
+    /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while updating the call cancellation.</exception>
     public void UpdateCallCancellation(int volunteerId, int assignmentId)
     {
         try
@@ -355,7 +398,13 @@ internal class CallImplementation : BlApi.ICall
         }
     }
 
-
+    /// <summary>
+    /// Assigns a volunteer to a call for treatment, marking the call as being handled by the volunteer.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer selecting the call for treatment.</param>
+    /// <param name="callId">The ID of the call to be selected for treatment.</param>
+    /// <exception cref="BO.BlInvalidOperationException">Thrown if the call is already closed, expired, or in progress.</exception>
+    /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while selecting the call for treatment.</exception>
     public void SelectCallForTreatment(int volunteerId, int callId)
     {
         try
