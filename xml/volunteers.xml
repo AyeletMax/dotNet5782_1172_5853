@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer>
   <Volunteer>
+	<Id>215553504</Id>
+	<Name>as</Name>
+	<Phone>0583282450</Phone>
+	<Email>ayelet2450@gmail.com</Email>
+	<IsActive>true</IsActive>
+	<Role>Manager</Role>
+	<Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+	<Address>druk 58 ramat shlomo jerusalem israel</Address>
+	<Latitude>31.8139395</Latitude>
+	<Longitude>35.216089</Longitude>
+	<LargestDistance>7</LargestDistance>
+	<DistanceType>Walk</DistanceType>
+  </Volunteer>
+  <Volunteer>
     <Id>738970391</Id>
     <Name>Lior Ben-David</Name>
     <Phone>0501234567</Phone>
@@ -8,7 +22,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>x5lRirYWFwUTj0WNcQraHd2jdOBmaEXm51rbsW9AdPc=</Password>
-    <Address>9 Weizman St, Tel Aviv, Israel</Address>
+    <Address>9 Weizman Tel Aviv Israel</Address>
     <Latitude>32.1094</Latitude>
     <Longitude>34.78</Longitude>
     <LargestDistance>0</LargestDistance>
@@ -22,7 +36,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>FxmBjt4wiWfyJuUMXoRsqOQyq+ho1+I/OAMfYhi3STk=</Password>
-    <Address>40 Jabotinsky St, Petah Tikva, Israel</Address>
+    <Address>40 Jabotinsky Petah Tikva Israel</Address>
     <Latitude>32.085</Latitude>
     <Longitude>34.8778</Longitude>
     <LargestDistance>4</LargestDistance>
@@ -36,7 +50,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>dbta7tKnDujJnIHxb341850a33JNfhc2PZIX7xjWXfY=</Password>
-    <Address>Ein Kerem 5, Jerusalem, Israel</Address>
+    <Address>Ein Kerem 5 Jerusalem Israel</Address>
     <Latitude>31.7732</Latitude>
     <Longitude>35.2037</Longitude>
     <LargestDistance>6</LargestDistance>
@@ -50,7 +64,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>d9rGBZ+Xx/L/QVgYv1DYbEUvFFRhRJNOFA+0zaCFW60=</Password>
-    <Address>Tel Hashomer 6, Ramat Gan, Israel</Address>
+    <Address>Tel Hashomer 6 Ramat Gan Israel</Address>
     <Latitude>32.0735</Latitude>
     <Longitude>34.8011</Longitude>
     <LargestDistance>2</LargestDistance>
@@ -64,7 +78,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>KHyIZM94DuQAejOVLhTnRRQQSfdxFWgL0QKvQOVq488=</Password>
-    <Address>20 Yirmiyahu St, Jerusalem, Israel</Address>
+    <Address>20 Yirmiyahu Jerusalem Israel</Address>
     <Latitude>31.7683</Latitude>
     <Longitude>35.1804</Longitude>
     <LargestDistance>7</LargestDistance>
@@ -78,7 +92,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>kpIyVnw1sdZmOYGnlJy6i058okSXHJw6RTElPFQYNRo=</Password>
-    <Address>128 Kaplan St, Tel Aviv, Israel</Address>
+    <Address>128 Kaplan Tel Aviv Israel</Address>
     <Latitude>32.081</Latitude>
     <Longitude>34.7707</Longitude>
     <LargestDistance>0</LargestDistance>
@@ -92,7 +106,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>kPpyqgkd7gJFTyw4pGdVsj7xZ1PqVWbnaMRjQkh+dno=</Password>
-    <Address>65 Jabotinsky St, Kfar Saba, Israel</Address>
+    <Address>65 Jabotinsky Kfar Saba Israel</Address>
     <Latitude>32.182</Latitude>
     <Longitude>34.8999</Longitude>
     <LargestDistance>5</LargestDistance>
@@ -106,7 +120,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>bxI04laZuRbark2H+NmXyOnzsvyqof4afuG1brseMNU=</Password>
-    <Address>Barzilai 6, Ashkelon, Israel</Address>
+    <Address>Barzilai 6 Ashkelon Israel</Address>
     <Latitude>31.67</Latitude>
     <Longitude>34.5675</Longitude>
     <LargestDistance>5</LargestDistance>
@@ -120,7 +134,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>/q1exlDSPegFqt4YPSUrICms9Xxz58B3QfAa21Ishzs=</Password>
-    <Address>Ziv 6, Safed, Israel</Address>
+    <Address>Ziv 6 Safed Israel</Address>
     <Latitude>32.9674</Latitude>
     <Longitude>35.4884</Longitude>
     <LargestDistance>1</LargestDistance>
@@ -134,7 +148,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>bJ8lAzHXyobaAjaAVW1zYV0CIKJuIaw3ufM1qrLxkPU=</Password>
-    <Address>11 Beilinson St, Tel Aviv, Israel</Address>
+    <Address>11 Beilinson Tel Aviv Israel</Address>
     <Latitude>32.084</Latitude>
     <Longitude>34.7746</Longitude>
     <LargestDistance>2</LargestDistance>
@@ -148,7 +162,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>3lgLs8Fi9c0ZY/7nfw80ZsNjnSVgMVIUkBQ3z1O+3Jo=</Password>
-    <Address>13 Azrieli St, Netanya, Israel</Address>
+    <Address>13 Azrieli St Netanya Israel</Address>
     <Latitude>32.3143</Latitude>
     <Longitude>34.8446</Longitude>
     <LargestDistance>4</LargestDistance>
@@ -162,7 +176,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>kn1pxdFy5DoLRdmOlfzIia3EiNmOu9q0kIxSAfB1OFQ=</Password>
-    <Address>2 Kalay St, Haifa, Israel</Address>
+    <Address>2 Kalay Haifa Israel</Address>
     <Latitude>32.7872</Latitude>
     <Longitude>34.9796</Longitude>
     <LargestDistance>0</LargestDistance>
@@ -176,7 +190,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>8TVgXyewElBhAMIfvzvHJ6hPhguVCmyKLSL1HUdtViE=</Password>
-    <Address>11 Wolfson St, Holon, Israel</Address>
+    <Address>11 Wolfson Holon Israel</Address>
     <Latitude>32.0167</Latitude>
     <Longitude>34.7673</Longitude>
     <LargestDistance>2</LargestDistance>
@@ -190,7 +204,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>FanyQNx8w4CXZZS/WdyDLQUhThw0pZEU4WRekhYrnIQ=</Password>
-    <Address>12 Bialik St, Ashdod, Israel</Address>
+    <Address>12 Bialik Ashdod Israel</Address>
     <Latitude>31.8015</Latitude>
     <Longitude>34.6414</Longitude>
     <LargestDistance>0</LargestDistance>
@@ -204,7 +218,7 @@
     <IsActive>true</IsActive>
     <Role>Volunteer</Role>
     <Password>6G/LqTOHP50UDBOYNA+17DkrM6NIC34W9/SunT6CIyk=</Password>
-    <Address>17 Heichal Shlomo St, Haifa, Israel</Address>
+    <Address>17 Heichal Shlomo Haifa Israel</Address>
     <Latitude>32.7682</Latitude>
     <Longitude>34.9762</Longitude>
     <LargestDistance>4</LargestDistance>
@@ -251,19 +265,5 @@
     <Longitude>35.216089</Longitude>
     <LargestDistance>7</LargestDistance>
     <DistanceType>Drive</DistanceType>
-  </Volunteer>
-  <Volunteer>
-    <Id>215553504</Id>
-    <Name>as</Name>
-    <Phone>0583282450</Phone>
-    <Email>ayelet2450@gmail.com</Email>
-    <IsActive>true</IsActive>
-    <Role>Manager</Role>
-    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
-    <Address>druk 58 ramat shlomo jerusalem israel</Address>
-    <Latitude>31.8139395</Latitude>
-    <Longitude>35.216089</Longitude>
-    <LargestDistance>7</LargestDistance>
-    <DistanceType>Walk</DistanceType>
   </Volunteer>
 </ArrayOfVolunteer>

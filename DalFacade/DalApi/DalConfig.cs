@@ -1,21 +1,33 @@
 ﻿namespace DalApi;
 using System.Xml.Linq;
-
+/// <summary>
+/// Static class for handling DAL configuration.
+/// Reads the configuration from an XML file and initializes DAL settings.
+/// </summary>
 static class DalConfig
 {
     /// <summary>
-    /// internal PDS class
+    /// Internal record representing a DAL implementation.
     /// </summary>
     internal record DalImplementation
     (
-        string Package,   // package/dll name
-        string Namespace, // namespace where DAL implementation class is contained in
-        string Class   // DAL implementation class name
+        string Package,   
+        string Namespace, 
+        string Class   
     );
-
+    /// <summary>
+    /// Name of the currently selected DAL implementation.
+    /// </summary>
     internal static string s_dalName;
+
+    /// <summary>
+    /// Dictionary mapping DAL package names to their implementations.
+    /// </summary>
     internal static Dictionary<string, DalImplementation> s_dalPackages;
 
+    /// <summary>
+    /// Static constructor to load DAL configuration from XML file.
+    /// </summary>
     static DalConfig()
     {
         XElement dalConfig = XElement.Load(@"..\xml\dal-config.xml") ??
@@ -34,7 +46,9 @@ static class DalConfig
                         ).ToDictionary(p => "" + p.Name, p => p.Item2);
     }
 }
-
+/// <summary>
+/// Custom exception class for DAL configuration errors.
+/// </summary>
 [Serializable]
 public class DalConfigException : Exception
 {

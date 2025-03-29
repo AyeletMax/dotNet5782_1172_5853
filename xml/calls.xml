@@ -590,4 +590,64 @@
     <VerbalDescription>gregerg</VerbalDescription>
     <Id>59</Id>
   </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>gregre</VerbalDescription>
+    <Id>60</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>1 Hartom Jerusalem Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>hrghf</VerbalDescription>
+    <Id>61</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>fdbfd</VerbalDescription>
+    <Id>62</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>gfgd</VerbalDescription>
+    <Id>63</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>fgfsgf</VerbalDescription>
+    <Id>64</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-03-26T19:19:21</OpenTime>
+    <MaxFinishTime xsi:nil="true" />
+    <VerbalDescription>gfgfd</VerbalDescription>
+    <Id>65</Id>
+  </Call>
 </ArrayOfCall>

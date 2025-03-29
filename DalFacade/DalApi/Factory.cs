@@ -1,6 +1,13 @@
 ﻿namespace DalApi;
+/// <summary>
+/// Factory class for obtaining an instance of IDal.
+/// Responsible for dynamically loading the correct DAL implementation.
+/// </summary>
 public static class Factory
 {
+    /// <summary>
+    /// Gets an instance of IDal based on the configuration.
+    /// </summary>
     public static IDal Get
     {
         get
