@@ -7,7 +7,16 @@ namespace Helpers;
 
 internal static class CallManager
 {
+    /// <summary>
+    /// An instance of the data access layer (DAL).
+    /// </summary>
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
+
+    /// <summary>
+    /// Calculates the status of a call.
+    /// </summary>
+    /// <param name="callId">The ID of the call.</param>
+    /// <returns>The current status of the call.</returns>
     public static Status GetCallStatus(int callId)
     {
         var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
@@ -26,6 +35,11 @@ internal static class CallManager
         return Status.Opened;
     }
 
+    /// <summary>
+    /// Converts a business object (BO) call to a data object (DO) call.
+    /// </summary>
+    /// <param name="call">The business object call.</param>
+    /// <returns>A data object call.</returns>
     public static DO.Call ConvertBoCallToDoCall(BO.Call call)
     {
         return new DO.Call
@@ -41,41 +55,46 @@ internal static class CallManager
         };
     }
 
+    /// <summary>
+    /// Validates the details of a given call.
+    /// </summary>
+    /// <param name="call">The call to validate.</param>
+    /// <exception cref="BlInvalidFormatException">Thrown when call details are invalid.</exception>
     internal static void ValidateCallDetails(BO.Call call)
     {
-        // Validate that the address is a valid address with latitude and longitude
         if (string.IsNullOrWhiteSpace(call.Address) ||
             !(call.Latitude >= -90 && call.Latitude <= 90 &&
               call.Longitude >= -180 && call.Longitude <= 180))
         {
             throw new BlInvalidFormatException("The address must be valid with latitude and longitude.");
         }
-        // Validate the call type is valid
         if (!Enum.IsDefined(typeof(BO.CallType), call.MyCallType))
         {
             throw new BlInvalidFormatException("Invalid call type.");
         }
-        // Validate the description length
         if (!string.IsNullOrEmpty(call.VerbalDescription) && call.VerbalDescription.Length > 500)
         {
             throw new BlInvalidFormatException("Description is too long (maximum 500 characters).");
         }
-        // Validate that there are no assignments in the past
         if (call.CallAssignments != null && call.CallAssignments.Any(a => a.EntranceTime < call.OpenTime))
         {
             throw new BlInvalidFormatException("Assignments cannot start before the call's open time.");
         }
-        //Validate that the open time is not in the future
         if (call.OpenTime > DateTime.Now)
         {
             throw new BlInvalidFormatException("The open time cannot be in the future.");
         }
-        //Validate that the endTime is past the openTime
         if (call.MaxFinishTime.HasValue && call.MaxFinishTime.Value <= call.OpenTime)
         {
             throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
         }
     }
+
+    /// <summary>
+    /// Handles periodic updates for calls based on the clock changes.
+    /// </summary>
+    /// <param name="oldClock">The previous clock time.</param>
+    /// <param name="newClock">The new clock time.</param>
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
         List<DO.Call> expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
@@ -103,7 +122,11 @@ internal static class CallManager
 
     }
 
-
+    /// <summary>
+    /// Sends an email to a volunteer regarding a canceled assignment.
+    /// </summary>
+    /// <param name="volunteer">The volunteer to notify.</param>
+    /// <param name="assignment">The canceled assignment.</param>
     internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
     {
         var call = s_dal.Call.Read(assignment.CallId)!;
@@ -122,6 +145,11 @@ internal static class CallManager
         Tools.SendEmail(volunteer.Email, subject, body);
     }
 
+
+    /// <summary>
+    /// Notifies available volunteers about a new call.
+    /// </summary>
+    /// <param name="call">The new call to notify about.</param>
     internal static void NotifyVolunteers(BO.Call call)
     {
         List<DO.Volunteer> volunteers = s_dal.Volunteer.ReadAll().Where(v => v.Active).ToList();
@@ -146,4 +174,3 @@ internal static class CallManager
         }
     }
 }
-
