@@ -7,21 +7,44 @@ using System.Text;
 
 namespace Helpers
 {
+    // <summary>
+    /// A static class responsible for managing volunteer-related operations.
+    /// </summary>
     internal class VolunteerManager
     {
+        // <summary>
+        /// An instance of the data access layer (DAL).
+        /// </summary>
         private static readonly DalApi.IDal s_dal = DalApi.Factory.Get;
+
+        /// <summary>
+        /// Verifies whether the entered password matches the stored encrypted password.
+        /// </summary>
+        /// <param name="enteredPassword">The entered password.</param>
+        /// <param name="storedPassword">The stored encrypted password.</param>
+        /// <returns>True if the passwords match, otherwise false.</returns>
         internal static bool VerifyPassword(string enteredPassword, string storedPassword)
         {
             var encryptedPassword = EncryptPassword(enteredPassword);
             return encryptedPassword == storedPassword;
         }
 
+        /// <summary>
+        /// Encrypts a password using SHA-256 hashing.
+        /// </summary>
+        /// <param name="password">The plain text password.</param>
+        /// <returns>The encrypted password as a Base64 string.</returns>
         internal static string EncryptPassword(string password)
         {
             using var sha256 = SHA256.Create();
             var hashedBytes = sha256?.ComputeHash(Encoding.UTF8.GetBytes(password));;
             return Convert.ToBase64String(hashedBytes!);
         }
+
+        /// <summary>
+        /// Generates a strong random password.
+        /// </summary>
+        /// <returns>A randomly generated strong password.</returns>
 
         internal static string GenerateStrongPassword()
         {
@@ -30,6 +53,11 @@ namespace Helpers
             return new string(Enumerable.Repeat(chars, 12).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        /// <summary>
+        /// Checks if a given password meets security requirements.
+        /// </summary>
+        /// <param name="password">The password to check.</param>
+        /// <returns>True if the password is strong, otherwise false.</returns>
         internal static bool IsPasswordStrong(string password)
         {
             if (password.Length < 8)
@@ -45,6 +73,11 @@ namespace Helpers
             return true;
         }
 
+        /// <summary>
+        /// Retrieves a list of volunteers with their activity statistics.
+        /// </summary>
+        /// <param name="volunteers">A collection of volunteer data objects.</param>
+        /// <returns>A collection of business objects representing volunteers.</returns>
         internal static IEnumerable<BO.VolunteerInList> GetVolunteerList(IEnumerable<DO.Volunteer> volunteers)
         {
             return volunteers.Select(v =>
@@ -74,6 +107,12 @@ namespace Helpers
             });
         }
 
+
+        /// <summary>
+        /// Validates the input format of a volunteer object.
+        /// </summary>
+        /// <param name="boVolunteer">The volunteer business object.</param>
+        /// <exception cref="BO.BlInvalidFormatException">Thrown when input validation fails.</exception>
         internal static void ValidateInputFormat(BO.Volunteer boVolunteer)
         {
             if (boVolunteer == null)
@@ -89,6 +128,13 @@ namespace Helpers
             if (boVolunteer.Password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(boVolunteer.Password))
                 throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
         }
+
+
+        /// <summary>
+        /// Validates an ID number using a checksum algorithm.
+        /// </summary>
+        /// <param name="id">The ID number to validate.</param>
+        /// <returns>True if the ID is valid, otherwise false.</returns>
         internal static bool IsValidId(int id)
         {
             string idStr = id.ToString().PadLeft(9, '0');
@@ -109,10 +155,11 @@ namespace Helpers
             return sum % 10 == 0;
         }
 
-
-
-
-
+        /// <summary>
+        /// Converts a business object (BO) volunteer to a data object (DO) volunteer.
+        /// </summary>
+        /// <param name="boVolunteer">The business object volunteer.</param>
+        /// <returns>A data object volunteer.</returns>
         internal static DO.Volunteer CreateDoVolunteer(BO.Volunteer boVolunteer)
         {
             return new DO.Volunteer(
@@ -130,6 +177,13 @@ namespace Helpers
                 (DO.DistanceType)boVolunteer.MyDistanceType
             );
         }
+
+        /// <summary>
+        /// Validates if a user has permission to update a volunteer's details.
+        /// </summary>
+        /// <param name="requesterId">The ID of the user requesting the update.</param>
+        /// <param name="boVolunteer">The volunteer object being updated.</param>
+        /// <exception cref="BO.BlUnauthorizedAccessException">Thrown when permission is denied.</exception>
         internal static void ValidatePermissions(int requesterId, BO.Volunteer boVolunteer)
         {
             bool isSelf = (requesterId == boVolunteer.Id);
@@ -141,6 +195,10 @@ namespace Helpers
             if (!isAdmin && boVolunteer.MyRole != BO.Role.Volunteer)
                 throw new BO.BlUnauthorizedAccessException("Only an admin can update the volunteer's role.");
         }
+
+        /// <summary>
+        /// Determines which fields have changed between the original and updated volunteer objects.
+        /// </summary>
         internal static List<string> GetChangedFields(DO.Volunteer original, BO.Volunteer updated)
         {
             var changedFields = new List<string>();
@@ -154,6 +212,13 @@ namespace Helpers
             return changedFields;
         }
 
+        /// <summary>
+        /// Determines whether a user has permission to update specific fields in a volunteer's record.
+        /// </summary>
+        /// <param name="requesterId">The ID of the user making the update request.</param>
+        /// <param name="changedFields">A list of fields that are being updated.</param>
+        /// <param name="boVolunteer">The volunteer object being updated.</param>
+        /// <returns>True if the user is allowed to update the specified fields, otherwise false.</returns>
         internal static bool CanUpdateFields(int requesterId, List<string> changedFields, BO.Volunteer boVolunteer)
         {
             var restrictedFields = new List<string> { "Role" };
