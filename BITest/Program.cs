@@ -4,9 +4,21 @@ using BO;
 using DO;
 namespace BlTest
 {
+    /// <summary>
+    /// The Program class serves as the main entry point for the BL Test System.
+    /// It provides a console-based interface for administrators and volunteers to interact with the system.
+    /// </summary>
     class Program
     {
+
+        // <summary>
+        /// Static instance of the business logic layer (BL) obtained from the factory.
+        /// </summary>
         static readonly IBl s_bl = Factory.Get();
+
+        /// <summary>
+        /// Main method that presents a menu to the user and handles their selection.
+        /// </summary>
         static void Main()
     {
             try
@@ -49,6 +61,9 @@ namespace BlTest
         }
 
 
+        /// <summary>
+        /// Displays the administration menu and handles the corresponding actions.
+        /// </summary>
         static void AdminMenu()
         {
             while (true)
@@ -125,6 +140,9 @@ namespace BlTest
             }
         }
 
+        /// <summary>
+        /// Displays the volunteer management menu and handles user actions.
+        /// </summary>
         static void VolunteerMenu()
         {
             while (true)
@@ -408,7 +426,9 @@ namespace BlTest
             }
         }
 
-
+        /// <summary>
+        /// Displays the call management menu and processes user choices.
+        /// </summary>
         static void CallMenu()
         {
             try
