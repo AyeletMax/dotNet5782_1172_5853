@@ -61,7 +61,7 @@ internal static class CallManager
             throw new BlInvalidFormatException("Description is too long (maximum 500 characters).");
         }
         // Validate that there are no assignments in the past
-        if (call.callAssignments != null && call.callAssignments.Any(a => a.EntranceTime < call.OpenTime))
+        if (call.CallAssignments != null && call.CallAssignments.Any(a => a.EntranceTime < call.OpenTime))
         {
             throw new BlInvalidFormatException("Assignments cannot start before the call's open time.");
         }
