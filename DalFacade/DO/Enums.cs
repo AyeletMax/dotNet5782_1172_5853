@@ -1,10 +1,16 @@
 ﻿namespace DO;
-
+/// <summary>
+/// Represents the different roles in the system.
+/// </summary>
 public enum Role
 {
     Manager,
     Volunteer
 }
+
+/// <summary>
+/// Represents different types of distances used in the system.
+/// </summary>
 public enum DistanceType
 {
     Air,
@@ -12,6 +18,9 @@ public enum DistanceType
     Drive
 }
 
+/// <summary>
+/// Represents the different types of calls in the system.
+/// </summary>
 public enum CallType
 {
     None,
@@ -22,7 +31,9 @@ public enum CallType
     PersonalizedMusicCare
 }
 
-
+/// <summary>
+/// Represents the possible finish statuses for a call.
+/// </summary>
 public enum FinishCallType
 {
     TakenCareOf,

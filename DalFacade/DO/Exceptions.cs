@@ -23,6 +23,9 @@ public class DalDeletionImpossible : Exception
 {
     public DalDeletionImpossible(string? message) : base(message) { }
 }
+/// <summary>
+/// Custom exception class for errors that occur while loading or creating a DAL XML file.
+/// </summary>
 public class DalXMLFileLoadCreateException : Exception
 {
     public DalXMLFileLoadCreateException(string? message) : base(message) { }
