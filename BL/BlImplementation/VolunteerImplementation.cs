@@ -156,6 +156,11 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
 
             _dal.Volunteer.Update(doVolunteer);
+            VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id); //stage 5
+
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+
+
         }
         catch (BO.BlInvalidFormatException)
         {
@@ -182,7 +187,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             {
                 throw new BO.BlDeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
             }
-            _dal.Volunteer.Delete(volunteerId);
+            _dal.Volunteer.Delete(volunteerId);//stage 4
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+
         }
         catch (BO.BlDeletionException)
         {
@@ -219,6 +226,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
             _dal.Volunteer.Create(doVolunteer);
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
         }
         catch (DO.DalAlreadyExistsException ex)
         {
@@ -235,15 +243,15 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
     }
 
-
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+            VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+            VolunteerManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+            VolunteerManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+            VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
 
 }
-
-
-
-
-  
-
-
-
-

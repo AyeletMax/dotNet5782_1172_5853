@@ -4,7 +4,7 @@ namespace BlApi;
 /// The ICall interface defines the operations available for managing calls.
 /// It includes methods for retrieving call details, updating call information, adding and deleting calls, and handling various call statuses.
 /// </summary>
-public interface ICall
+public interface ICall : IObservable //stage 5 הרחבת ממשק
 {
     /// <summary>
     /// Retrieves the call quantities grouped by their status.

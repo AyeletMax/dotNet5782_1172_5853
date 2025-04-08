@@ -11,6 +11,7 @@ internal static class CallManager
     /// An instance of the data access layer (DAL).
     /// </summary>
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
+    internal static ObserverManager Observers = new(); //stage 5 
 
     /// <summary>
     /// Calculates the status of a call.

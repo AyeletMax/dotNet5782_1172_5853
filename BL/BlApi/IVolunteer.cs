@@ -1,5 +1,5 @@
 ﻿namespace BlApi;
-public interface IVolunteer
+public interface IVolunteer : IObservable //stage 5 הרחבת ממשק
 {
     /// <summary>
     /// Logs in a user by username and password.

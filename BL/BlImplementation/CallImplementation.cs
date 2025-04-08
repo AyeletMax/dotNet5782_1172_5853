@@ -25,8 +25,8 @@ internal class CallImplementation : BlApi.ICall
                 .ForEach(g => counts[g.Key] = g.Count());
             return counts;
         }
-        catch (Exception ex) 
-        { 
+        catch (Exception ex)
+        {
             throw new BlGeneralDatabaseException("Failed to retrieve calls list", ex);
         }
     }
@@ -121,11 +121,11 @@ internal class CallImplementation : BlApi.ICall
                 MyStatus = CallManager.GetCallStatus(callId),
                 CallAssignments = callAssignments
             };
-     
+
         }
         catch (BlDoesNotExistException)
         {
-            throw; 
+            throw;
         }
         catch (Exception ex)
         {
@@ -154,8 +154,10 @@ internal class CallImplementation : BlApi.ICall
                 call.Latitude = existingCall.Latitude;
                 call.Longitude = existingCall.Longitude;
             }
-            DO.Call callToUpdate=CallManager.ConvertBoCallToDoCall(call);
+            DO.Call callToUpdate = CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Update(callToUpdate);
+            CallManager.Observers.NotifyItemUpdated(callToUpdate.Id); // Stage 5
+            CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -178,18 +180,19 @@ internal class CallImplementation : BlApi.ICall
 
             var status = CallManager.GetCallStatus(call.Id);
 
-            if ((status == Status.Opened && status == Status.InProgressAtRisk)|| _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
+            if ((status == Status.Opened && status == Status.InProgressAtRisk) || _dal.Assignment.ReadAll(a => a.CallId == callId).Any())
             {
                 throw new BO.BlDeletionException($"The call with ID:{callId} cannot be deleted.");
-            }                
+            }
 
             _dal.Call.Delete(callId);
+            CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BlDeletionException)
         {
-           throw;
+            throw;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while deleting.", ex);
         }
@@ -208,7 +211,7 @@ internal class CallImplementation : BlApi.ICall
             call.Longitude = longitude;
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             _dal.Call.Create(dataCall);
-            CallManager.NotifyVolunteers(call);
+            CallManager.Observers.NotifyListUpdated(); // Stage 5
 
         }
         catch (BlInvalidFormatException)
@@ -276,14 +279,14 @@ internal class CallImplementation : BlApi.ICall
         {
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
             var openCalls = _dal.Call.ReadAll()
-                .Where(c =>  (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk)) 
+                .Where(c => (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk))
                 .Select(c => new BO.OpenCallInList
                 {
-                    Id = volunteerId, 
-                    MyCallType = (BO.CallType)c.MyCallType,  
-                    VerbalDescription = c.VerbalDescription, 
-                    Address = c.Address, 
-                    OpenTime = c.OpenTime,   
+                    Id = volunteerId,
+                    MyCallType = (BO.CallType)c.MyCallType,
+                    VerbalDescription = c.VerbalDescription,
+                    Address = c.Address,
+                    OpenTime = c.OpenTime,
                     MaxFinishTime = c.MaxFinishTime,
                     distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
                 });
@@ -317,18 +320,20 @@ internal class CallImplementation : BlApi.ICall
                 throw new BO.BlUnauthorizedAccessException($"Volunteer with ID {volunteerId} is not authorized to complete this assignment.");
             }
 
-            if (assignment.FinishCallType!=null|| assignment.ExitTime!=null)
+            if (assignment.FinishCallType != null || assignment.ExitTime != null)
             {
                 throw new BO.BlInvalidOperationException("The assignment has already been completed or canceled.");
             }
 
             var updatedAssignment = assignment with
             {
-                FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf, 
-                ExitTime = ClockManager.Now 
+                FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf,
+                ExitTime = ClockManager.Now
             };
 
             _dal.Assignment.Update(updatedAssignment);
+            //CallManager.Observers.NotifyItemUpdated(updatedAssignment.Id); // Stage 5
+            //CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BlUnauthorizedAccessException)
         {
@@ -359,7 +364,7 @@ internal class CallImplementation : BlApi.ICall
             var assignment = _dal.Assignment.Read(assignmentId) ?? throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
 
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
-            if (volunteer.MyRole!= DO.Role.Manager || assignment.VolunteerId != volunteerId)
+            if (volunteer.MyRole != DO.Role.Manager || assignment.VolunteerId != volunteerId)
             {
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to cancel this assignment.");
             }
@@ -373,12 +378,14 @@ internal class CallImplementation : BlApi.ICall
 
             assignment = assignment with
             {
-                ExitTime = ClockManager.Now, 
+                ExitTime = ClockManager.Now,
                 FinishCallType = (assignment.VolunteerId == volunteerId) ? DO.FinishCallType.CanceledByVolunteer : DO.FinishCallType.CanceledByManager
             };
             //פה הוספתי
             CallManager.SendEmailToVolunteer(volunteer, assignment);
             _dal.Assignment.Update(assignment);
+            //CallManager.Observers.NotifyItemUpdated(assignment.Id); // Stage 5
+            //CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (KeyNotFoundException ex)
         {
@@ -388,7 +395,7 @@ internal class CallImplementation : BlApi.ICall
         {
             throw new BO.BlInvalidOperationException(ex.Message, ex);
         }
-        catch(BlInvalidOperationException ex)
+        catch (BlInvalidOperationException ex)
         {
             throw;
         }
@@ -412,7 +419,7 @@ internal class CallImplementation : BlApi.ICall
             var call = _dal.Call.Read(callId) ?? throw new BO.BlInvalidOperationException($"Call with ID {callId} not found.");
             var status = CallManager.GetCallStatus(callId);
 
-            if (status == Status.Expired || status == Status.Closed || (status == Status.InProgress && _dal.Assignment.Read(callId)!=null))
+            if (status == Status.Expired || status == Status.Closed || (status == Status.InProgress && _dal.Assignment.Read(callId) != null))
             {
                 throw new BO.BlInvalidOperationException($"Cannot select this call for treatment, since the call's status is: {status}");
             }
@@ -425,11 +432,21 @@ internal class CallImplementation : BlApi.ICall
                 FinishCallType: null
             );
             _dal.Assignment.Create(newAssignment);
+            //CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BO.BlInvalidOperationException ex)
         {
             throw new BO.BlInvalidOperationException($"Invalid operation: {ex.Message}", ex);
         }
     }
-
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+            CallManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+            CallManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+            CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+            CallManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
 }
