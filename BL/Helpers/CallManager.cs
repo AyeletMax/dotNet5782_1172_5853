@@ -22,7 +22,7 @@ internal static class CallManager
     {
         var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
-        TimeSpan? timeLeft = call.MaxFinishTime - ClockManager.Now;
+        TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
 
         if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
             return Status.Expired;
@@ -103,22 +103,28 @@ internal static class CallManager
         expiredCalls.ForEach(call =>
         {
             List<DO.Assignment> assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
-            if (!assignments.Any())
+            if (!assignments.Any()) { 
                 s_dal.Assignment.Create(new DO.Assignment(
                 CallId: call.Id,
                 VolunteerId: 0,
-                EntranceTime: ClockManager.Now,
-                ExitTime: ClockManager.Now,
+                EntranceTime: AdminManager.Now,
+                ExitTime: AdminManager.Now,
                 FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
             ));
+                Observers.NotifyItemUpdated(call.Id);
+
+            }
             List<DO.Assignment> assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
             if (assignmentsWithNull.Any())
+            {
                 assignments.ForEach(assignment =>
                     s_dal.Assignment.Update(assignment with
                     {
-                        ExitTime = ClockManager.Now,
+                        ExitTime = AdminManager.Now,
                         FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
                     }));
+                Observers.NotifyItemUpdated(call.Id);
+            }
         });
 
     }

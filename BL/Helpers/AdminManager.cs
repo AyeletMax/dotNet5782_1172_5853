@@ -1,31 +1,41 @@
 ﻿using BlImplementation;
 using BO;
+using DalApi;
 namespace Helpers;
 
 /// <summary>
 /// Internal BL manager for all Application's Clock logic policies
 /// </summary>
-internal static class ClockManager //stage 4
+internal static class AdminManager //stage 4
 {
     #region Stage 4
-    private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
+    private static readonly DalApi.IDal s_dal = DalApi.Factory.Get; //stage 4
+    #endregion Stage 4
+
+    #region Stage 5
+    internal static event Action? ConfigUpdatedObservers; //prepared for stage 5 - for config update observers
+    internal static event Action? ClockUpdatedObservers; //prepared for stage 5 - for clock update observers
+    #endregion Stage 5
+
+    #region Stage 4
+    /// <summary>
+    /// Property for providing/setting current configuration variable value for any BL class that may need it
+    /// </summary>
+    internal static TimeSpan RiskRange
+    {
+        get => s_dal.Config.RiskRange;
+        set
+        {
+            s_dal.Config.RiskRange = value;
+            ConfigUpdatedObservers?.Invoke(); // stage 5
+        }
+    }
 
     /// <summary>
     /// Property for providing current application's clock value for any BL class that may need it
     /// </summary>
-    internal static DateTime Now { get => _dal.Config.Clock; } //stage 4
-    internal static void Reset()
-    {
-        // קריאה לאיפוס תצורת המערכת, לדוגמה:
-        _dal.Config.Reset();  // איפוס כל ערכי התצורה וההגדרות
+    internal static DateTime Now { get => s_dal.Config.Clock; } //stage 4
 
-        // אם יש מערכים או משתנים נוספים שצריך לאפס ב-ClockManager, כאן המקום להוסיף.
-    }
-    internal static TimeSpan RiskRange
-    {
-        get => _dal.Config.RiskRange; // מחזירים את ערך טווח הזמן סיכון מתוך הגישה לנתונים
-        set => _dal.Config.RiskRange = value; // מעדכנים את ערך טווח הזמן סיכון דרך הגישה לנתונים
-    }
     /// <summary>
     /// Method to perform application's clock from any BL class as may be required
     /// </summary>
@@ -39,8 +49,8 @@ internal static class ClockManager //stage 4
 
     private static void updateClock(DateTime newClock) // prepared for stage 7 as DRY to eliminate needless repetition
     {
-        var oldClock = _dal.Config.Clock; //stage 4
-        _dal.Config.Clock = newClock; //stage 4
+        var oldClock = s_dal.Config.Clock; //stage 4
+        s_dal.Config.Clock = newClock; //stage 4
 
         //TO_DO:
         //Add calls here to any logic method that should be called periodically,
@@ -49,7 +59,7 @@ internal static class ClockManager //stage 4
         //Go through all students to update properties that are affected by the clock update
         //(students becomes not active after 5 years etc.)
 
-        CallManager.PeriodicCallUpdates(oldClock, newClock);
+        StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
         //etc ...
 
         //Calling all the observers of clock update
@@ -57,20 +67,12 @@ internal static class ClockManager //stage 4
     }
     #endregion Stage 4
 
-
-    #region Stage 5
-
-    internal static event Action? ClockUpdatedObservers; //prepared for stage 5 - for clock update observers
-
-    #endregion Stage 5
-
-
     #region Stage 7 base
     internal static readonly object blMutex = new();
     private static Thread? s_thread;
     private static int s_interval { get; set; } = 1; //in minutes by second    
     private static volatile bool s_stop = false;
-    private static object mutex = new();
+    private static readonly object mutex = new();
 
     internal static void Start(int interval)
     {
@@ -105,7 +107,7 @@ internal static class ClockManager //stage 4
             //TO_DO:
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
-            //StudentManager.SimulateCourseRegistrationAndGrade(); //stage 7
+            VolunteerManager.SimulateCourseRegistrationAndGrade(); //stage 7
 
             //etc...
             #endregion Stage 7
