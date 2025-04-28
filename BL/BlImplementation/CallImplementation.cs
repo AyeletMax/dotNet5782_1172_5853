@@ -328,7 +328,7 @@ internal class CallImplementation : BlApi.ICall
             var updatedAssignment = assignment with
             {
                 FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf,
-                ExitTime = ClockManager.Now
+                ExitTime = AdminManager.Now
             };
 
             _dal.Assignment.Update(updatedAssignment);
@@ -378,7 +378,7 @@ internal class CallImplementation : BlApi.ICall
 
             assignment = assignment with
             {
-                ExitTime = ClockManager.Now,
+                ExitTime = AdminManager.Now,
                 FinishCallType = (assignment.VolunteerId == volunteerId) ? DO.FinishCallType.CanceledByVolunteer : DO.FinishCallType.CanceledByManager
             };
             //פה הוספתי
@@ -427,7 +427,7 @@ internal class CallImplementation : BlApi.ICall
             var newAssignment = new DO.Assignment(
                 CallId: callId,
                 VolunteerId: volunteerId,
-                EntranceTime: ClockManager.Now,
+                EntranceTime: AdminManager.Now,
                 ExitTime: null,
                 FinishCallType: null
             );
