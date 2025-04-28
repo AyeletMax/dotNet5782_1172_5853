@@ -15,7 +15,7 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public DateTime GetClock()
     {
-        return ClockManager.Now;
+        return AdminManager.Now;
     }
     /// <summary>
     /// Advances the system clock by the specified time unit.
@@ -25,22 +25,22 @@ internal class AdminImplementation : IAdmin
     {
         DateTime newClock = unit switch
         {
-            TimeUnit.MINUTE => ClockManager.Now.AddMinutes(1),
-            TimeUnit.HOUR => ClockManager.Now.AddHours(1),
-            TimeUnit.DAY => ClockManager.Now.AddDays(1),
-            TimeUnit.MONTH => ClockManager.Now.AddMonths(1),
-            TimeUnit.YEAR => ClockManager.Now.AddYears(1),
+            TimeUnit.MINUTE => AdminManager.Now.AddMinutes(1),
+            TimeUnit.HOUR => AdminManager.Now.AddHours(1),
+            TimeUnit.DAY => AdminManager.Now.AddDays(1),
+            TimeUnit.MONTH => AdminManager.Now.AddMonths(1),
+            TimeUnit.YEAR => AdminManager.Now.AddYears(1),
             _ => throw new ArgumentOutOfRangeException(nameof(unit), "Invalid time unit")
         };
 
-        ClockManager.UpdateClock(newClock);
+        AdminManager.UpdateClock(newClock);
     }
     /// <summary>
     /// Returns the maximum risk range in the system.
     /// </summary>
     public TimeSpan GetMaxRange()
     {
-        return ClockManager.RiskRange;
+        return AdminManager.RiskRange;
     }
     /// <summary>
     /// Sets the maximum risk range in the system.
@@ -48,7 +48,7 @@ internal class AdminImplementation : IAdmin
     /// <param name="maxRange">The new risk range to be set.</param>
     public void SetMaxRange(TimeSpan maxRange)
     {
-        ClockManager.RiskRange = maxRange;
+        AdminManager.RiskRange = maxRange;
     }
     /// <summary>
     /// Resets the database and system clock.
@@ -56,7 +56,7 @@ internal class AdminImplementation : IAdmin
     public void ResetDB()
     {
         _dal.ResetDB();
-        ClockManager.Reset();
+        AdminManager.Reset();
     }
     /// <summary>
     /// Initializes the database and updates the system clock.
@@ -64,7 +64,7 @@ internal class AdminImplementation : IAdmin
     public void InitializeDB() {
 
         DalTest.Initialization.DO();
-        ClockManager.UpdateClock(ClockManager.Now);
+        AdminManager.UpdateClock(AdminManager.Now);
     }
 
 }
