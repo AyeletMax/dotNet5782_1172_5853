@@ -66,7 +66,18 @@ internal static class AdminManager //stage 4
         ClockUpdatedObservers?.Invoke(); //prepared for stage 5
     }
     #endregion Stage 4
-
+    internal static void ResetDB()
+    {
+        s_dal.ResetDB();
+    }
+    /// <summary>
+    /// Initializes the database and updates the system clock.
+    /// </summary>
+    internal static void InitializeDB()
+    {
+        DalTest.Initialization.DO();
+        UpdateClock(Now);
+    }
     #region Stage 7 base
     internal static readonly object blMutex = new();
     private static Thread? s_thread;
@@ -107,7 +118,7 @@ internal static class AdminManager //stage 4
             //TO_DO:
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
-            CallManager.SimulateCourseRegistrationAndGrade(); //stage 7
+            VolunteerManager.SimulateCourseRegistrationAndGrade(); //stage 7
 
             //etc...
             #endregion Stage 7

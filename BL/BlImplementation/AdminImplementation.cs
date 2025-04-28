@@ -35,6 +35,17 @@ internal class AdminImplementation : IAdmin
 
         AdminManager.UpdateClock(newClock);
     }
+
+
+    public void InitializeDB()
+    {
+        AdminManager.InitializeDB();
+    }
+    public void ResetDB()
+    {
+        AdminManager.ResetDB();
+    }
+
     /// <summary>
     /// Returns the maximum risk range in the system.
     /// </summary>
@@ -53,21 +64,10 @@ internal class AdminImplementation : IAdmin
     /// <summary>
     /// Resets the database and system clock.
     /// </summary>
-    public void ResetDB()
-    {
-        _dal.ResetDB();
-        AdminManager.Reset();
-    }
-    /// <summary>
-    /// Initializes the database and updates the system clock.
-    /// </summary>
-    public void InitializeDB() {
-
-        DalTest.Initialization.DO();
-        AdminManager.UpdateClock(AdminManager.Now);
-    }
-
+    public void AddClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers += clockObserver;
+    public void RemoveClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers -= clockObserver;
+    public void AddConfigObserver(Action configObserver) => AdminManager.ConfigUpdatedObservers += configObserver;
+    public void RemoveConfigObserver(Action configObserver) =>AdminManager.ConfigUpdatedObservers -= configObserver;
 }
 
-    
-    
+

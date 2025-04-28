@@ -25,4 +25,9 @@ public interface IAdmin
     // Parameters:
     // unit: The time unit (e.g., day, month) by which the clock should be advanced.
     void AdvanceClock(BO.TimeUnit unit);
+    void AddConfigObserver(Action configObserver);
+    void RemoveConfigObserver(Action configObserver);
+    void AddClockObserver(Action clockObserver);
+    void RemoveClockObserver(Action clockObserver);
+
 }
