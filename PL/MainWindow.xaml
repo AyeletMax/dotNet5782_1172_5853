@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="800"
+        Loaded="MainWindow_Loaded"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -24,9 +25,9 @@
         <!-- Clock Area (Left) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="20">
             <Label Content="System Clock" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
-            <Label Name="SystemClockLabel" Content="00:00:00" FontSize="14" Margin="0,0,0,10"/>
+            <Label Name="SystemClockLabel"  Margin="0,0,0,10" Content="{Binding CurrentTime}" FontWeight="Bold" FontSize="20"/>
 
-            <Button Content="Advance Second" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceSecond_Click"/>
+            <Button Content="Advance Second" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceMonth_Click"/>
             <Button Content="Advance Minute" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceMinute_Click"/>
             <Button Content="Advance Hour" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceHour_Click"/>
             <Button Content="Advance Day" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceDay_Click"/>
@@ -37,19 +38,15 @@
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="20">
             <Label Content="Configuration" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
             <Label Content="Risk Range (minutes)" FontSize="14" Margin="0,0,0,5"/>
-            <TextBox Name="RiskRangeTextBox" Width="200" Height="30" Margin="0,0,0,10" HorizontalAlignment="Left"/>
-            <Button Content="Update Config" Width="150" Height="40" Margin="0,0,0,10" Click="UpdateConfig_Click"/>
+            <TextBox Name="RiskRangeTextBox" Width="200" Height="30" Margin="0,0,0,10" HorizontalAlignment="Left"  Text="{Binding RiskRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Update Config" Width="150" Height="40" Click="UpdateConfig_Click"/>
         </StackPanel>
 
         <!-- Buttons Row -->
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-            <Button Content="Open List View" Width="150" Height="40" Margin="10,0"/>
+            <Button Content="Open List View" Width="150" Height="40"/>
             <Button Content="Initialize DB" Width="150" Height="40" Margin="10,0" Click="InitializeDB_Click"/>
             <Button Content="Reset DB" Width="150" Height="40" Margin="10,0" Click="ResetDB_Click"/>
         </StackPanel>
-
-        <!-- ListView -->
-        <ListView Grid.Row="2" Grid.ColumnSpan="2" Margin="20"/>
-
     </Grid>
 </Window>
