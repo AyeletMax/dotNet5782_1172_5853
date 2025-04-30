@@ -72,6 +72,7 @@ public enum TimeUnit
 /// </summary>
 public enum VolunteerSortField
 {
+    None,
     Id,
     Name,
     TotalResponsesHandled,
