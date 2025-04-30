@@ -18,7 +18,7 @@ namespace PL.Call
     /// <summary>
     /// Interaction logic for CallListWindow.xaml
     /// </summary>
-    public partial class CallListWindow : Window
+    public partial class CallListWindow: Window
     {
         public CallListWindow()
         {
