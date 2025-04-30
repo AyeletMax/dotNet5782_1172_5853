@@ -2,22 +2,19 @@
 using System.Windows;
 using System.Windows.Threading;
 using Helpers;
+using PL.Volunteer;
+
 namespace PL
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        private readonly ObserverManager _observerManager = new();
 
         public MainWindow()
         {
             InitializeComponent();
-
-            _observerManager.AddListObserver(ClockObserver);
-            _observerManager.AddListObserver(ConfigObserver);
+            this.Loaded += MainWindow_Loaded;
+            this.Closed += MainWindow_Closed;
         }
 
         public DateTime CurrentTime
@@ -27,6 +24,7 @@ namespace PL
         }
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow));
+
         public TimeSpan RiskRange
         {
             get { return (TimeSpan)GetValue(RiskRangeProperty); }
@@ -47,6 +45,9 @@ namespace PL
         private void AdvanceMonth_Click(object sender, RoutedEventArgs e) =>
             s_bl.Admin.AdvanceClock(BO.TimeUnit.MONTH);
 
+        private void AdvanceHour_Click(object sender, RoutedEventArgs e) =>
+            s_bl.Admin.AdvanceClock(BO.TimeUnit.HOUR);
+
         private void UpdateConfig_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show($"RiskRange was updated to: {RiskRange.TotalMinutes} minutes.");
@@ -58,8 +59,8 @@ namespace PL
             {
                 try
                 {
-                    TimeSpan maxRange = TimeSpan.FromMinutes(minutes);
-                    s_bl.Admin.SetMaxRange(maxRange);
+                    RiskRange = TimeSpan.FromMinutes(minutes);
+                    s_bl.Admin.SetMaxRange(RiskRange);
 
                     MessageBox.Show($"Risk range updated to: {minutes} minutes.");
                 }
@@ -75,7 +76,9 @@ namespace PL
         }
 
         private void ClockObserver() => CurrentTime = s_bl.Admin.GetClock();
+
         private void ConfigObserver() => RiskRange = s_bl.Admin.GetMaxRange();
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             CurrentTime = s_bl.Admin.GetClock();
@@ -83,5 +86,15 @@ namespace PL
             s_bl.Admin.AddClockObserver(ClockObserver);
             s_bl.Admin.AddConfigObserver(ConfigObserver);
         }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            s_bl.Admin.RemoveClockObserver(ClockObserver);
+            s_bl.Admin.RemoveConfigObserver(ConfigObserver);
+        }
+        private void InitializeDB_Click(object sender, RoutedEventArgs e) =>s_bl.Admin.InitializeDB();
+        private void ResetDB_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ResetDB();
+        private void HandleVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
+        private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow().Show();
     }
 }

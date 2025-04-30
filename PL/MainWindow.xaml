@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="800"
         Loaded="MainWindow_Loaded"
+        Closed="MainWindow_Closed"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -26,11 +27,11 @@
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="20">
             <Label Content="System Clock" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
             <Label Name="SystemClockLabel"  Margin="0,0,0,10" Content="{Binding CurrentTime}" FontWeight="Bold" FontSize="20"/>
-
-            <Button Content="Advance Second" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceMonth_Click"/>
+            
             <Button Content="Advance Minute" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceMinute_Click"/>
             <Button Content="Advance Hour" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceHour_Click"/>
             <Button Content="Advance Day" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceDay_Click"/>
+            <Button Content="Advance Month" Width="150" Height="40" Margin="0,0,0,10" Click="AdvanceMonth_Click"/>
             <Button Content="Advance Year" Width="150" Height="40" Click="AdvanceYear_Click"/>
         </StackPanel>
 
@@ -44,7 +45,8 @@
 
         <!-- Buttons Row -->
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-            <Button Content="Open List View" Width="150" Height="40"/>
+            <Button Content="Handle Volunteers" Width="150" Height="40" Margin="10,0" Click="HandleVolunteers_Click"/>
+            <Button Content="Handle Calls" Width="150" Height="40" Margin="10,0" Click="HandleCalls_Click"/>
             <Button Content="Initialize DB" Width="150" Height="40" Margin="10,0" Click="InitializeDB_Click"/>
             <Button Content="Reset DB" Width="150" Height="40" Margin="10,0" Click="ResetDB_Click"/>
         </StackPanel>

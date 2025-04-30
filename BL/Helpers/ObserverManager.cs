@@ -10,7 +10,7 @@
 /// <item>a hash table of delegates for individual entity observers - indexed by appropriate entity ID</item>
 /// </list>
 /// </summary>
-public class ObserverManager //stage 5
+class ObserverManager //stage 5
 {
     /// <summary>
     /// event delegate for list observers - it's called whenever there may be need to update the presentation
@@ -29,7 +29,7 @@ public class ObserverManager //stage 5
     /// Add an observer on change in list of entities that may effect the list presentation
     /// </summary>
     /// <param name="observer">Observer method (usually from Presentation Layer) to be added</param>
-    public void AddListObserver(Action observer) => _listObservers += observer;
+    internal void AddListObserver(Action observer) => _listObservers += observer;
     /// <summary>
     /// Remove an observer on change in list of entities that may effect the list presentation
     /// </summary>
