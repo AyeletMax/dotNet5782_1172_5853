@@ -3,10 +3,99 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Volunteer"
+        xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="VolunteerWindow" Height="450" Width="800">
-    <Grid>
-        
+
+        <Window.Resources>
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style x:Key="TextBoxStyle" TargetType="TextBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <local:RoleCollection x:Key="RoleCollection"/>
+            <local:DistanceTypeCollection x:Key="DistanceTypeCollection"/>
+        </Window.Resources>
+
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Name -->
+            <Label Content="Name:" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- Phone -->
+            <Label Content="Phone:" Grid.Row="1" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Phone}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- Email -->
+            <Label Content="Email:" Grid.Row="2" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Email}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- Active -->
+            <Label Content="Active:" Grid.Row="3" Style="{StaticResource LabelStyle}"/>
+            <CheckBox Grid.Column="1" IsChecked="{Binding Active}" Style="{StaticResource CheckBoxStyle}"/>
+
+            <!-- Role -->
+            <Label Content="Role:" Grid.Row="4" Style="{StaticResource LabelStyle}"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ComboBoxStyle}"
+            ItemsSource="{StaticResource DistanceTypeCollection}"
+             SelectedItem="{Binding DistanceTypeCollection, Mode=TwoWay}" />
+
+
+            <!-- Address -->
+            <Label Content="Address:" Grid.Row="5" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Address}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- Latitude -->
+            <Label Content="Latitude:" Grid.Row="6" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Latitude}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- Longitude -->
+            <Label Content="Longitude:" Grid.Row="7" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding Longitude}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- LargestDistance -->
+            <Label Content="LargestDistance:" Grid.Row="8" Style="{StaticResource LabelStyle}"/>
+            <TextBox Grid.Column="1" Text="{Binding LargestDistance}" Style="{StaticResource TextBoxStyle}"/>
+
+            <!-- MyDistanceType -->
+            <Label Content="Distance Type:" Grid.Row="9" Style="{StaticResource LabelStyle}"/>
+            <ComboBox Grid.Row="9" Grid.Column="1" Style="{StaticResource ComboBoxStyle}"
+            ItemsSource="{StaticResource RoleCollection}"
+            SelectedItem="{Binding RoleCollection, Mode=TwoWay}" />
+
+        <!--<Button Grid.Row="10" Grid.ColumnSpan="2" Margin="0,20,0,0"
+            Content="{Binding ButtonText}" Click="btnAddUpdate_Click"
+            HorizontalAlignment="Center" Width="120" Height="30"/>-->
+            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ButtonText}"
+            Click="btnAddUpdate_Click" HorizontalAlignment="Center" Width="120" Height="30" Margin="10"/>
     </Grid>
 </Window>
