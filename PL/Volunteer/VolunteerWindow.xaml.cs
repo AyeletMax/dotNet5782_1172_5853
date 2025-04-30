@@ -23,5 +23,9 @@ namespace PL.Volunteer
         {
             InitializeComponent();
         }
+
+        private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }
