@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PL.Volunteer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,17 @@ namespace PL.Call
     {
         public CallListWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
         }
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public IEnumerable<BO.VolunteerInList> CallList
+        {
+            get { return (IEnumerable<BO.VolunteerInList>)GetValue(CallListProperty); }
+            set { SetValue(CallListProperty, value); }
+        }
+
+        public static readonly DependencyProperty CallListProperty =
+            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
+
     }
 }
