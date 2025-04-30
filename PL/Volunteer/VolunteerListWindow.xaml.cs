@@ -15,13 +15,22 @@ using System.Windows.Shapes;
 namespace PL.Volunteer
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for VolunteerListWindow.xaml
     /// </summary>
-    public partial class VolunteerList : Window
+    public partial class VolunteerListWindow : Window
     {
-        public VolunteerList()
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public VolunteerListWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
         }
+        public IEnumerable<BO.VolunteerInList> VolunteerList
+        {
+            get { return (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty); }
+            set { SetValue(VolunteerListProperty, value); }
+        }
+
+        public static readonly DependencyProperty VolunteerListProperty =
+            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
     }
 }
