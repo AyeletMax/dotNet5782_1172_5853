@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="800"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Window.Resources>
-        <!-- הגדרת המשאב של רשימת הערכים של ה-Enum -->
         <local:VolunteerSortFieldCollection x:Key="VolunteerSortFieldCollection"/>
     </Window.Resources>
 
@@ -44,9 +45,59 @@
             </ComboBox>
         </Grid>
 
-        <!-- פקד הרשימה המתקדמת (ListView) -->
-        <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Path=VolunteerList}" />
+        <!-- פקד DataGrid (במקום ListView) -->
+        <DataGrid Grid.Row="1" Margin="10"
+                  ItemsSource="{Binding Path=VolunteerList}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  EnableRowVirtualization="True"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  SelectedItem="{Binding SelectedVolunteer}">
+
+            <DataGrid.Columns>
+                <!-- עמודת Id -->
+                <DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="Auto"/>
+
+                <!-- עמודת שם עם הדגשה -->
+                <DataGridTemplateColumn Header="Name" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="DarkBlue"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- עמודת תיבת סימון עבור IsActive -->
+                <DataGridTemplateColumn Header="Is Active" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsActive}" IsEnabled="False" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- עמודת TotalResponsesHandled -->
+                <DataGridTextColumn Binding="{Binding TotalResponsesHandled}" Header="Total Responses Handled" Width="Auto"/>
+
+                <!-- עמודת TotalResponsesCancelled -->
+                <DataGridTextColumn Binding="{Binding TotalResponsesCancelled}" Header="Total Responses Cancelled" Width="Auto"/>
+
+                <!-- עמודת TotalExpiredResponses -->
+                <DataGridTextColumn Binding="{Binding TotalExpiredResponses}" Header="Total Expired Responses" Width="Auto"/>
+
+                <!-- עמודת SumOfCalls -->
+                <DataGridTextColumn Binding="{Binding SumOfCalls}" Header="Sum of Calls" Width="Auto"/>
+
+                <!-- עמודת SumOfCancellation -->
+                <DataGridTextColumn Binding="{Binding SumOfCancellation}" Header="Sum of Cancellation" Width="Auto"/>
+
+                <!-- עמודת SumOfExpiredCalls -->
+                <DataGridTextColumn Binding="{Binding SumOfExpiredCalls}" Header="Sum of Expired Calls" Width="Auto"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- כפתור הוספה -->
         <Button Grid.Row="2" Content="Add" HorizontalAlignment="Center" Margin="10" Width="150" Height="40"/>
     </Grid>
 </Window>
-    

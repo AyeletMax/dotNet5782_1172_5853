@@ -6,9 +6,6 @@ using System.Windows.Controls;
 
 namespace PL.Volunteer
 {
-    /// <summary>
-    /// Interaction logic for VolunteerListWindow.xaml
-    /// </summary>
     public partial class VolunteerListWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -17,13 +14,14 @@ namespace PL.Volunteer
         {
             InitializeComponent();
             SortFields = Enum.GetValues(typeof(BO.VolunteerSortField)).Cast<BO.VolunteerSortField>().ToList();
-            ObserveVolunteerList(); // במקום לקרוא ישירות ל־GetVolunteersList
-            s_bl.Volunteer.AddObserver(ObserveVolunteerList); // זו אותה מתודה שמשמשת לרענון
+            RefreshVolunteerList();
+            s_bl?.Volunteer.AddObserver(RefreshVolunteerList);
         }
 
-        private void ObserveVolunteerList()
+        private void RefreshVolunteerList()
         {
             VolunteerList = s_bl.Volunteer.GetVolunteersList(
+                isActive: null,
                 sortBy: SelectedSortField == BO.VolunteerSortField.None ? null : SelectedSortField);
         }
 
@@ -47,7 +45,7 @@ namespace PL.Volunteer
                 if (_selectedSortField != value)
                 {
                     _selectedSortField = value;
-                    ObserveVolunteerList(); // במקום לכתוב שוב את GetVolunteersList
+                    RefreshVolunteerList();
                 }
             }
         }
@@ -68,18 +66,11 @@ namespace PL.Volunteer
                 _ => BO.VolunteerSortField.None,
             };
         }
-        private void queryVolunteerList()=> VolunteerList = (SelectedSortField == BO.VolunteerSortField.None) ?
-         s_bl?.Volunteer.GetVolunteersList() :
-         s_bl?.Volunteer.GetVolunteersList(SelectedSortField);
 
+        private void Window_Loaded(object sender, RoutedEventArgs e) =>
+            s_bl?.Volunteer.AddObserver(RefreshVolunteerList);
 
-        private void volunteerListObserver()
-            => queryVolunteerList();
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-            => s_bl.Volunteer.AddObserver(volunteerListObserver);
-
-        private void Window_Closed(object sender, EventArgs e)
-            => s_bl.Volunteer.RemoveObserver(volunteerListObserver);
+        private void Window_Closed(object sender, EventArgs e) =>
+            s_bl?.Volunteer.RemoveObserver(RefreshVolunteerList);
     }
 }
