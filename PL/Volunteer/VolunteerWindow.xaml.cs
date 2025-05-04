@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows;
 
 
@@ -6,14 +7,33 @@ namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window
     {
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.Volunteer Volunteer { get; set; }
         public string ButtonText { get; set; }
 
         private BlApi.IVolunteer _volunteerBl;
 
-        public VolunteerWindow(BO.Volunteer volunteer, BlApi.IVolunteer volunteerBl)
+        public VolunteerWindow(BO.Volunteer volunteer, BlApi.IVolunteer volunteerBl, int Id = 0)
         {
             InitializeComponent();
+
+
+            CurrentVolunteer = (Id != 0) ? s_bl.Volunteer.Read(Id)! : new BO.Volunteer
+            {
+                Id = 0,
+                Name = "",
+                Phone = "",
+                Email = "",
+                Address = "",
+                Active = false,
+                Latitude = 0,
+                Longitude = 0,
+                LargestDistance = 0,
+                MyDistanceType = BO.DistanceType.None,
+                MyRole = BO.Role.None
+            };
+
+
             this.Volunteer = volunteer;
             this.DataContext = this;
             this._volunteerBl = volunteerBl;
@@ -74,5 +94,13 @@ namespace PL.Volunteer
             //    }
             //}
         }
+        public BO.Volunteer? CurrentVolunteer
+        {
+            get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
+            set { SetValue(CurrentVolunteerProperty, value); }
+        }
+
+        public static readonly DependencyProperty CurrentVolunteerProperty =
+            DependencyProperty.Register("CurrentCourse", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
     }
 }
