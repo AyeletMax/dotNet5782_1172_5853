@@ -72,5 +72,10 @@ namespace PL.Volunteer
 
         private void Window_Closed(object sender, EventArgs e) =>
             s_bl?.Volunteer.RemoveObserver(RefreshVolunteerList);
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            new VolunteerWindow().Show();
+        }
     }
 }

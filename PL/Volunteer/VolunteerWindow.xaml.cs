@@ -3,6 +3,7 @@ using BO;
 using BlApi;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace PL.Volunteer;
 
@@ -96,32 +97,57 @@ public partial class VolunteerWindow : Window
 
     private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
     {
+        //try
+        //{
+        //    if (CurrentVolunteer == null)
+        //        return;
+
+        //    CurrentVolunteer.Password = Password;
+
+        //    if (CurrentVolunteer.Id == 0)
+        //    {
+        //        _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
+        //        MessageBox.Show("Volunteer added successfully.");
+        //    }
+        //    else
+        //    {
+        //        _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
+        //        MessageBox.Show("Volunteer updated successfully.");
+        //    }
+
+        //    Password = "";
+        //    PasswordBox.Clear();
+        //    Close();
+        //}
+        //catch (Exception ex)
+        //{
+        //    MessageBox.Show($"Error: {ex.Message}");
+        //}
         try
         {
-            if (CurrentVolunteer == null)
-                return;
-
-            CurrentVolunteer.Password = Password;
-
-            if (CurrentVolunteer.Id == 0)
+            if (ButtonText == "Add")
             {
-                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
+                //bl.Volunteer.Create(CurrentVolunteer!);
+                //MessageBox.Show("המתנדב נוסף בהצלחה!", "הוספה", MessageBoxButton.OK, MessageBoxImage.Information);
+                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer!);
                 MessageBox.Show("Volunteer added successfully.");
             }
-            else
+            else if (ButtonText == "Update")
             {
-                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
-                MessageBox.Show("Volunteer updated successfully.");
+                //s_bl.Volunteer.Update(CurrentVolunteer!);
+                //MessageBox.Show("המתנדב עודכן בהצלחה!", "עדכון", MessageBoxButton.OK, MessageBoxImage.Information);
+                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer!.Id, CurrentVolunteer);
+                 MessageBox.Show("Volunteer updated successfully.");
             }
 
-            Password = "";
-            PasswordBox.Clear();
-            Close();
+            // סגירת החלון הנוכחי
+            this.Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error: {ex.Message}");
+            MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
     }
 
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
