@@ -1,24 +1,81 @@
-﻿using System;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
+using BO;
+using BlApi;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace PL.Volunteer;
 
-namespace PL.Volunteer
+public partial class VolunteerWindow : Window
 {
-    public partial class VolunteerWindow : Window
+    private readonly IBl _volunteerBl = Factory.Get();
+
+    public string ButtonText
     {
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public BO.Volunteer Volunteer { get; set; }
-        public string ButtonText { get; set; }
+        get => (string)GetValue(ButtonTextProperty);
+        set => SetValue(ButtonTextProperty, value);
+    }
 
-        private BlApi.IVolunteer _volunteerBl;
+    public static readonly DependencyProperty ButtonTextProperty =
+        DependencyProperty.Register(
+            nameof(ButtonText),
+            typeof(string),
+            typeof(VolunteerWindow),
+            new PropertyMetadata("Add"));
 
-        public VolunteerWindow(BO.Volunteer volunteer, BlApi.IVolunteer volunteerBl, int Id = 0)
+    public IEnumerable<BO.Role> RoleCollection { get; set; }
+    public IEnumerable<BO.DistanceType> DistanceTypeCollection { get; set; }
+
+    public BO.Volunteer? CurrentVolunteer
+    {
+        get => (BO.Volunteer?)GetValue(CurrentVolunteerProperty);
+        set => SetValue(CurrentVolunteerProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentVolunteerProperty =
+        DependencyProperty.Register(
+            nameof(CurrentVolunteer),
+            typeof(BO.Volunteer),
+            typeof(VolunteerWindow),
+            new PropertyMetadata(null));
+
+    public string Password
+    {
+        get => (string)GetValue(PasswordProperty);
+        set => SetValue(PasswordProperty, value);
+    }
+
+    public static readonly DependencyProperty PasswordProperty =
+        DependencyProperty.Register(
+            nameof(Password),
+            typeof(string),
+            typeof(VolunteerWindow),
+            new PropertyMetadata(string.Empty));
+
+    public VolunteerWindow(int id = 0)
+    {
+        InitializeComponent();
+
+        RoleCollection = Enum.GetValues(typeof(BO.Role)).Cast<BO.Role>();
+        DistanceTypeCollection = Enum.GetValues(typeof(BO.DistanceType)).Cast<BO.DistanceType>();
+
+        if (id != 0)
         {
-            InitializeComponent();
-
-
-            CurrentVolunteer = (Id != 0) ? s_bl.Volunteer.Read(Id)! : new BO.Volunteer
+            var volunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
+            if (volunteer != null)
+            {
+                CurrentVolunteer = volunteer;
+                ButtonText = "Update";
+            }
+            else
+            {
+                MessageBox.Show("Volunteer not found.");
+                Close();
+            }
+        }
+        else
+        {
+            CurrentVolunteer = new BO.Volunteer
             {
                 Id = 0,
                 Name = "",
@@ -32,75 +89,45 @@ namespace PL.Volunteer
                 MyDistanceType = BO.DistanceType.None,
                 MyRole = BO.Role.None
             };
-
-
-            this.Volunteer = volunteer;
-            this.DataContext = this;
-            this._volunteerBl = volunteerBl;
-
-            ButtonText = volunteer.Id == 0 ? "Add" : "Update";
         }
-        private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
+
+        DataContext = this;
+    }
+
+    private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            //if (Volunteer.Id == 0)
-            //{
-            //    // לוגיקה להוספה של וולונטר חדש
-            //    BO.Volunteer newVolunteer = new BO.Volunteer
-            //    {
-            //        Name = txtName.Text,
-            //        Phone = txtPhone.Text,
-            //        Email = txtEmail.Text,
-            //        Address = txtAddress.Text,
-            //        Password = txtPassword.Password,
-            //        Active = chkActive.IsChecked ?? false,
-            //        MyRole = (BO.Role)cmbRole.SelectedItem
-            //    };
+            if (CurrentVolunteer == null)
+                return;
 
-            //    try
-            //    {
-            //        // קריאה לפונקציה להוספת וולונטר חדש
-            //        _volunteerBl.AddVolunteer(newVolunteer);
-            //        MessageBox.Show("Volunteer added successfully!");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show($"Error adding volunteer: {ex.Message}");
-            //    }
-            //}
-            //else
-            //{
-            //    // לוגיקה לעדכון וולונטר קיים
-            //    BO.Volunteer updatedVolunteer = new BO.Volunteer
-            //    {
-            //        Id = Volunteer.Id,  // ID נשאר אותו דבר
-            //        Name = txtName.Text,
-            //        Phone = txtPhone.Text,
-            //        Email = txtEmail.Text,
-            //        Address = txtAddress.Text,
-            //        Password = txtPassword.Password,
-            //        Active = chkActive.IsChecked ?? false,
-            //        MyRole = (BO.Role)cmbRole.SelectedItem
-            //    };
+            CurrentVolunteer.Password = Password;
 
-            //    try
-            //    {
-            //        // קריאה לפונקציה לעדכון וולונטר קיים
-            //        _volunteerBl.UpdateVolunteer(Volunteer.Id, updatedVolunteer);
-            //        MessageBox.Show("Volunteer updated successfully!");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show($"Error updating volunteer: {ex.Message}");
-            //    }
-            //}
+            if (CurrentVolunteer.Id == 0)
+            {
+                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
+                MessageBox.Show("Volunteer added successfully.");
+            }
+            else
+            {
+                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
+                MessageBox.Show("Volunteer updated successfully.");
+            }
+
+            Password = "";
+            PasswordBox.Clear();
+            Close();
         }
-        public BO.Volunteer? CurrentVolunteer
+        catch (Exception ex)
         {
-            get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
-            set { SetValue(CurrentVolunteerProperty, value); }
+            MessageBox.Show($"Error: {ex.Message}");
         }
+    }
 
-        public static readonly DependencyProperty CurrentVolunteerProperty =
-            DependencyProperty.Register("CurrentCourse", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        var passwordBox = sender as System.Windows.Controls.PasswordBox;
+        if (passwordBox != null)
+            Password = passwordBox.Password;
     }
 }

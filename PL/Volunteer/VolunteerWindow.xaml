@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="VolunteerWindow" Height="450" Width="800">
-    <!--DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">>-->
 
     <Window.Resources>
+       
         <Style x:Key="LabelStyle" TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -48,53 +48,49 @@
 
         <!-- Name -->
         <Label Content="Name:" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="txtName" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Column="1" Text="{Binding CurrentVolunteer.Name, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Phone -->
         <Label Content="Phone:" Grid.Row="1" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="txtPhone" Grid.Column="1" Text="{Binding Phone}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Email -->
         <Label Content="Email:" Grid.Row="2" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="txtEmail" Grid.Column="1" Text="{Binding Email}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentVolunteer.Email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Active -->
         <Label Content="Active:" Grid.Row="3" Style="{StaticResource LabelStyle}"/>
-        <CheckBox x:Name="chkActive" Grid.Column="1" IsChecked="{Binding Active}" Style="{StaticResource CheckBoxStyle}"/>
+        <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding CurrentVolunteer.Active, Mode=TwoWay}" Style="{StaticResource CheckBoxStyle}"/>
 
         <!-- Role -->
         <Label Content="Role:" Grid.Row="4" Style="{StaticResource LabelStyle}"/>
-        <ComboBox x:Name="cmbRole" Grid.Row="4" Grid.Column="1" Style="{StaticResource ComboBoxStyle}"
-                  ItemsSource="{Binding RoleCollection}"
-                  SelectedItem="{Binding MyRole, Mode=TwoWay}" />
+        <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ComboBoxStyle}"
+                  ItemsSource="{Binding RoleCollection}" SelectedItem="{Binding CurrentVolunteer.MyRole, Mode=TwoWay}"/>
 
         <!-- Address -->
         <Label Content="Address:" Grid.Row="5" Style="{StaticResource LabelStyle}"/>
-        <TextBox x:Name="txtAddress" Grid.Column="1" Text="{Binding Address}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Latitude -->
         <Label Content="Latitude:" Grid.Row="6" Style="{StaticResource LabelStyle}"/>
-        <TextBox Grid.Column="1" Text="{Binding Latitude}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding CurrentVolunteer.Latitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Longitude -->
         <Label Content="Longitude:" Grid.Row="7" Style="{StaticResource LabelStyle}"/>
-        <TextBox Grid.Column="1" Text="{Binding Longitude}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding CurrentVolunteer.Longitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- LargestDistance -->
         <Label Content="LargestDistance:" Grid.Row="8" Style="{StaticResource LabelStyle}"/>
-        <TextBox Grid.Column="1" Text="{Binding LargestDistance}" Style="{StaticResource TextBoxStyle}"/>
+        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding CurrentVolunteer.LargestDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
         <!-- Distance Type -->
         <Label Content="Distance Type:" Grid.Row="9" Style="{StaticResource LabelStyle}"/>
         <ComboBox Grid.Row="9" Grid.Column="1" Style="{StaticResource ComboBoxStyle}"
-                  ItemsSource="{Binding DistanceTypeCollection}"
-                  SelectedItem="{Binding MyDistanceType, Mode=TwoWay}" />
+                  ItemsSource="{Binding DistanceTypeCollection}" SelectedItem="{Binding CurrentVolunteer.MyDistanceType, Mode=TwoWay}"/>
 
         <!-- Password -->
-        <Label Content="Password:" Grid.Row="10" Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="txtPassword" Grid.Column="1" />
-
-
+        <Label Content="Password:" Grid.Row="9" Grid.ColumnSpan="2" Margin="35,35,659,0" Grid.RowSpan="2"/>
+        <PasswordBox x:Name="PasswordBox" Grid.Row="10" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged"/>
 
         <!-- Button -->
         <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ButtonText}"
