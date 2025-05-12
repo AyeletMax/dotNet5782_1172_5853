@@ -18,11 +18,7 @@ public partial class VolunteerWindow : Window
     }
 
     public static readonly DependencyProperty ButtonTextProperty =
-        DependencyProperty.Register(
-            nameof(ButtonText),
-            typeof(string),
-            typeof(VolunteerWindow),
-            new PropertyMetadata("Add"));
+        DependencyProperty.Register(nameof(ButtonText),typeof(string),typeof(VolunteerWindow), new PropertyMetadata("Add"));
 
     public IEnumerable<BO.Role> RoleCollection { get; set; }
     public IEnumerable<BO.DistanceType> DistanceTypeCollection { get; set; }
@@ -32,7 +28,7 @@ public partial class VolunteerWindow : Window
         get => (BO.Volunteer?)GetValue(CurrentVolunteerProperty);
         set => SetValue(CurrentVolunteerProperty, value);
     }
-
+  
     public static readonly DependencyProperty CurrentVolunteerProperty =
         DependencyProperty.Register(
             nameof(CurrentVolunteer),
@@ -55,6 +51,8 @@ public partial class VolunteerWindow : Window
 
     public VolunteerWindow(int id = 0)
     {
+        ButtonText = id == 0 ? "Add" : "Update";
+
         InitializeComponent();
 
         RoleCollection = Enum.GetValues(typeof(BO.Role)).Cast<BO.Role>();
@@ -91,63 +89,39 @@ public partial class VolunteerWindow : Window
                 MyRole = BO.Role.None
             };
         }
-
         DataContext = this;
     }
 
     private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
     {
-        //try
-        //{
-        //    if (CurrentVolunteer == null)
-        //        return;
-
-        //    CurrentVolunteer.Password = Password;
-
-        //    if (CurrentVolunteer.Id == 0)
-        //    {
-        //        _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
-        //        MessageBox.Show("Volunteer added successfully.");
-        //    }
-        //    else
-        //    {
-        //        _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
-        //        MessageBox.Show("Volunteer updated successfully.");
-        //    }
-
-        //    Password = "";
-        //    PasswordBox.Clear();
-        //    Close();
-        //}
-        //catch (Exception ex)
-        //{
-        //    MessageBox.Show($"Error: {ex.Message}");
-        //}
         try
         {
-            if (ButtonText == "Add")
+            if (CurrentVolunteer == null)
+                return;
+
+            CurrentVolunteer.Password = Password;
+
+
+            if (CurrentVolunteer.Id == 0)
             {
-                //bl.Volunteer.Create(CurrentVolunteer!);
-                //MessageBox.Show("המתנדב נוסף בהצלחה!", "הוספה", MessageBoxButton.OK, MessageBoxImage.Information);
-                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer!);
+                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
+                MessageBox.Show("Volunteer updated successfully.");
+                
+            }
+            else
+            {
+                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
                 MessageBox.Show("Volunteer added successfully.");
             }
-            else if (ButtonText == "Update")
-            {
-                //s_bl.Volunteer.Update(CurrentVolunteer!);
-                //MessageBox.Show("המתנדב עודכן בהצלחה!", "עדכון", MessageBoxButton.OK, MessageBoxImage.Information);
-                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer!.Id, CurrentVolunteer);
-                 MessageBox.Show("Volunteer updated successfully.");
-            }
 
-            // סגירת החלון הנוכחי
-            this.Close();
+            Password = "";
+            PasswordBox.Clear();
+            Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Error: {ex.Message}");
         }
-
     }
 
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
