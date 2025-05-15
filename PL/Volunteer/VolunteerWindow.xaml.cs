@@ -51,9 +51,9 @@ public partial class VolunteerWindow : Window
 
     public VolunteerWindow(int id = 0)
     {
-        ButtonText = id == 0 ? "Add" : "Update";
+        ButtonText = id != 0 ? "Update" : "Add";
 
-        InitializeComponent();
+       
 
         RoleCollection = Enum.GetValues(typeof(BO.Role)).Cast<BO.Role>();
         DistanceTypeCollection = Enum.GetValues(typeof(BO.DistanceType)).Cast<BO.DistanceType>();
@@ -64,7 +64,6 @@ public partial class VolunteerWindow : Window
             if (volunteer != null)
             {
                 CurrentVolunteer = volunteer;
-                ButtonText = "Update";
             }
             else
             {
@@ -89,6 +88,7 @@ public partial class VolunteerWindow : Window
                 MyRole = BO.Role.None
             };
         }
+        InitializeComponent();
         DataContext = this;
     }
 
@@ -104,14 +104,16 @@ public partial class VolunteerWindow : Window
 
             if (CurrentVolunteer.Id == 0)
             {
-                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
-                MessageBox.Show("Volunteer updated successfully.");
+                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
+                MessageBox.Show("Volunteer added successfully.");
+                
                 
             }
             else
             {
-                _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
-                MessageBox.Show("Volunteer added successfully.");
+                _volunteerBl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
+                MessageBox.Show("Volunteer updated successfully.");
+
             }
 
             Password = "";

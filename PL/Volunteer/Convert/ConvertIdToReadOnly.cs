@@ -2,13 +2,18 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace PL.Converters
+namespace PL.Volunteer.Convert
 {
-    public class IdToReadOnlyConverter : IValueConverter
+    public class ConvertIdToReadOnly : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is int id && id != 0;
+            if (value is int id)
+            {
+                return id != 0;
+            }
+
+            return true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -16,4 +21,5 @@ namespace PL.Converters
             throw new NotImplementedException();
         }
     }
+
 }

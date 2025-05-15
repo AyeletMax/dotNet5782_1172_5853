@@ -3,13 +3,15 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace PL.Converters
+namespace PL.Volunteer.Convert
 {
-    public class IdToVisibilityConverter : IValueConverter
+    public class ConvertIdToVisibility : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is int id && id != 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (value is int id && id != 0)
+                return Visibility.Visible;
+            return Visibility.Collapsed; // הסתרה במצב הוספה
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
