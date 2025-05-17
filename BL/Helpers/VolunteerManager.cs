@@ -69,7 +69,7 @@ internal static class VolunteerManager
             return false;
         if (!password.Any(char.IsDigit))
             return false;
-        if (!password.Any(c => "@#$%^&*".Contains(c)))
+        if (!password.Any(c => "!@#$%^&*".Contains(c)))
             return false;
         return true;
     }

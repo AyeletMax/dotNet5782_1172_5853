@@ -132,4 +132,27 @@ public partial class VolunteerWindow : Window
         if (passwordBox != null)
             Password = passwordBox.Password;
     }
+    private void RefreshVolunteer()
+    {
+        if (CurrentVolunteer == null)
+            return;
+
+        int id = CurrentVolunteer.Id;
+        CurrentVolunteer = null;
+        CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
+        DataContext = null;
+        DataContext = this;
+    }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
+            _volunteerBl.Volunteer.AddObserver(CurrentVolunteer.Id, RefreshVolunteer);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
+            _volunteerBl.Volunteer.RemoveObserver(CurrentVolunteer.Id, RefreshVolunteer);
+    }
+
 }

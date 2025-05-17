@@ -13,6 +13,7 @@
     <Window.Resources>
         <local:VolunteerSortFieldCollection x:Key="VolunteerSortFieldCollection"/>
     </Window.Resources>
+    
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <!-- הגדרת שורות -->
@@ -52,7 +53,8 @@
                   AutoGenerateColumns="False"
                   EnableRowVirtualization="True"
                   RowDetailsVisibilityMode="VisibleWhenSelected"
-                  SelectedItem="{Binding SelectedVolunteer}">
+                  SelectedItem="{Binding SelectedVolunteer}"
+                  MouseDoubleClick="lsvVolunteerList_MouseDoubleClick">
 
             <DataGrid.Columns>
                 <!-- עמודת Id -->
@@ -98,6 +100,6 @@
         </DataGrid>
 
         <!-- כפתור הוספה -->
-        <Button Grid.Row="2" Content="{Binding ButtonText}" HorizontalAlignment="Center" Margin="10" Width="150" Height="40" Click="btnAdd_Click"/>
+        <Button Grid.Row="2" Content="Add" HorizontalAlignment="Center" Margin="10" Width="150" Height="40" Click="btnAdd_Click"/>
     </Grid>
 </Window>

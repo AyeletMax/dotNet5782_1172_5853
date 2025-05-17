@@ -183,20 +183,6 @@
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>116763483</Id>
-    <Name>Yulia Shaked</Name>
-    <Phone>0548533173</Phone>
-    <Email>0548533173@gmail.com</Email>
-    <IsActive>true</IsActive>
-    <Role>Volunteer</Role>
-    <Password>8TVgXyewElBhAMIfvzvHJ6hPhguVCmyKLSL1HUdtViE=</Password>
-    <Address>11 Wolfson Holon Israel</Address>
-    <Latitude>32.0167</Latitude>
-    <Longitude>34.7673</Longitude>
-    <LargestDistance>2</LargestDistance>
-    <DistanceType>Air</DistanceType>
-  </Volunteer>
-  <Volunteer>
     <Id>851301945</Id>
     <Name>Hila Shulman</Name>
     <Phone>0583292455</Phone>
@@ -236,20 +222,6 @@
     <Latitude>31.8139395</Latitude>
     <Longitude>35.216089</Longitude>
     <LargestDistance>3</LargestDistance>
-    <DistanceType>Air</DistanceType>
-  </Volunteer>
-  <Volunteer>
-    <Id>327605853</Id>
-    <Name>bracha</Name>
-    <Phone>0583282456</Phone>
-    <Email>bracharosenfeld@gmail.com</Email>
-    <IsActive>true</IsActive>
-    <Role>Manager</Role>
-    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
-    <Address>druk 58 ramat shlomo jerusalem israel</Address>
-    <Latitude>31.8139395</Latitude>
-    <Longitude>35.216089</Longitude>
-    <LargestDistance>1</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
@@ -321,5 +293,33 @@
     <Longitude>35.2167089</Longitude>
     <LargestDistance>10</LargestDistance>
     <DistanceType>Walk</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>327605853</Id>
+    <Name>bracha</Name>
+    <Phone>0548551329</Phone>
+    <Email>bracharosenfeld@gmail.com</Email>
+    <IsActive>false</IsActive>
+    <Role>Volunteer</Role>
+    <Password>MShOiA+wdc2e/XMbgvotgr3ppqwLPzgh0Cu13IA37Gg=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>1</LargestDistance>
+    <DistanceType>Walk</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>116763483</Id>
+    <Name>Yulia Shaked</Name>
+    <Phone>0548533173</Phone>
+    <Email>0548533173@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Volunteer</Role>
+    <Password>r2H+rGkXpxNHBaVEwc6V9s0BZHCKmSqWdTPpTMgRHw8=</Password>
+    <Address>11 Wolfson Holon Israel</Address>
+    <Latitude>32.0174754</Latitude>
+    <Longitude>34.7819525</Longitude>
+    <LargestDistance>10</LargestDistance>
+    <DistanceType>Drive</DistanceType>
   </Volunteer>
 </ArrayOfVolunteer>

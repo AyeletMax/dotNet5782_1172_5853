@@ -9,6 +9,8 @@ namespace PL.Volunteer
     public partial class VolunteerListWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public BO.VolunteerInList? SelectedVolunteer { get; set; }
+
 
         public VolunteerListWindow()
         {
@@ -76,6 +78,13 @@ namespace PL.Volunteer
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             new VolunteerWindow().Show();
+        }
+
+        private void lsvVolunteerList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (SelectedVolunteer != null)
+                new VolunteerWindow(SelectedVolunteer.Id).Show();
+
         }
     }
 }
