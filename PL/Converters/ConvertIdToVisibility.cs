@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
-namespace PL.Volunteer.Convert
+namespace PL.Converters
 {
-    public class ConvertIdToReadOnly : IValueConverter
+    public class ConvertIdToVisibility : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int id)
-            {
-                return id != 0;
-            }
-
-            return true;
+            if (value is int id && id != 0)
+                return Visibility.Visible;
+            return Visibility.Collapsed; // הסתרה במצב הוספה
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -21,5 +19,4 @@ namespace PL.Volunteer.Convert
             throw new NotImplementedException();
         }
     }
-
 }
