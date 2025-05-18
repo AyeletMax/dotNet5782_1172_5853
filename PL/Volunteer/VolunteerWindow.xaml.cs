@@ -20,6 +20,7 @@ public partial class VolunteerWindow : Window
     public static readonly DependencyProperty ButtonTextProperty =
         DependencyProperty.Register(nameof(ButtonText),typeof(string),typeof(VolunteerWindow), new PropertyMetadata("Add"));
 
+
     public IEnumerable<BO.Role> RoleCollection { get; set; }
     public IEnumerable<BO.DistanceType> DistanceTypeCollection { get; set; }
 
@@ -49,8 +50,30 @@ public partial class VolunteerWindow : Window
             typeof(VolunteerWindow),
             new PropertyMetadata(string.Empty));
 
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
+            _volunteerBl.Volunteer.AddObserver(CurrentVolunteer.Id, RefreshVolunteer);
+    }
+
+    private void Window_Closed(object? sender, EventArgs e)
+    {
+        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
+            _volunteerBl.Volunteer.RemoveObserver(CurrentVolunteer.Id, RefreshVolunteer);
+    }
+    private void VolunteerObserver()
+    {
+        int id = CurrentVolunteer!.Id;
+        CurrentVolunteer = null;
+        CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
+    }
+
+
     public VolunteerWindow(int id = 0)
     {
+        InitializeComponent();
+        Loaded += Window_Loaded;    
+        Closed += Window_Closed;
         ButtonText = id != 0 ? "Update" : "Add";
 
        
@@ -60,6 +83,7 @@ public partial class VolunteerWindow : Window
 
         if (id != 0)
         {
+           
             var volunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
             if (volunteer != null)
             {
@@ -88,7 +112,7 @@ public partial class VolunteerWindow : Window
                 MyRole = BO.Role.None
             };
         }
-        InitializeComponent();
+        
         DataContext = this;
     }
 
@@ -143,16 +167,5 @@ public partial class VolunteerWindow : Window
         DataContext = null;
         DataContext = this;
     }
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
-            _volunteerBl.Volunteer.AddObserver(CurrentVolunteer.Id, RefreshVolunteer);
-    }
-
-    private void Window_Closed(object sender, EventArgs e)
-    {
-        if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
-            _volunteerBl.Volunteer.RemoveObserver(CurrentVolunteer.Id, RefreshVolunteer);
-    }
-
+  
 }
