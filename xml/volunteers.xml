@@ -1,20 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer>
   <Volunteer>
-    <Id>215553504</Id>
-    <Name>as</Name>
-    <Phone>0583282450</Phone>
-    <Email>ayelet2450@gmail.com</Email>
-    <IsActive>true</IsActive>
-    <Role>Manager</Role>
-    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
-    <Address>druk 58 ramat shlomo jerusalem israel</Address>
-    <Latitude>31.8139395</Latitude>
-    <Longitude>35.216089</Longitude>
-    <LargestDistance>7</LargestDistance>
-    <DistanceType>Walk</DistanceType>
-  </Volunteer>
-  <Volunteer>
     <Id>738970391</Id>
     <Name>Lior Ben-David</Name>
     <Phone>0501234567</Phone>
@@ -211,20 +197,6 @@
     <DistanceType>Air</DistanceType>
   </Volunteer>
   <Volunteer>
-    <Id>326772191</Id>
-    <Name>dan</Name>
-    <Phone>0583282450</Phone>
-    <Email>ayelet2450@gmail.com</Email>
-    <IsActive>true</IsActive>
-    <Role>Manager</Role>
-    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
-    <Address>druk 58 ramat shlomo jerusalem israel</Address>
-    <Latitude>31.8139395</Latitude>
-    <Longitude>35.216089</Longitude>
-    <LargestDistance>7</LargestDistance>
-    <DistanceType>Drive</DistanceType>
-  </Volunteer>
-  <Volunteer>
     <Id>215243353</Id>
     <Name>adi</Name>
     <Phone>0556771603</Phone>
@@ -320,6 +292,20 @@
     <Latitude>31.8139395</Latitude>
     <Longitude>35.216089</Longitude>
     <LargestDistance>3</LargestDistance>
+    <DistanceType>Drive</DistanceType>
+  </Volunteer>
+  <Volunteer>
+    <Id>326772191</Id>
+    <Name>dan</Name>
+    <Phone>0583282450</Phone>
+    <Email>ayelet2450@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Volunteer</Role>
+    <Password>FNrVw1R4TdWaU067GSFpKt0SYjdbR893aPpPHbq7vV0=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>7</LargestDistance>
     <DistanceType>Drive</DistanceType>
   </Volunteer>
 </ArrayOfVolunteer>

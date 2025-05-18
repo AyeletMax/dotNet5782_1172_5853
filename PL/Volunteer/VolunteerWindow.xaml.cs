@@ -61,12 +61,12 @@ public partial class VolunteerWindow : Window
         if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             _volunteerBl.Volunteer.RemoveObserver(CurrentVolunteer.Id, RefreshVolunteer);
     }
-    private void VolunteerObserver()
-    {
-        int id = CurrentVolunteer!.Id;
-        CurrentVolunteer = null;
-        CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
-    }
+    //private void VolunteerObserver()
+    //{
+    //    int id = CurrentVolunteer!.Id;
+    //    CurrentVolunteer = null;
+    //    CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
+    //}
 
 
     public VolunteerWindow(int id = 0)
