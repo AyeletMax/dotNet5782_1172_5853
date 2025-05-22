@@ -136,6 +136,14 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         {
             var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
             VolunteerManager.ValidateInputFormat(boVolunteer);
+            if(boVolunteer.Password == "")
+            {
+                boVolunteer.Password = existingVolunteer.Password;
+            }
+            else
+            {
+                VolunteerManager.CheckPassword(boVolunteer.Password);
+            }
             if (boVolunteer.Address != null)
             {
                 var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
@@ -219,8 +227,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
             }
             VolunteerManager.ValidateInputFormat(boVolunteer);
-
-            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address);
+            VolunteerManager.CheckPassword(boVolunteer.Password!);
+            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
             
             boVolunteer.Latitude = latitude;
             boVolunteer.Longitude = longitude;

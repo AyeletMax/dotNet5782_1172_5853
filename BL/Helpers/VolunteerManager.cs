@@ -127,10 +127,12 @@ internal static class VolunteerManager
             throw new BO.BlInvalidFormatException("Invalid phone number format. Phone number must have 10 digits.");
         if (boVolunteer.Name.Length < 2)
             throw new BO.BlInvalidFormatException("Volunteer name is too short. Name must have at least 2 characters.");
-        if (boVolunteer.Password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(boVolunteer.Password))
+    }
+    internal static void CheckPassword(string password)
+    {
+        if (password.Length < 6 || !Helpers.VolunteerManager.IsPasswordStrong(password))
             throw new BO.BlInvalidFormatException("Password is too weak. It must have at least 6 characters, including uppercase, lowercase, and numbers.");
     }
-
 
     /// <summary>
     /// Validates an ID number using a checksum algorithm.
