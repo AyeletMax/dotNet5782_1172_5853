@@ -93,8 +93,32 @@ namespace PL
             s_bl.Admin.RemoveClockObserver(ClockObserver);
             s_bl.Admin.RemoveConfigObserver(ConfigObserver);
         }
-        private void InitializeDB_Click(object sender, RoutedEventArgs e) =>s_bl.Admin.InitializeDB();
-        private void ResetDB_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ResetDB();
+        private void InitializeDB_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.InitializeDB();
+                MessageBox.Show("The database was initialized successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while initializing the database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ResetDB_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ResetDB();
+                MessageBox.Show("The database was reset successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while resetting the database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+     
         private void HandleVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
         private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow().Show();
     }
