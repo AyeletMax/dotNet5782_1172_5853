@@ -108,8 +108,8 @@ public partial class VolunteerWindow : Window
                 Latitude = 0,
                 Longitude = 0,
                 LargestDistance = 0,
-                MyDistanceType = BO.DistanceType.None,
-                MyRole = BO.Role.None
+                MyDistanceType = BO.DistanceType.Air,
+                MyRole = BO.Role.Volunteer
             };
         }
         

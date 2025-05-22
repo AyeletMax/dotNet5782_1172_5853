@@ -150,7 +150,7 @@ public static class Initialization
             TimeSpan difference = maxTime - minTime - TimeSpan.FromHours(2);
             int validDifference = (int)Math.Max(difference.TotalMinutes, 0);
             DateTime randomTime = minTime.AddMinutes(s_rand.Next(validDifference));
-            s_dal!.Assignment.Create(new Assignment(callId, volunteerId, randomTime, randomTime.AddHours(2),
+            s_dal!.Assignment.Create(new Assignment(callId, volunteerId, randomTime, null,
                 (FinishCallType)s_rand.Next(Enum.GetValues(typeof(FinishCallType)).Length - 1)));
         }
     }

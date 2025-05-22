@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -141,8 +142,21 @@ namespace PL.Volunteer
 
         private void lsvVolunteerList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (SelectedVolunteer != null)
-                new VolunteerWindow(SelectedVolunteer.Id).Show();
+            try
+            {
+                if (SelectedVolunteer != null)
+                    new VolunteerWindow(SelectedVolunteer.Id).Show();
+            }
+            catch (BlDoesNotExistException ex)
+            {
+                MessageBox.Show($"Unexpected error:\n{ex.Message};",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Unexpected error:\n{ex.Message};",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
         }
     }

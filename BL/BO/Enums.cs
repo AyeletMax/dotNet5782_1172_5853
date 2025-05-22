@@ -4,7 +4,6 @@
 /// </summary>
 public enum Role
 {
-    None,
     Manager,
     Volunteer
 }
@@ -14,7 +13,6 @@ public enum Role
 /// </summary>
 public enum DistanceType
 {
-    None,
     Air,
     Walk,
     Drive
