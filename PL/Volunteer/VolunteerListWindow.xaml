@@ -45,7 +45,36 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </Grid>
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
+            <Label Grid.Column="0" Content="Sort By:" VerticalAlignment="Center" Margin="10"/>
+
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch" Margin="10" 
+              SelectedValue="{Binding SelectedSortField, Mode=TwoWay}"
+              ItemsSource="{Binding Source={StaticResource VolunteerSortFieldCollection}}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"
+              SelectedValue="{Binding SelectedCallType, Mode=TwoWay}" 
+              ItemsSource="{Binding CallTypeList}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
         <!-- פקד DataGrid (במקום ListView) -->
         <DataGrid Grid.Row="1" Margin="10"
                   ItemsSource="{Binding Path=VolunteerList}"

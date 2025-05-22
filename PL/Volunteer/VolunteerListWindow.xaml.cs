@@ -24,8 +24,10 @@ namespace PL.Volunteer
         {
             VolunteerList = s_bl.Volunteer.GetVolunteersList(
                 isActive: null,
-                sortBy: SelectedSortField == BO.VolunteerSortField.None ? null : SelectedSortField);
+                sortBy: SelectedSortField == BO.VolunteerSortField.None ? null : SelectedSortField,
+                filterField: SelectedCallType == BO.CallType.None ? null : SelectedCallType);
         }
+
 
         public IEnumerable<BO.VolunteerInList> VolunteerList
         {
@@ -51,6 +53,22 @@ namespace PL.Volunteer
                 }
             }
         }
+        public IEnumerable<BO.CallType> CallTypeList { get; } = Enum.GetValues(typeof(BO.CallType)).Cast<BO.CallType>().ToList();
+
+        private BO.CallType? _selectedCallType = null;
+        public BO.CallType? SelectedCallType
+        {
+            get => _selectedCallType;
+            set
+            {
+                if (_selectedCallType != value)
+                {
+                    _selectedCallType = value;
+                    RefreshVolunteerList();
+                }
+            }
+        }
+
 
         private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

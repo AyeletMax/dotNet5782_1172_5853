@@ -48,11 +48,11 @@ public static class Initialization
     }
     private static int GenerateValidIsraeliId(Random rand)
     {
-        int idWithoutCheckDigit = rand.Next(10000000, 99999999); // מספר בן 8 ספרות בלבד
+        int idWithoutCheckDigit = rand.Next(10000000, 99999999); 
         int checkDigit = CalculateIsraeliIdCheckDigit(idWithoutCheckDigit);
-        int finalId = unchecked(idWithoutCheckDigit * 10 + checkDigit); // לוודא שהתוצאה לא חורגת
+        int finalId = unchecked(idWithoutCheckDigit * 10 + checkDigit); 
 
-        return finalId >= 0 ? finalId : -finalId; // לוודא שהתוצאה חיובית
+        return finalId >= 0 ? finalId : -finalId; 
     }
 
     private static int CalculateIsraeliIdCheckDigit(int idWithoutCheckDigit)

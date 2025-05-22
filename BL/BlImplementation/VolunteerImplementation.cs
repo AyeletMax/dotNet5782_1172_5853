@@ -31,7 +31,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
     }
     // Retrieve a list of volunteers, with optional filters for activity status and sorting criteria.
-    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null)
+    public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null, BO.CallType? filterField = null)
     {
        
         try
@@ -39,7 +39,9 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
                 !isActive.HasValue || v.Active == isActive.Value);
 
-            var volunteerList = VolunteerManager.GetVolunteerList(volunteers);
+        
+            var volunteerList = VolunteerManager.GetVolunteerList(volunteers)
+            .Where(vol => !filterField.HasValue || vol.MyCallType == filterField.Value);
 
             volunteerList = sortBy.HasValue ? sortBy.Value switch
             {

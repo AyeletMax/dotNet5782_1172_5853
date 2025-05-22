@@ -126,7 +126,7 @@ public partial class VolunteerWindow : Window
             CurrentVolunteer.Password = Password;
 
 
-            if (CurrentVolunteer.Id == 0)
+            if (ButtonText == "Add")
             {
                 _volunteerBl.Volunteer.AddVolunteer(CurrentVolunteer);
                 MessageBox.Show("Volunteer added successfully.");
