@@ -86,36 +86,47 @@ namespace PL.Volunteer
                 _ => BO.VolunteerSortField.None,
             };
         }
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is BO.VolunteerInList volunteer)
             {
-                var result = MessageBox.Show(
-                    $"Are you sure you want to delete volunteer '{volunteer.Name}' (ID: {volunteer.Id})?",
-                    "Confirm Deletion",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.Yes)
+                if (ConfirmDeletion(volunteer))
                 {
-                    try
-                    {
-                        s_bl.Volunteer.DeleteVolunteer(volunteer.Id);
-                        
-                    }
-                    catch (BO.BlDeletionException ex)
-                    {
-                        MessageBox.Show($"Cannot delete volunteer:\n{ex.Message}",
-                            "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Unexpected error:\n{ex.Message}",
-                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    TryDeleteVolunteer(volunteer.Id);
                 }
             }
         }
+
+        private bool ConfirmDeletion(BO.VolunteerInList volunteer)
+        {
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete volunteer '{volunteer.Name}' (ID: {volunteer.Id})?",
+                "Confirm Deletion",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            return result == MessageBoxResult.Yes;
+        }
+
+        private void TryDeleteVolunteer(int volunteerId)
+        {
+            try
+            {
+                s_bl.Volunteer.DeleteVolunteer(volunteerId);
+            }
+            catch (BO.BlDeletionException ex)
+            {
+                MessageBox.Show($"Cannot delete volunteer:\n{ex.Message}",
+                    "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error:\n{ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e) =>
             s_bl?.Volunteer.AddObserver(RefreshVolunteerList);
