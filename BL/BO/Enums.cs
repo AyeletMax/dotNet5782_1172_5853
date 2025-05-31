@@ -78,9 +78,9 @@ public enum VolunteerSortField
     TotalResponsesHandled,
     TotalResponsesCancelled,
     TotalExpiredResponses,
-    SumOfCalls,
-    SumOfCancellation,
-    SumOfExpiredCalls
+    //SumOfCalls,
+    //SumOfCancellation,
+    //SumOfExpiredCalls
 }
 
 /// <summary>

@@ -158,13 +158,20 @@ public static class Initialization
         int hour = Math.Max(0, s_dal!.Config.Clock.Hour - 5);
         DateTime begin = new DateTime(s_dal!.Config.Clock.Year, s_dal.Config.Clock.Month, s_dal.Config.Clock.Day, hour, 0, 0);
         int range = Math.Max(0, (int)(s_dal.Config.Clock - begin).TotalMinutes);
-      
         for (int i = 0; i < 50; i++)
         {
-            
             int startTime = s_rand.Next(range);
-            int randIndex = s_rand.Next(verbalDescriptions.Length);
-            s_dal!.Call.Create(new Call(callTypes[randIndex], addresses[randIndex], latitudes[i], longitudes[i], begin.AddMinutes(startTime), begin.AddMinutes(startTime + s_rand.Next(30, 360)), verbalDescriptions[randIndex]));
+            int randIndex = s_rand.Next(verbalDescriptions.Length); // 0-9
+            int addressIndex = randIndex % addresses.Length; // תמיד בטווח 0-9
+            s_dal!.Call.Create(new Call(
+                callTypes[randIndex],
+                addresses[addressIndex],
+                latitudes[i],
+                longitudes[i],
+                begin.AddMinutes(startTime),
+                begin.AddMinutes(startTime + s_rand.Next(30, 360)),
+                verbalDescriptions[randIndex]
+            ));
         }
     }
     private static void createAssignment()
