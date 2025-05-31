@@ -10,6 +10,60 @@
         Closed="MainWindow_Closed"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
+    <!-- רקע הדרגתי עדין -->
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F3F6FD" Offset="0.0"/>
+            <GradientStop Color="#FDE4EC" Offset="1.0"/>
+            <!--<GradientStop Color="#F3F6FD" Offset="0.0"/>
+            <GradientStop Color="#FDE4EC" Offset="1.0/>-->
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#5C6BC0"/>
+
+            <!--<Setter Property="Background" Value="#EC407A"/>-->
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- סגנון תוויות -->
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- סגנון לטקסטבוקסים -->
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="BorderBrush" Value="plum"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
+
+    <!-- הקוד שלך בדיוק כמו ששלחת - לא שונה כלל -->
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         <Grid.ColumnDefinitions>
