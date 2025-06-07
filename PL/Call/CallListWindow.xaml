@@ -1,4 +1,4 @@
-﻿<Window x:Class="PL.Call.CallListWindow"
+﻿<!--<Window x:Class="PL.Call.CallListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,32 +9,209 @@
          DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
 
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F3F6FD" Offset="0.0"/>
+            <GradientStop Color="#FDE4EC" Offset="1.0"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+        --><!--<local:VolunteerSortFieldCollection x:Key="VolunteerSortFieldCollection"/>-->
+
+        <!-- סגנון כפתור עגול --><!--
+        <Style x:Key="RoundButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#5C6BC0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        --><!-- סגנון DataGrid --><!--
+        <Style TargetType="DataGrid">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F5F5F5"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="BorderBrush" Value="#BDBDBD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        --><!-- סגנון כותרות ממורכזות --><!--
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#3F51B5"/>
+        </Style>
+
+        --><!-- עיצוב טקסט ממורכז --><!--
+        <Style x:Key="CenteredText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-        <!-- הגדרת שורות -->
+        --><!-- הגדרת שורות --><!--
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- גריד פנימי עליון - שורת סינון -->
+        --><!-- גריד פנימי עליון - שורת סינון --><!--
         <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Label בעמודה 0 -->
+            --><!-- Label בעמודה 0 --><!--
             <Label Grid.Column="0" Content="Select:" VerticalAlignment="Center" Margin="10"/>
 
-            <!-- ComboBox בעמודה 1 -->
+            --><!-- ComboBox בעמודה 1 --><!--
             <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
         </Grid>
 
-        <!-- פקד הרשימה המתקדמת (ListView) -->
+        --><!-- פקד הרשימה המתקדמת (ListView) --><!--
         <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Path=CallList}" />
         <Button Grid.Row="2" Content="Add" HorizontalAlignment="Center" Margin="10" Width="150" Height="40"/>
+    </Grid>
+</Window>-->
+
+<Window x:Class="PL.Call.CallListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Call Management" Height="600" Width="1200"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Filter and Sort Panel -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Background="LightGray">
+            <Label Content="Sort By:" VerticalAlignment="Center" Margin="5"/>
+            <ComboBox ItemsSource="{Binding SortFields}" 
+                      SelectedItem="{Binding SelectedSortField}"
+                      Width="150" Margin="5"/>
+
+            <Label Content="Filter by Status:" VerticalAlignment="Center" Margin="15,5,5,5"/>
+            <ComboBox ItemsSource="{Binding StatusTypes}" 
+                      SelectedItem="{Binding SelectedStatusFilter}"
+                      Width="120" Margin="5"/>
+
+            <Label Content="Filter by Call Type:" VerticalAlignment="Center" Margin="15,5,5,5"/>
+            <ComboBox ItemsSource="{Binding CallTypes}" 
+                      SelectedItem="{Binding SelectedCallTypeFilter}"
+                      Width="150" Margin="5"/>
+
+            <Button Content="Add Call" Click="btnAdd_Click" 
+                    Width="80" Height="30" Margin="20,5,5,5"
+                    Background="LightGreen"/>
+        </StackPanel>
+
+        <!-- Calls List -->
+        <ListView Grid.Row="1" ItemsSource="{Binding CallList}" 
+                  SelectedItem="{Binding SelectedCall}" 
+                  MouseDoubleClick="lsvCallList_MouseDoubleClick"
+                  Margin="10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Call ID" DisplayMemberBinding="{Binding CallId}" Width="80"/>
+                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding CallType}" Width="150"/>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding MyStatus}" Width="120"/>
+                    <GridViewColumn Header="Open Time" DisplayMemberBinding="{Binding OpenTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="140"/>
+                    <GridViewColumn Header="Time Remaining" DisplayMemberBinding="{Binding TimeRemainingToCall}" Width="120"/>
+                    <GridViewColumn Header="Last Volunteer" DisplayMemberBinding="{Binding LastVolunteer}" Width="150"/>
+                    <GridViewColumn Header="Completion Time" DisplayMemberBinding="{Binding CompletionTime}" Width="120"/>
+                    <GridViewColumn Header="Total Allocations" DisplayMemberBinding="{Binding TotalAllocations}" Width="120"/>
+
+                    <!-- Delete Button Column -->
+                    <GridViewColumn Header="Delete" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Click="DeleteButton_Click"
+                                        Background="LightCoral" 
+                                        Width="60" Height="25">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MyStatus}" Value="Opened">
+                                                    <DataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger.Setters>
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding MyStatus}" Value="Opened"/>
+                                                        <Condition Binding="{Binding TotalAllocations}" Value="0"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <!-- Cancel Assignment Button Column -->
+                    <GridViewColumn Header="Cancel Assignment" Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Cancel" Click="CancelAssignmentButton_Click"
+                                        Background="Orange" 
+                                        Width="80" Height="25">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MyStatus}" Value="InProgress">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding MyStatus}" Value="InProgressAtRisk">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
