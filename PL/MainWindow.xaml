@@ -15,8 +15,6 @@
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#F3F6FD" Offset="0.0"/>
             <GradientStop Color="#FDE4EC" Offset="1.0"/>
-            <!--<GradientStop Color="#F3F6FD" Offset="0.0"/>
-            <GradientStop Color="#FDE4EC" Offset="1.0/>-->
         </LinearGradientBrush>
     </Window.Background>
 
@@ -24,7 +22,6 @@
         <Style TargetType="Button">
             <Setter Property="Background" Value="#5C6BC0"/>
 
-            <!--<Setter Property="Background" Value="#EC407A"/>-->
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
