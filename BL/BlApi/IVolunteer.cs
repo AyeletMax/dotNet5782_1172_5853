@@ -8,7 +8,7 @@ public interface IVolunteer : IObservable //stage 5 הרחבת ממשק
     /// <param name="password">The password of the user.</param>
     /// <returns>The role of the user if login is successful.</returns>
     /// <exception cref="UnauthorizedAccessException">Thrown if the username or password is incorrect.</exception>
-    BO.Role Login(string username, string password);
+    BO.Role Login(int id, string password);
 
     /// <summary>
     /// Requests a filtered and sorted list of volunteers.

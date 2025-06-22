@@ -12,11 +12,11 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
     // Login function to authenticate a volunteer based on username and password.
     // If the username exists and the password matches, return the volunteer's role
-    public BO.Role Login(string username, string password)
+    public BO.Role Login(int id, string password)
     {
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Name == username);
+            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Id == id);
             DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
             throw new BO.BlDoesNotExistException("Incorrect username or password.");
             return (BO.Role)matchingVolunteer.MyRole;
