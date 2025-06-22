@@ -11,16 +11,16 @@ using BO;
 namespace PL.Call
 {
     /// <summary>
-    /// Window for adding a new call to the system
+    /// Window for adding a new call or viewing/editing an existing call
     /// </summary>
     public partial class CallWindow : Window, INotifyPropertyChanged
     {
         #region Properties
 
         /// <summary>
-        /// The new call object
+        /// The call object (new or existing)
         /// </summary>
-        public BO.Call NewCall { get; set; }
+        public BO.Call Call { get; set; }
 
         private DateTime? _maxFinishDate;
         /// <summary>
@@ -57,6 +57,26 @@ namespace PL.Call
         /// </summary>
         public bool IsEditMode { get; private set; }
 
+        /// <summary>
+        /// Whether fields can be edited based on call status
+        /// </summary>
+        public bool CanEditAllFields { get; private set; }
+
+        /// <summary>
+        /// Whether only max finish time can be edited
+        /// </summary>
+        public bool CanEditOnlyMaxTime { get; private set; }
+
+        /// <summary>
+        /// Whether no fields can be edited
+        /// </summary>
+        public bool CannotEdit { get; private set; }
+
+        /// <summary>
+        /// Whether assignments section should be visible
+        /// </summary>
+        public bool HasAssignments => Call?.CallAssignments?.Any() == true;
+
         #endregion
 
         #region Constructor
@@ -70,20 +90,22 @@ namespace PL.Call
             InitializeNewCall();
             IsEditMode = false;
             this.Title = "Add New Call";
+            SetEditPermissions();
         }
 
         /// <summary>
-        /// Constructor for editing an existing call
+        /// Constructor for viewing/editing an existing call
         /// </summary>
-        /// <param name="existingCall">The existing call to edit</param>
+        /// <param name="existingCall">The existing call to view/edit</param>
         public CallWindow(BO.Call existingCall)
         {
             InitializeComponent();
-            NewCall = existingCall ?? throw new ArgumentNullException(nameof(existingCall));
+            Call = existingCall ?? throw new ArgumentNullException(nameof(existingCall));
             InitializeFromExistingCall();
             IsEditMode = true;
-            this.Title = "Edit Call";
+            this.Title = $"Call Details - ID: {Call.Id}";
             AddButton.Content = "Update Call";
+            SetEditPermissions();
         }
 
         #endregion
@@ -95,7 +117,7 @@ namespace PL.Call
         /// </summary>
         private void InitializeNewCall()
         {
-            NewCall = new BO.Call
+            Call = new BO.Call
             {
                 MyStatus = Status.Opened,
                 OpenTime = DateTime.Now,
@@ -105,7 +127,7 @@ namespace PL.Call
                 CallAssignments = new List<CallAssignInList>()
             };
 
-            // Set default maximum time - 24 hours from today
+            // Set default maximum time - 24 hours from now
             MaxFinishDate = DateTime.Today.AddDays(1);
             MaxFinishTime = "23:59";
 
@@ -118,10 +140,10 @@ namespace PL.Call
         /// </summary>
         private void InitializeFromExistingCall()
         {
-            if (NewCall.MaxFinishTime.HasValue)
+            if (Call.MaxFinishTime.HasValue)
             {
-                MaxFinishDate = NewCall.MaxFinishTime.Value.Date;
-                MaxFinishTime = NewCall.MaxFinishTime.Value.ToString("HH:mm");
+                MaxFinishDate = Call.MaxFinishTime.Value.Date;
+                MaxFinishTime = Call.MaxFinishTime.Value.ToString("HH:mm");
             }
             else
             {
@@ -132,6 +154,25 @@ namespace PL.Call
             // Set the selected value in the combo box
             SetSelectedCallType();
         }
+        private void UpdateCallStatus()
+        {
+            if (Call.MyStatus == Status.Closed)
+                return; // לא משנים סטטוס אם הקריאה סגורה
+
+            if (Call.MaxFinishTime.HasValue && DateTime.Now > Call.MaxFinishTime.Value)
+            {
+                Call.MyStatus = Status.Expired;
+            }
+            else if (Call.CallAssignments != null && Call.CallAssignments.Any(a => a.ExitTime == null))
+            {
+                Call.MyStatus = Status.InProgress;
+            }
+            else
+            {
+                Call.MyStatus = Status.Opened;
+            }
+            OnPropertyChanged(nameof(Call));
+        }
 
         /// <summary>
         /// Set the selected type in the call type combo box
@@ -140,10 +181,95 @@ namespace PL.Call
         {
             foreach (ComboBoxItem item in CallTypeComboBox.Items)
             {
-                if (item.Tag.ToString() == NewCall.MyCallType.ToString())
+                if (item.Tag.ToString() == Call.MyCallType.ToString())
                 {
                     CallTypeComboBox.SelectedItem = item;
                     break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set edit permissions based on call status
+        /// </summary>
+        private void SetEditPermissions()
+        {
+            if (!IsEditMode)
+            {
+                // New call - all fields editable
+                CanEditAllFields = true;
+                CanEditOnlyMaxTime = false;
+                CannotEdit = false;
+            }
+            else
+            {
+                // Existing call - permissions based on status
+                switch (Call.MyStatus)
+                {
+                    case Status.Opened:
+                    case Status.AtRisk:
+                        CanEditAllFields = true;
+                        CanEditOnlyMaxTime = false;
+                        CannotEdit = false;
+                        break;
+
+                    case Status.InProgress:
+                    case Status.InProgressAtRisk:
+                        CanEditAllFields = false;
+                        CanEditOnlyMaxTime = true;
+                        CannotEdit = false;
+                        break;
+
+                    case Status.Closed:
+                    case Status.Expired:
+                        CanEditAllFields = false;
+                        CanEditOnlyMaxTime = false;
+                        CannotEdit = true;
+                        break;
+
+                    default:
+                        CanEditAllFields = false;
+                        CanEditOnlyMaxTime = false;
+                        CannotEdit = true;
+                        break;
+                }
+            }
+
+            // Update UI elements based on permissions
+            UpdateUIEditability();
+            OnPropertyChanged(nameof(CanEditAllFields));
+            OnPropertyChanged(nameof(CanEditOnlyMaxTime));
+            OnPropertyChanged(nameof(CannotEdit));
+            OnPropertyChanged(nameof(HasAssignments));
+        }
+
+        /// <summary>
+        /// Update UI elements editability
+        /// </summary>
+        private void UpdateUIEditability()
+        {
+            if (IsEditMode)
+            {
+                // Call type
+                CallTypeComboBox.IsEnabled = CanEditAllFields;
+
+                // Address
+                AddressTextBox.IsReadOnly = !CanEditAllFields;
+
+                // Description
+                DescriptionTextBox.IsReadOnly = !CanEditAllFields;
+
+                // Max finish time - editable if all fields editable OR only max time editable
+                MaxFinishDatePicker.IsEnabled = CanEditAllFields || CanEditOnlyMaxTime;
+                MaxFinishTimeTextBox.IsReadOnly = !(CanEditAllFields || CanEditOnlyMaxTime);
+
+                // Update button
+                AddButton.IsEnabled = !CannotEdit;
+
+                // Show/hide assignments section
+                if (AssignmentsSection != null)
+                {
+                    AssignmentsSection.Visibility = HasAssignments ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
         }
@@ -162,7 +288,7 @@ namespace PL.Call
             {
                 if (Enum.TryParse<CallType>(selectedItem.Tag.ToString(), out CallType callType))
                 {
-                    NewCall.MyCallType = callType;
+                    Call.MyCallType = callType;
                 }
             }
         }
@@ -184,18 +310,18 @@ namespace PL.Call
                 // Send to business logic layer
                 if (IsEditMode)
                 {
-                    BlApi.Factory.Get().Call.UpdateCallDetails(NewCall);
+                    BlApi.Factory.Get().Call.UpdateCallDetails(Call);
                     MessageBox.Show("Call updated successfully!", "Success",
                                   MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    BlApi.Factory.Get().Call.AddCall(NewCall);
+                    BlApi.Factory.Get().Call.AddCall(Call);
                     MessageBox.Show("Call added successfully!\nEmail sent to appropriate volunteers.",
                                   "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
-                this.DialogResult = true;
+                //this.DialogResult = true;
                 this.Close();
             }
             catch (BlInvalidFormatException ex)
@@ -243,68 +369,76 @@ namespace PL.Call
         /// <returns>true if input is valid</returns>
         private bool ValidateInputFormat()
         {
-            // Check call type
-            if (NewCall.MyCallType == CallType.None)
+            // Skip validation for fields that cannot be edited
+            if (CanEditAllFields)
             {
-                ShowErrorMessage("Please select a call type");
-                CallTypeComboBox.Focus();
-                return false;
+                // Check call type
+                if (Call.MyCallType == CallType.None)
+                {
+                    ShowErrorMessage("Please select a call type");
+                    CallTypeComboBox.Focus();
+                    return false;
+                }
+
+                // Check address
+                if (string.IsNullOrWhiteSpace(Call.Address))
+                {
+                    ShowErrorMessage("Please enter an address");
+                    AddressTextBox.Focus();
+                    return false;
+                }
+
+                if (Call.Address.Trim().Length < 5)
+                {
+                    ShowErrorMessage("Address must contain at least 5 characters");
+                    AddressTextBox.Focus();
+                    return false;
+                }
+
+                // Check description length
+                if (!string.IsNullOrEmpty(Call.VerbalDescription) &&
+                    Call.VerbalDescription.Length > 500)
+                {
+                    ShowErrorMessage("Verbal description cannot exceed 500 characters");
+                    DescriptionTextBox.Focus();
+                    return false;
+                }
             }
 
-            // Check address
-            if (string.IsNullOrWhiteSpace(NewCall.Address))
+            // Max finish time validation (if editable)
+            if (CanEditAllFields || CanEditOnlyMaxTime)
             {
-                ShowErrorMessage("Please enter an address");
-                AddressTextBox.Focus();
-                return false;
-            }
+                // Check time format
+                if (!IsValidTimeFormat(MaxFinishTime))
+                {
+                    ShowErrorMessage("Invalid time format. Please enter in HH:MM format (e.g., 14:30)");
+                    MaxFinishTimeTextBox.Focus();
+                    return false;
+                }
 
-            if (NewCall.Address.Trim().Length < 5)
-            {
-                ShowErrorMessage("Address must contain at least 5 characters");
-                AddressTextBox.Focus();
-                return false;
-            }
+                // Check maximum date and time
+                if (!MaxFinishDate.HasValue)
+                {
+                    ShowErrorMessage("Please select a maximum finish date for the call");
+                    MaxFinishDatePicker.Focus();
+                    return false;
+                }
 
-            // Check description length
-            if (!string.IsNullOrEmpty(NewCall.VerbalDescription) &&
-                NewCall.VerbalDescription.Length > 500)
-            {
-                ShowErrorMessage("Verbal description cannot exceed 500 characters");
-                DescriptionTextBox.Focus();
-                return false;
-            }
+                if (MaxFinishDate.Value.Date < DateTime.Today)
+                {
+                    ShowErrorMessage("Maximum finish date cannot be in the past");
+                    MaxFinishDatePicker.Focus();
+                    return false;
+                }
 
-            // Check time format
-            if (!IsValidTimeFormat(MaxFinishTime))
-            {
-                ShowErrorMessage("Invalid time format. Please enter in HH:MM format (e.g., 14:30)");
-                MaxFinishTimeTextBox.Focus();
-                return false;
-            }
-
-            // Check maximum date and time
-            if (!MaxFinishDate.HasValue)
-            {
-                ShowErrorMessage("Please select a maximum finish date for the call");
-                MaxFinishDatePicker.Focus();
-                return false;
-            }
-
-            if (MaxFinishDate.Value.Date < DateTime.Today)
-            {
-                ShowErrorMessage("Maximum finish date cannot be in the past");
-                MaxFinishDatePicker.Focus();
-                return false;
-            }
-
-            // Check that maximum time is greater than opening time
-            UpdateMaxFinishTime();
-            if (NewCall.MaxFinishTime.HasValue && NewCall.MaxFinishTime.Value <= NewCall.OpenTime)
-            {
-                ShowErrorMessage("Maximum finish time must be greater than the call opening time");
-                MaxFinishTimeTextBox.Focus();
-                return false;
+                // Check that maximum time is greater than opening time
+                UpdateMaxFinishTime();
+                if (Call.MaxFinishTime.HasValue && Call.MaxFinishTime.Value <= Call.OpenTime)
+                {
+                    ShowErrorMessage("Maximum finish time must be greater than the call opening time");
+                    MaxFinishTimeTextBox.Focus();
+                    return false;
+                }
             }
 
             HideErrorMessage();
@@ -345,9 +479,10 @@ namespace PL.Call
                 if (TimeSpan.TryParseExact(MaxFinishTime, @"h\:mm", CultureInfo.InvariantCulture, out TimeSpan time) ||
                     TimeSpan.TryParseExact(MaxFinishTime, @"hh\:mm", CultureInfo.InvariantCulture, out time))
                 {
-                    NewCall.MaxFinishTime = MaxFinishDate.Value.Date.Add(time);
+                    Call.MaxFinishTime = MaxFinishDate.Value.Date.Add(time);
                 }
             }
+            UpdateCallStatus(); // הוספת שורה זו בסוף הפונקציה
         }
 
         /// <summary>
