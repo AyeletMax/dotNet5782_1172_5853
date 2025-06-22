@@ -9,4 +9,3 @@
         <local:VolunteerSortFieldCollection x:Key="VolunteerSortFieldCollection" />
     </Application.Resources>
 </Application>
-

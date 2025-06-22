@@ -530,4 +530,14 @@
     <VerbalDescription>BRACHA GET!!!!!!!!!!!!!!</VerbalDescription>
     <Id>53</Id>
   </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <OpenTime>2025-06-22T23:22:08.7047355+03:00</OpenTime>
+    <MaxFinishTime>2025-06-23T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>sing for sick people</VerbalDescription>
+    <Id>54</Id>
+  </Call>
 </ArrayOfCall>

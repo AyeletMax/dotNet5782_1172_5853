@@ -97,7 +97,7 @@
                     HorizontalAlignment="Stretch"/>
 
                 <TextBlock Text="{Binding ErrorMessage}"
-                       Foreground="Red"
+                       Foreground="DarkBlue"
                        TextWrapping="Wrap"
                        Margin="0,10,0,0"/>
             </StackPanel>

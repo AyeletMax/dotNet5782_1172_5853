@@ -8,7 +8,6 @@
         Title="Call Management" Height="680" Width="1000"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
-    --><!-- רקע גרדיאנט עדין --><!--
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#FDF5F7" Offset="0"/>
