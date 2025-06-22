@@ -1,244 +1,234 @@
-﻿using PL.Volunteer;
+﻿//using BO;
+//using PL.Volunteer;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using System.Windows;
+//using System.Windows.Controls;
+//using System.Windows.Data;
+//using System.Windows.Documents;
+//using System.Windows.Input;
+//using System.Windows.Media;
+//using System.Windows.Media.Imaging;
+//using System.Windows.Shapes;
+////using static BO.Enums;
+
+
+
+//namespace PL.Call
+//{
+//    /// <summary>
+//    /// Interaction logic for CallListWindow.xaml
+//    /// </summary>
+//    public partial class CallListWindow : Window
+//    {
+
+//        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+//        public CallListWindow()
+//        {
+//            InitializeComponent();
+//        }
+//        public CallType CallType { get; set; } = CallType.None;
+//        public Status CallStatus { get; set; } = Status.None;
+
+//        public BO.CallInList? SelectedCall { get; set; }
+
+//        public IEnumerable<CallType> CallTypeCollection => Enum.GetValues(typeof(CallType)).Cast<CallType>();
+//        public IEnumerable<Status> CallStatusCollection => Enum.GetValues(typeof(Status)).Cast<Status>();
+//        public IEnumerable<BO.CallInList> CallList
+//        {
+//            get { return (IEnumerable<BO.CallInList>)GetValue(CallListProperty); }
+//            set { SetValue(CallListProperty, value); }
+//        }
+
+//        public static readonly DependencyProperty CallListProperty =
+//            DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
+
+//        private void comboBoxFilterCallType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+//        {
+//            CallList = (CallType == CallType.None) ?
+//                s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
+//                s_bl.Call.GetCallList(CallInListFields.CallType, CallType, null);
+//        }
+
+//        private void comboBoxFilterCallStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+//        {
+//            CallList = (CallStatus == Status.None) ?
+//                      s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
+//                      s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus, null);
+//        }
+
+
+
+//        private void btnDeleteCall_Click(object sender, RoutedEventArgs e)
+//        {
+//            if (SelectedCall is BO.CallInList call)
+//            {
+//                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {call.CallId}?", "Delete Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+//                try
+//                {
+//                    if (result == MessageBoxResult.Yes)
+//                        s_bl.Call.DeleteCall(call.CallId);
+//                }
+//                catch (Exception ex)
+//                {
+//                    MessageBox.Show(ex.Message);
+//                }
+//            }
+//        }
+
+//        private void btnUnassignCall_Click(object sender, RoutedEventArgs e)
+//        {
+//            //if (SelectedCall is BO.CallInList call)
+//            //{
+//            //    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {call.CallId}?", "Delete Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+//            //    try
+//            //    {
+//            //        if (result == MessageBoxResult.Yes)
+//            //            s_bl.Call.MarkCallCancellation(call.CallId);
+//            //    }
+//            //    catch (Exception ex)
+//            //    {
+//            //        MessageBox.Show(ex.Message);
+//            //    }
+//            //}
+//            MessageBox.Show("לא עובד בגלל המורה");
+//        }
+
+
+//        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+//        {
+//            new CallWindow(SelectedCall.CallId).Show();
+
+//        }
+//        private void btnAddCall_Click(object sender, RoutedEventArgs e)
+//        {
+//            new CallWindow().Show();
+//        }
+//    }
+//}
+
+
+using BO;
+using PL.Volunteer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using BO;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-/*
 namespace PL.Call
 {
     /// <summary>
     /// Interaction logic for CallListWindow.xaml
     /// </summary>
-    public partial class CallListWindow: Window
+    public partial class CallListWindow : Window
     {
+
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public CallListWindow()
         {
             InitializeComponent();
         }
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public IEnumerable<BO.VolunteerInList> CallList
+        public CallType CallType { get; set; } = CallType.None;
+        public Status CallStatus { get; set; } = Status.None;
+
+        public BO.CallInList? SelectedCall { get; set; }
+
+
+        public IEnumerable<BO.CallInList> CallList
         {
-            get { return (IEnumerable<BO.VolunteerInList>)GetValue(CallListProperty); }
+            get { return (IEnumerable<BO.CallInList>)GetValue(CallListProperty); }
             set { SetValue(CallListProperty, value); }
         }
 
         public static readonly DependencyProperty CallListProperty =
-            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
 
-    }
-}
-*/
+        private void comboBoxFilterCallType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            => queryVolunteerList();
 
-/*using BO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;*/
+        private void comboBoxFilterCallStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+             => queryVolunteerList();
 
-namespace PL.Call
-{
-    public partial class CallListWindow : Window
-    {
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public BO.CallInList? SelectedCall { get; set; }
 
-        public CallListWindow()
+
+        private void btnDeleteCall_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            SortFields = Enum.GetValues(typeof(BO.CallInListFields)).Cast<BO.CallInListFields>().ToList();
-            StatusTypes = Enum.GetValues(typeof(BO.Status)).Cast<BO.Status>().ToList();
-            CallTypes = Enum.GetValues(typeof(BO.CallType)).Cast<BO.CallType>().ToList();
-            RefreshCallList();
-            s_bl?.Call.AddObserver(RefreshCallList);
-        }
-
-        private void RefreshCallList()
-        {
-            var callList = s_bl.Call.GetCallList(
-              filterField: SelectedStatusFilter == null ? null : BO.CallInListFields.MyStatus,
-              filterValue: SelectedStatusFilter
-          );
-        }
-
-        public IEnumerable<BO.CallInList> CallList
-        {
-            get => (IEnumerable<BO.CallInList>)GetValue(CallListProperty);
-            set => SetValue(CallListProperty, value);
-        }
-
-        public static readonly DependencyProperty CallListProperty =
-            DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(CallListWindow), new PropertyMetadata(null));
-
-        public List<BO.CallInListFields> SortFields { get; set; }
-        public List<BO.Status> StatusTypes { get; set; }
-        public List<BO.CallType> CallTypes { get; set; }
-
-        private BO.CallInListFields _selectedSortField = BO.CallInListFields.CallId;
-        public BO.CallInListFields SelectedSortField
-        {
-            get => _selectedSortField;
-            set
+            if (SelectedCall is BO.CallInList call)
             {
-                if (_selectedSortField != value)
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {call.CallId}?", "Delete Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                try
                 {
-                    _selectedSortField = value;
-                    RefreshCallList();
+                    if (result == MessageBoxResult.Yes)
+                        s_bl.Call.DeleteCall(call.CallId);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
 
-        private BO.Status? _selectedStatusFilter = null;
-        public BO.Status? SelectedStatusFilter
+        private void btnUnassignCall_Click(object sender, RoutedEventArgs e)
         {
-            get => _selectedStatusFilter;
-            set
-            {
-                if (_selectedStatusFilter != value)
-                {
-                    _selectedStatusFilter = value;
-                    RefreshCallList();
-                }
-            }
+            //if (SelectedCall is BO.CallInList call)
+            //{
+            //    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {call.CallId}?", "Delete Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            //    try
+            //    {
+            //        if (result == MessageBoxResult.Yes)
+            //            s_bl.Call.MarkCallCancellation(call.CallId);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show(ex.Message);
+            //    }
+            //}
+            MessageBox.Show("לא עובד בגלל המורה");
         }
 
-        private BO.CallType _selectedCallTypeFilter = BO.CallType.None;
-        public BO.CallType SelectedCallTypeFilter
+
+        private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            get => _selectedCallTypeFilter;
-            set
-            {
-                if (_selectedCallTypeFilter != value)
-                {
-                    _selectedCallTypeFilter = value;
-                    RefreshCallList();
-                }
-            }
+            //new CallWindow(SelectedCall!.CallId).Show();
+            new CallWindow().Show();
+
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private IEnumerable<BO.CallInList> FilterCallList()
         {
-            if (sender is Button button && button.DataContext is BO.CallInList call)
-            {
-                if (CanDeleteCall(call) && ConfirmDeletion(call))
-                {
-                    TryDeleteCall(call.CallId);
-                }
-            }
+            return (CallStatus == Status.None) ?
+              s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
+              s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus, null);
         }
-
-        private bool CanDeleteCall(BO.CallInList call)
+        private void queryVolunteerList()
         {
-            return call.MyStatus == BO.Status.Opened && call.TotalAllocations == 0;
+            CallList = FilterCallList();
         }
+        private void callListObserver()
+                => queryVolunteerList();
 
-        private bool ConfirmDeletion(BO.CallInList call)
-        {
-            var result = MessageBox.Show(
-                $"Are you sure you want to delete call ID: {call.CallId}?",
-                "Confirm Deletion",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+        private void callListWindow_Loaded(object sender, RoutedEventArgs e)
+            => s_bl.Call.AddObserver(callListObserver);
 
-            return result == MessageBoxResult.Yes;
-        }
-
-        private void TryDeleteCall(int callId)
-        {
-            try
-            {
-                s_bl.Call.DeleteCall(callId);
-            }
-            catch (BO.BlDeletionException ex)
-            {
-                MessageBox.Show($"Cannot delete call:\n{ex.Message}",
-                    "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unexpected error:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CancelAssignmentButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is BO.CallInList call)
-            {
-                if (CanCancelAssignment(call) && ConfirmCancelAssignment(call))
-                {
-                    TryCancelAssignment(call.CallId);
-                }
-            }
-        }
-
-        private bool CanCancelAssignment(BO.CallInList call)
-        {
-            return call.MyStatus == BO.Status.InProgress || call.MyStatus == BO.Status.InProgressAtRisk;
-        }
-
-        private bool ConfirmCancelAssignment(BO.CallInList call)
-        {
-            var result = MessageBox.Show(
-                $"Are you sure you want to cancel the current assignment for call ID: {call.CallId}?\nVolunteer: {call.LastVolunteer}",
-                "Confirm Assignment Cancellation",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
-
-            return result == MessageBoxResult.Yes;
-        }
-
-        private void TryCancelAssignment(int callId)
-        {
-            try
-            {
-                s_bl.Call.UpdateCallCancellation(callId, SelectedCall.Id.Value);
-                MessageBox.Show("Assignment cancelled successfully. Email notification sent to volunteer.",
-                    "Assignment Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to cancel assignment:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e) =>
-            s_bl?.Call.AddObserver(RefreshCallList);
-
-        private void Window_Closed(object sender, EventArgs e) =>
-            s_bl?.Call.RemoveObserver(RefreshCallList);
+        private void callLisWindow_Closed(object sender, EventArgs e)
+            => s_bl.Call.RemoveObserver(callListObserver);
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             new CallWindow().Show();
-        }
 
-
-
-        private void lsvCallList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            try
-            {
-                if (SelectedCall != null)
-                    //new CallWindow(SelectedCall.CallId).Show();
-                    return;
-            }
-            catch (BlDoesNotExistException ex)
-            {
-                MessageBox.Show($"Unexpected error:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unexpected error:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
     }
 }

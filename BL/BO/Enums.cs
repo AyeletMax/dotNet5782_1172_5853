@@ -47,6 +47,7 @@ public enum FinishCallType
 /// </summary>
 public enum Status
 {
+    None,
     InProgress,       
     AtRisk,
     InProgressAtRisk,

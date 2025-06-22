@@ -34,3 +34,18 @@ internal class DistanceTypeCollection : IEnumerable
         (System.Enum.GetValues(typeof(BO.DistanceType)) as IEnumerable<BO.DistanceType>)!;
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+
+internal class CallTypeCollection : IEnumerable
+{
+    static readonly IEnumerable<BO.CallType> s_enums =
+        (System.Enum.GetValues(typeof(BO.CallType)) as IEnumerable<BO.CallType>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
+internal class CallStatusCollection : IEnumerable
+{
+    static readonly IEnumerable<BO.Status> s_enums =
+        (System.Enum.GetValues(typeof(BO.Status)) as IEnumerable<BO.Status>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
