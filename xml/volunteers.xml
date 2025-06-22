@@ -658,4 +658,18 @@
     <LargestDistance>4</LargestDistance>
     <DistanceType>Air</DistanceType>
   </Volunteer>
+  <Volunteer>
+    <Id>345810543</Id>
+    <Name>Leah</Name>
+    <Phone>0534817373</Phone>
+    <Email>bracharosenfeld@gmail.com</Email>
+    <IsActive>true</IsActive>
+    <Role>Volunteer</Role>
+    <Password>zGsNLt/FRX6LwGv7IDfy1/HbMekQTl723Pw2z698uGc=</Password>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <LargestDistance>30</LargestDistance>
+    <DistanceType>Walk</DistanceType>
+  </Volunteer>
 </ArrayOfVolunteer>
