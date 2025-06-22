@@ -244,6 +244,7 @@
                 </TextBlock.Style>
             </TextBlock>
 
+            
             <!-- Error Message -->
             <TextBlock Name="ErrorMessageTextBlock"
                       Grid.Row="10"

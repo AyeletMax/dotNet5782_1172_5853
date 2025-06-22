@@ -37,6 +37,7 @@ namespace PL.Call
             }
         }
 
+
         private string _maxFinishTime = "23:59";
         /// <summary>
         /// Maximum finish time for the call (HH:MM format)
