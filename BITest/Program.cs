@@ -332,15 +332,15 @@ namespace BlTest
                         case 5:
                             sortBy = BO.VolunteerSortField.TotalExpiredResponses;
                             break;
-                        case 6:
-                            sortBy = BO.VolunteerSortField.SumOfCalls;
-                            break;
-                        case 7:
-                            sortBy = BO.VolunteerSortField.SumOfCancellation;
-                            break;
-                        case 8:
-                            sortBy = BO.VolunteerSortField.SumOfExpiredCalls;
-                            break;
+                        //case 6:
+                        //    sortBy = BO.VolunteerSortField.SumOfCalls;
+                        //    break;
+                        //case 7:
+                        //    sortBy = BO.VolunteerSortField.SumOfCancellation;
+                        //    break;
+                        //case 8:
+                        //    sortBy = BO.VolunteerSortField.SumOfExpiredCalls;
+                        //    break;
                         default:
                             Console.WriteLine("Invalid selection. Defaulting to sorting by ID.");
                             break;
