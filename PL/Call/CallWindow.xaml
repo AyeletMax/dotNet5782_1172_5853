@@ -32,7 +32,7 @@
             </Grid.RowDefinitions>
 
             <!-- Title -->
-            <Border Grid.Row="0" Background="#007ACC" CornerRadius="5" Margin="0,0,0,20">
+            <!--<Border Grid.Row="0" Background="#007ACC" CornerRadius="5" Margin="0,0,0,20">
                 <TextBlock FontSize="24" 
                           FontWeight="Bold" 
                           Foreground="White"
@@ -44,10 +44,10 @@
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
-            </Border>
+            </Border>-->
 
             <!-- Call ID (only in edit mode) -->
-            <!--<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10"
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10"
                        Visibility="{Binding Call.Id, Converter={StaticResource ConvertIdToVisibility}}">
                 <TextBlock Text="Call ID:" 
                           Width="150" 
@@ -63,7 +63,7 @@
                         BorderBrush="#CCCCCC"
                         BorderThickness="1"
                         Padding="5"/>
-            </StackPanel>-->
+            </StackPanel>
 
             <!-- Call Type -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10">
@@ -196,7 +196,7 @@
             </StackPanel>
 
             <!-- Assignments Section -->
-            <!--<GroupBox Name="AssignmentsSection" Grid.Row="8" Header="Call Assignments" 
+            <GroupBox Name="AssignmentsSection" Grid.Row="8" Header="Call Assignments" 
                      Margin="0,20,0,10" Padding="10"
                      Visibility="{Binding HasAssignments, Converter={StaticResource BooleanToVisibilityConverter}}"
                      FontWeight="SemiBold" FontSize="14">
@@ -217,10 +217,10 @@
                         <DataGridTextColumn Header="Finish Type" Binding="{Binding FinishCallType}" Width="120"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </GroupBox>-->
+            </GroupBox>
 
             <!-- Edit Permission Info -->
-            <!--<TextBlock Grid.Row="9" 
+            <TextBlock Grid.Row="9" 
                       FontSize="12" 
                       Foreground="Blue" 
                       HorizontalAlignment="Center" 
@@ -242,7 +242,7 @@
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
-            </TextBlock>-->
+            </TextBlock>
 
             
             <!-- Error Message -->

@@ -200,9 +200,12 @@ namespace PL.Call
 
         private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            //new CallWindow(SelectedCall!.CallId).Show();
-            new CallWindow().Show();
-
+            if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
+            {
+                var callDetails = BlApi.Factory.Get().Call.GetCallDetails(selectedCall.Id.Value);
+                var editWindow = new CallWindow(callDetails);
+                editWindow.ShowDialog();
+            }
         }
 
         private IEnumerable<BO.CallInList> FilterCallList()
