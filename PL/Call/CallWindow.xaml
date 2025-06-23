@@ -196,7 +196,7 @@
             </StackPanel>
 
             <!-- Assignments Section -->
-            <GroupBox Name="AssignmentsSection" Grid.Row="8" Header="Call Assignments" 
+            <!--<GroupBox Name="AssignmentsSection" Grid.Row="8" Header="Call Assignments" 
                      Margin="0,20,0,10" Padding="10"
                      Visibility="{Binding HasAssignments, Converter={StaticResource BooleanToVisibilityConverter}}"
                      FontWeight="SemiBold" FontSize="14">
@@ -217,10 +217,10 @@
                         <DataGridTextColumn Header="Finish Type" Binding="{Binding FinishCallType}" Width="120"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </GroupBox>
+            </GroupBox>-->
 
             <!-- Edit Permission Info -->
-            <TextBlock Grid.Row="9" 
+            <!--<TextBlock Grid.Row="9" 
                       FontSize="12" 
                       Foreground="Blue" 
                       HorizontalAlignment="Center" 
@@ -242,7 +242,7 @@
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
-            </TextBlock>
+            </TextBlock>-->
 
             
             <!-- Error Message -->

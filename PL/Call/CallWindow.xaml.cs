@@ -268,10 +268,10 @@ namespace PL.Call
                 AddButton.IsEnabled = !CannotEdit;
 
                 // Show/hide assignments section
-                if (AssignmentsSection != null)
-                {
-                    AssignmentsSection.Visibility = HasAssignments ? Visibility.Visible : Visibility.Collapsed;
-                }
+                //if (AssignmentsSection != null)
+                //{
+                //    AssignmentsSection.Visibility = HasAssignments ? Visibility.Visible : Visibility.Collapsed;
+                //}
             }
         }
 

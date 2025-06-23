@@ -540,4 +540,34 @@
     <VerbalDescription>sing for sick people</VerbalDescription>
     <Id>54</Id>
   </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <OpenTime>2025-06-23T04:00:38.8245278+03:00</OpenTime>
+    <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>frg</VerbalDescription>
+    <Id>55</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 59 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8128935</Latitude>
+    <Longitude>35.2193299</Longitude>
+    <OpenTime>2025-06-23T04:12:53.6945844+03:00</OpenTime>
+    <MaxFinishTime>2025-06-27T23:59:00</MaxFinishTime>
+    <VerbalDescription>quick!!!</VerbalDescription>
+    <Id>56</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-06-23T04:14:09.3410227+03:00</OpenTime>
+    <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>gooo</VerbalDescription>
+    <Id>57</Id>
+  </Call>
 </ArrayOfCall>
