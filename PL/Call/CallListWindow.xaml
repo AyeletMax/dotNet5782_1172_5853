@@ -1,211 +1,6 @@
-﻿<!--<Window x:Class="PL.Call.CallListWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL"
-        mc:Ignorable="d"
-        Title="Call Management" Height="680" Width="1000"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
-
-    <Window.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#FDF5F7" Offset="0"/>
-            <GradientStop Color="#E6F7FD" Offset="1"/>
-        </LinearGradientBrush>
-    </Window.Background>
-
-    --><!-- משאבים --><!--
-    <Window.Resources>
-        --><!-- רשימות סטטוס וסוג קריאה יקבלו ItemsSource מקוד‑המאחורי --><!--
-        <BooleanToVisibilityConverter x:Key="Bool2Vis"/>
-
-        --><!-- סגנונות כלליים (ממחזרים את אלו של volunteer window) --><!--
-        <Style x:Key="RoundButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#5C6BC0"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="10,6"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="20"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="DataGrid">
-            <Setter Property="RowBackground" Value="White"/>
-            <Setter Property="AlternatingRowBackground" Value="#FAFAFA"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="GridLinesVisibility" Value="None"/>
-        </Style>
-
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#3F51B5"/>
-        </Style>
-
-        <Style x:Key="CenteredText" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-        </Style>
-    </Window.Resources>
-
-    --><!-- פריסה --><!--
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        --><!-- כותרת --><!--
-        <TextBlock Grid.Row="0"
-                   Text=" Call Management"
-                   FontSize="26"
-                   FontWeight="Bold"
-                   Foreground="#3F51B5"
-                   HorizontalAlignment="Center"
-                   Margin="0,10"/>
-
-        --><!-- פס מיון/סינון/קיבוץ --><!--
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,10">
-            --><!-- סינון סטטוס --><!--
-            <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="Filter by Status:" FontSize="12" Margin="2"/>
-                <ComboBox Width="160" Height="28"
-                          ItemsSource="{Binding StatusList}"
-                          SelectedValue="{Binding SelectedStatus, Mode=TwoWay}"/>
-            </StackPanel>
-
-            --><!-- סינון סוג קריאה --><!--
-            <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="Filter by Call Type:" FontSize="12" Margin="2"/>
-                <ComboBox Width="160" Height="28"
-                          ItemsSource="{Binding CallTypeList}"
-                          SelectedValue="{Binding SelectedCallType, Mode=TwoWay}"/>
-            </StackPanel>
-
-            --><!-- מיון --><!--
-            <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="Sort By:" FontSize="12" Margin="2"/>
-                <ComboBox Width="160" Height="28"
-                          ItemsSource="{Binding SortFieldList}"
-                          SelectedValue="{Binding SelectedSortField, Mode=TwoWay}"/>
-            </StackPanel>
-
-            --><!-- קיבוץ (אופציונלי) --><!--
-            <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="Group By:" FontSize="12" Margin="2"/>
-                <ComboBox Width="160" Height="28"
-                          ItemsSource="{Binding GroupFieldList}"
-                          SelectedValue="{Binding SelectedGroupField, Mode=TwoWay}"/>
-            </StackPanel>
-        </StackPanel>
-
-        --><!-- טבלת קריאות --><!--
-        <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding CallList}"
-                  SelectedItem="{Binding SelectedCall}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  MouseDoubleClick="dgCallList_MouseDoubleClick"
-                  HorizontalAlignment="Center">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID"
-                                    Binding="{Binding Id}"
-                                    Width="60"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                <DataGridTextColumn Header="Status"
-                                    Binding="{Binding Status}"
-                                    Width="130"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                <DataGridTextColumn Header="Time Left"
-                                    Binding="{Binding TimeRemaining}"
-                                    Width="120"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                <DataGridTextColumn Header="Total Handling Time"
-                                    Binding="{Binding TimeHandled}"
-                                    Width="160"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                <DataGridTextColumn Header="Last Volunteer"
-                                    Binding="{Binding LastVolunteerName}"
-                                    Width="150"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                <DataGridTextColumn Header="#Assignments"
-                                    Binding="{Binding AssignmentCount}"
-                                    Width="120"
-                                    ElementStyle="{StaticResource CenteredText}"/>
-
-                --><!-- כפתור ביטול הקצאה --><!--
-                <DataGridTemplateColumn Header="Cancel"
-                                         Width="70">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="🔄"
-                                    ToolTip="Cancel current assignment"
-                                    Click="CancelAssignButton_Click"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    FontSize="16"
-                                    Visibility="{Binding CanCancelAssignment,
-                                                         Converter={StaticResource Bool2Vis}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                --><!-- כפתור מחיקה --><!--
-                <DataGridTemplateColumn Header="Delete"
-                                         Width="60">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="🗑"
-                                    ToolTip="Delete call"
-                                    Click="DeleteButton_Click"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    FontSize="16"
-                                    Visibility="{Binding CanDelete,
-                                                         Converter={StaticResource Bool2Vis}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        --><!-- כפתור הוספה --><!--
-        <Button Grid.Row="3"
-                Content="➕  Add Call"
-                Click="btnAdd_Click"
-                Style="{StaticResource RoundButtonStyle}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"/>
-    </Grid>
-</Window>-->
-<Window x:Class="PL.Call.CallListWindow"
+﻿<!--גירסת מקור לפני העיצובים-->
+    
+    <!--<Window x:Class="PL.Call.CallListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -246,14 +41,14 @@
             </Setter>
         </Style>
 
-        <!-- סגנון תוויות -->
+        --><!-- סגנון תוויות --><!--
         <Style TargetType="Label">
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="Foreground" Value="#333"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
 
-        <!-- סגנון לטקסטבוקסים -->
+        --><!-- סגנון לטקסטבוקסים --><!--
         <Style TargetType="TextBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="5"/>
@@ -262,40 +57,58 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
         </Style>
+        <local:CallTypeCollection x:Key="CallTypeCollection"/>
+        <local:CallStatusCollection x:Key="CallStatusCollection"/>
     </Window.Resources>
 
 
     <Grid>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+
+        <Grid HorizontalAlignment="Stretch" Grid.Row="0" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
-
             </Grid.ColumnDefinitions>
-            <!--<Label Content="Call Management" HorizontalContentAlignment="Center" Grid.Column="0" Height="25" VerticalAlignment="Top"/>-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            --><!--<Label Content="Call Management" HorizontalContentAlignment="Center" Grid.Column="0" Height="25" VerticalAlignment="Top"/>-->
             <!--<ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="&#x1F3B5; Call List for Music &amp; Singing &#x1F3B5;"
+            <!--<TextBlock Grid.Row="0" Grid.Column="1" Text="&#x1F3B5; Call List for Music &amp; Singing &#x1F3B5;"
                 FontSize="24" FontWeight="Bold" Foreground="#3F51B5"
-                HorizontalAlignment="Center" Margin="0,10"/>
-            <ComboBox 
-            SelectedValue="{Binding CallType, Mode=TwoWay}"
-            SelectionChanged="comboBoxFilterCallType_SelectionChanged" 
-            ItemsSource="{Binding Source={StaticResource CallTypeCollection}}" Margin="86,0,0,750" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
+                HorizontalAlignment="Center" Margin="0,10"/>-->
+            <!--<ComboBox 
+            SelectedItem="{Binding CallType, Mode=TwoWay}"
+            ItemsSource="{Binding Source={StaticResource CallTypeCollection}}" Margin="86,0,0,750" Grid.Column="2" RenderTransformOrigin="0.5,0.5">
             </ComboBox>
 
-            <Label Content="status" HorizontalContentAlignment="Center" Grid.Column="2" Margin="0,0,0,409"/>
+            <Label Content="status" HorizontalContentAlignment="Center" Grid.Column="2" Margin="86,0,0,750"/>
             <ComboBox
             Grid.Column="2" 
-            SelectedValue="{Binding CallStatus, Mode=TwoWay}"
-            SelectionChanged="comboBoxFilterCallStatus_SelectionChanged" 
-            ItemsSource="{Binding Source={StaticResource CallStatusCollection}}" Margin="86,0,0,750"/>
+            SelectedItem="{Binding CallStatus, Mode=TwoWay}"
+            ItemsSource="{Binding Source={StaticResource CallStatusCollection}}" />--><!--
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="🎵 Call List for Music &amp; Singing 🎵"
+           FontSize="24" FontWeight="Bold" Foreground="#3F51B5"
+           HorizontalAlignment="Center" Margin="0,10"/>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0" Margin="0,10">
+                <Label Content="Call Type:" VerticalAlignment="Center"/>
+                <ComboBox Width="150"
+              ItemsSource="{Binding Source={StaticResource CallTypeCollection}}"
+              SelectedItem="{Binding CallType, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Margin="0,10">
+                <Label Content="Status:" VerticalAlignment="Center"/>
+                <ComboBox Width="150"
+              ItemsSource="{Binding Source={StaticResource CallStatusCollection}}"
+              SelectedItem="{Binding CallStatus, Mode=TwoWay}" />
+            </StackPanel>
+
 
         </Grid>
         <DataGrid
@@ -308,15 +121,23 @@
         MouseDoubleClick="DataGrid_MouseDoubleClick"
         SelectedItem="{Binding SelectedCall}" Margin="0,63,0,63">
         <DataGrid.Columns>
-            <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="Auto"/>
+            --><!--<DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding OpeningTime}" Header="OpeningTime" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding TimeLeft}" Header="TimeLeft" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding LastVolunteerName}" Header="LastVolunteerName" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding TotalTime}" Header="TotalTime" Width="Auto"/>
             <DataGridTextColumn Binding="{Binding CallStatus}" Header="CallStatus" Width="Auto"/>
-            <DataGridTextColumn Binding="{Binding TotalAssignments}" Header="TotalAssignments" Width="Auto"/>
-            <DataGridTemplateColumn Header="Unassign" Width="Auto">
+            <DataGridTextColumn Binding="{Binding TotalAssignments}" Header="TotalAssignments" Width="Auto"/>--><!--
+                <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding OpenTime}" Header="OpeningTime" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding TimeRemainingToCall}" Header="TimeLeft" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding LastVolunteer}" Header="LastVolunteerName" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding CompletionTime}" Header="TotalTime" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding MyStatus}" Header="CallStatus" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding TotalAllocations}" Header="TotalAssignments" Width="Auto"/>
+                <DataGridTemplateColumn Header="Unassign" Width="Auto">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <Button Content="Unassign" Click="btnUnassignCall_Click"/>
@@ -339,4 +160,261 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"/>
     </Grid>
+</Window>-->
+
+    
+    <!--גירסת עיצוב ראשון-->
+<!--<Window x:Class="PL.Call.CallListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="Call Management" Height="640" Width="900"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Window.Resources>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="160"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Background" Value="#5C6BC0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#F3F6FD" Padding="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="🎵 Call List for Music &amp; Singing 🎵" 
+                       FontSize="24" FontWeight="Bold" Foreground="#3F51B5" 
+                       HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="2" Content="Call Type:" Style="{StaticResource LabelStyle}"/>
+                <ComboBox Grid.Column="2" Style="{StaticResource ComboBoxStyle}"
+                          ItemsSource="{Binding Source={StaticResource CallTypeCollection}}"
+                          SelectedItem="{Binding CallType, Mode=TwoWay}"/>
+
+                <Label Grid.Column="0" Content="Status:" Style="{StaticResource LabelStyle}" Grid.Row="1"/>
+                <ComboBox Grid.Column="0" Style="{StaticResource ComboBoxStyle}" Grid.Row="1"
+                          ItemsSource="{Binding Source={StaticResource CallStatusCollection}}"
+                          SelectedItem="{Binding CallStatus, Mode=TwoWay}"/>
+            </Grid>
+
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="#CCCCCC" CornerRadius="8" Background="White" Padding="10">
+                <DataGrid ItemsSource="{Binding CallList}"
+                          SelectedItem="{Binding SelectedCall}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          RowDetailsVisibilityMode="VisibleWhenSelected"
+                          MouseDoubleClick="DataGrid_MouseDoubleClick"
+                          EnableRowVirtualization="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          Margin="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding OpenTime}" Header="OpeningTime" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TimeRemainingToCall}" Header="TimeLeft" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding LastVolunteer}" Header="LastVolunteerName" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding CompletionTime}" Header="TotalTime" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding MyStatus}" Header="CallStatus" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding TotalAllocations}" Header="TotalAssignments" Width="*"/>
+                        <DataGridTemplateColumn Header="Unassign" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Unassign" Click="btnUnassignCall_Click" Style="{StaticResource ButtonStyle}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Click="btnDeleteCall_Click" Style="{StaticResource ButtonStyle}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Button Grid.Row="3" Content="➕  Add Call" Click="btnAdd_Click" HorizontalAlignment="Center" 
+                    Width="120" Height="35" Style="{StaticResource ButtonStyle}" Margin="0,15,0,0"/>
+        </Grid>
+    </Border>
+</Window>-->
+
+<Window x:Class="PL.Call.CallListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="Call List" Height="640" Width="900"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F3F6FD" Offset="0.0"/>
+            <GradientStop Color="#FDE4EC" Offset="1.0"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Window.Resources>
+        <local:CallTypeCollection x:Key="CallTypeCollection"/>
+        <local:CallStatusCollection x:Key="CallStatusCollection"/>
+
+        <Style x:Key="RoundButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#5C6BC0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F5F5F5"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="BorderBrush" Value="#BDBDBD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#3F51B5"/>
+        </Style>
+
+        <Style x:Key="CenteredText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="🎵 Call List for Music &amp; Singing 🎵"
+                   FontSize="24" FontWeight="Bold" Foreground="#3F51B5"
+                   HorizontalAlignment="Center" Margin="0,10"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Call Type:" FontSize="12" Margin="2"/>
+                <ComboBox Width="150" Height="28"
+                          SelectedValue="{Binding CallType, Mode=TwoWay}"
+                          ItemsSource="{Binding Source={StaticResource CallTypeCollection}}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontSize="12"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Status:" FontSize="12" Margin="2"/>
+                <ComboBox Width="150" Height="28"
+                          SelectedValue="{Binding CallStatus, Mode=TwoWay}"
+                          ItemsSource="{Binding Source={StaticResource CallStatusCollection}}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontSize="12"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" Margin="0"
+                  ItemsSource="{Binding CallList}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  SelectedItem="{Binding SelectedCall}"
+                  EnableRowVirtualization="True"
+                  MouseDoubleClick="DataGrid_MouseDoubleClick"
+                  HorizontalAlignment="Center">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="60" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="200" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding OpenTime}" Header="OpeningTime" Width="150" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding TimeRemainingToCall}" Header="TimeLeft" Width="120" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding LastVolunteer}" Header="LastVolunteerName" Width="150" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding CompletionTime}" Header="TotalTime" Width="100" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding MyStatus}" Header="CallStatus" Width="120" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTextColumn Binding="{Binding TotalAllocations}" Header="TotalAssignments" Width="120" ElementStyle="{StaticResource CenteredText}"/>
+                <DataGridTemplateColumn Header="Unassign" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Unassign" Click="btnUnassignCall_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Delete" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Click="btnDeleteCall_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="3" Content="➕ Add Call" Click="btnAdd_Click"
+                Style="{StaticResource RoundButtonStyle}" HorizontalAlignment="Center"/>
+    </Grid>
 </Window>
+
