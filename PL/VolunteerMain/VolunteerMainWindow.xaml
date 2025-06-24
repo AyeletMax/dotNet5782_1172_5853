@@ -3,15 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:VolunteerSystem"
         WindowStartupLocation="CenterScreen"
-        FlowDirection="RightToLeft">
-    <Grid>
-        
-    </Grid>
-
-    <!--Title="Choose Opened Calls" Height="800" Width="1200"-->
-
-
-    <!--<Window.Resources>
+        FlowDirection="RightToLeft"
+        Title="Choose Opened Calls" Height="800" Width="1200">
+    <Window.Resources>
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -68,7 +62,113 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="Filter By Call Type:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center"/>
                 <ComboBox x:Name="CallTypeFilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
-                          SelectionChanged="CallTypeFilter_SelectionChanged"/>
+                                      SelectionChanged="CallTypeFilter_SelectionChanged"/>
+
+                <TextBlock Text="Sort By:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" Margin="20,5,5,5"/>
+                <ComboBox x:Name="SortFieldComboBox" Style="{StaticResource FilterComboBoxStyle}"
+                          SelectionChanged="SortField_SelectionChanged"/>
+
+                <Button x:Name="RefreshButton" Content="Refresh List" Style="{StaticResource ButtonStyle}"
+                        Click="RefreshButton_Click" Margin="20,5,5,5"/>
+
+                <Button x:Name="UpdateAddressButton" Content="Update Adresses" Style="{StaticResource ButtonStyle}"
+                        Click="UpdateAddressButton_Click"/>
+</StackPanel>
+        </Border>
+
+        <DataGrid x:Name="OpenCallsDataGrid" Grid.Row="2" 
+                  AutoGenerateColumns="False" 
+                  SelectionMode="Single"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  SelectionChanged="OpenCallsDataGrid_SelectionChanged"
+                  Margin="10">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Call Number" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Call Type" Binding="{Binding MyCallType}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Opening Time" Binding="{Binding OpenTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="120" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Max Finish Time" Binding="{Binding MaxFinishTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="130" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Distance (KM)" Binding="{Binding distanceFromVolunteerToCall, StringFormat=F2}" Width="80" IsReadOnly="True"/>
+
+                <DataGridTemplateColumn Header="Action" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content=" Choose For Treatment" 
+                                    Style="{StaticResource SelectButtonStyle}"
+                                    Click="SelectCallButton_Click"
+                                    Tag="{Binding Id}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="1" Margin="10">
+                <StackPanel Margin="10">
+                    <TextBlock Text=" Selected Call Details " Style="{StaticResource HeaderTextStyle}" HorizontalAlignment="Center"/>
+                    <Separator Margin="0,5"/>
+                    <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="CallDescriptionTextBlock" 
+                                   TextWrapping="Wrap" 
+                                   Text="Select a call from the list to see the details."
+                                   FontSize="12"
+                                   Margin="5"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="White" BorderBrush="#DEE2E6" BorderThickness="1" Margin="10">
+                <Grid>
+                    <TextBlock x:Name="MapPlaceholder" 
+                               Text=""
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               FontSize="14" 
+                               Foreground="Gray"
+                               TextAlignment="Center"/>
+
+                    <WebBrowser x:Name="MapWebBrowser" Visibility="Collapsed"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
+<!--<Window x:Class="VolunteerSystem.VolunteerMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:VolunteerSystem"
+        WindowStartupLocation="CenterScreen"
+        FlowDirection="RightToLeft"
+        Title="Choose Opened Calls" Height="800" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Opened Calls" 
+                   FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Margin="10" Foreground="#2C3E50"/>
+
+        <Border Grid.Row="1" Background="#ECF0F1" Padding="10" Margin="5">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Filter By Call Type:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center"/>
+                <ComboBox x:Name="CallTypeFilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
+                                      SelectionChanged="CallTypeFilter_SelectionChanged"/>
 
                 <TextBlock Text="Sort By:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" Margin="20,5,5,5"/>
                 <ComboBox x:Name="SortFieldComboBox" Style="{StaticResource FilterComboBoxStyle}"
@@ -148,5 +248,7 @@
                 </Grid>
             </Border>
         </Grid>
-    </Grid>-->
-</Window>
+    </Grid>
+</Window>-->
+
+    

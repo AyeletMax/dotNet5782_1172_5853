@@ -237,7 +237,7 @@ namespace PL.Call
             {
                 var callDetails = BlApi.Factory.Get().Call.GetCallDetails(selectedCall.Id.Value);
                 var editWindow = new CallWindow(callDetails);
-                editWindow.ShowDialog();
+                editWindow.Show();
             }
         }
 

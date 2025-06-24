@@ -560,4 +560,14 @@
     <VerbalDescription>quick!!! ####</VerbalDescription>
     <Id>56</Id>
   </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-24T14:46:32.8480342+03:00</OpenTime>
+    <MaxFinishTime>2025-06-25T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>come</VerbalDescription>
+    <Id>60</Id>
+  </Call>
 </ArrayOfCall>

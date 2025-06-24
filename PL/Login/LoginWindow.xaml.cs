@@ -30,6 +30,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using BlApi;
 using BO;
+using VolunteerSystem;
 
 namespace PL.Login;
 
@@ -103,7 +104,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
             else
             {
                 //new Volunteer.MainWindow(id).Show();
-               new MainWindow().Show();
+               new VolunteerMainWindow(id).Show();
                 return;
             }
 
