@@ -9,7 +9,7 @@ using BlApi;
 
 namespace VolunteerSystem
 {
-    public partial class VolunteerMainWindow : Window
+    public partial class CallForTreatment() : Window
     {
         private readonly ICall _callBl;
         private readonly IVolunteer _volunteerBl;
@@ -17,7 +17,7 @@ namespace VolunteerSystem
         private IEnumerable<OpenCallInList> _allOpenCalls;
         private OpenCallInList _selectedCall;
 
-        public VolunteerMainWindow(int volunteerId)
+        public CallForTreatment(int volunteerId) : this()
         {
             InitializeComponent();
             _volunteerId = volunteerId;

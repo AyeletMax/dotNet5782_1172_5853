@@ -103,8 +103,8 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
             }
             else
             {
-                //new Volunteer.MainWindow(id).Show();
-               new VolunteerMainWindow(id).Show();
+                new MainWindow();
+
                 return;
             }
 
