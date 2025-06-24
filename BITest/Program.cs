@@ -167,7 +167,7 @@ namespace BlTest
                         {
                             Console.WriteLine("Please log in.");
                             Console.Write("Username: ");
-                            string username = Console.ReadLine()!;
+                            int username = Console.Read()!;
 
                             Console.Write("Enter Password (must be at least 8 characters, contain upper and lower case letters, a digit, and a special character): ");
                             string password = Console.ReadLine()!;
