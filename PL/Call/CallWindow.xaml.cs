@@ -104,7 +104,7 @@ namespace PL.Call
             Call = existingCall ?? throw new ArgumentNullException(nameof(existingCall));
             InitializeFromExistingCall();
             IsEditMode = true;
-            this.Title = $"Call Details - ID: {Call.Id}";
+            //this.Title = $"Call Details - ID: {Call.Id}";
             AddButton.Content = "Update Call";
             SetEditPermissions();
         }
@@ -155,6 +155,10 @@ namespace PL.Call
             // Set the selected value in the combo box
             SetSelectedCallType();
         }
+
+
+
+
         private void UpdateCallStatus()
         {
             if (Call.MyStatus == Status.Closed)
@@ -267,7 +271,7 @@ namespace PL.Call
                 // Update button
                 AddButton.IsEnabled = !CannotEdit;
 
-                // Show/hide assignments section
+                //Show / hide assignments section
                 if (AssignmentsSection != null)
                 {
                     AssignmentsSection.Visibility = HasAssignments ? Visibility.Visible : Visibility.Collapsed;
@@ -312,12 +316,15 @@ namespace PL.Call
                 if (IsEditMode)
                 {
                     BlApi.Factory.Get().Call.UpdateCallDetails(Call);
+                    this.Title = $"Call Details - ID: {Call.Id}";
                     MessageBox.Show("Call updated successfully!", "Success",
                                   MessageBoxButton.OK, MessageBoxImage.Information);
+                   
                 }
                 else
                 {
                     BlApi.Factory.Get().Call.AddCall(Call);
+                    this.Title = $"Call Details - ID: {Call.Id}";
                     MessageBox.Show("Call added successfully!\nEmail sent to appropriate volunteers.",
                                   "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -483,7 +490,7 @@ namespace PL.Call
                     Call.MaxFinishTime = MaxFinishDate.Value.Date.Add(time);
                 }
             }
-            UpdateCallStatus(); // הוספת שורה זו בסוף הפונקציה
+            UpdateCallStatus(); 
         }
 
         /// <summary>

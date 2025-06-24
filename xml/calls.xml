@@ -21,16 +21,6 @@
     <Id>2</Id>
   </Call>
   <Call>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Haifa, Israel</Address>
-    <Latitude>32.0727</Latitude>
-    <Longitude>34.8067</Longitude>
-    <OpenTime>2025-06-22T21:19:00</OpenTime>
-    <MaxFinishTime>2025-06-23T00:07:00</MaxFinishTime>
-    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
-    <Id>3</Id>
-  </Call>
-  <Call>
     <MyCallType>MusicTherapy</MyCallType>
     <Address>Tel Aviv, Israel</Address>
     <Latitude>32.0715</Latitude>
@@ -49,16 +39,6 @@
     <MaxFinishTime>2025-06-22T21:04:00</MaxFinishTime>
     <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
     <Id>5</Id>
-  </Call>
-  <Call>
-    <MyCallType>PersonalizedMusicCare</MyCallType>
-    <Address>Rishon Lezion, Israel</Address>
-    <Latitude>32.0805</Latitude>
-    <Longitude>34.7775</Longitude>
-    <OpenTime>2025-06-22T20:18:00</OpenTime>
-    <MaxFinishTime>2025-06-23T01:55:00</MaxFinishTime>
-    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
-    <Id>6</Id>
   </Call>
   <Call>
     <MyCallType>PersonalizedMusicCare</MyCallType>
@@ -531,6 +511,16 @@
     <Id>53</Id>
   </Call>
   <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>druk 58 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8139395</Latitude>
+    <Longitude>35.216089</Longitude>
+    <OpenTime>2025-06-23T04:00:38.8245278+03:00</OpenTime>
+    <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>frg</VerbalDescription>
+    <Id>55</Id>
+  </Call>
+  <Call>
     <MyCallType>MusicPerformance</MyCallType>
     <Address>druk 58 ramat shlomo jerusalem israel</Address>
     <Latitude>31.8139395</Latitude>
@@ -539,5 +529,45 @@
     <MaxFinishTime>2025-06-23T23:59:00+03:00</MaxFinishTime>
     <VerbalDescription>sing for sick people</VerbalDescription>
     <Id>54</Id>
+  </Call>
+  <Call>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Rishon Lezion, Israel</Address>
+    <Latitude>31.9635712</Latitude>
+    <Longitude>34.8101149</Longitude>
+    <OpenTime>2025-06-22T20:18:00</OpenTime>
+    <MaxFinishTime>2025-06-26T23:59:00</MaxFinishTime>
+    <VerbalDescription>Personalized music playlist for patients in recovery</VerbalDescription>
+    <Id>6</Id>
+  </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Haifa, Israel</Address>
+    <Latitude>32.8191218</Latitude>
+    <Longitude>34.9983856</Longitude>
+    <OpenTime>2025-06-22T21:19:00</OpenTime>
+    <MaxFinishTime>2025-06-25T23:59:00</MaxFinishTime>
+    <VerbalDescription>Community sing-along event for patients and families</VerbalDescription>
+    <Id>3</Id>
+  </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 52 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8128935</Latitude>
+    <Longitude>35.2193299</Longitude>
+    <OpenTime>2025-06-23T04:12:53.6945844+03:00</OpenTime>
+    <MaxFinishTime>2025-06-27T23:59:00</MaxFinishTime>
+    <VerbalDescription>quick!!! ####</VerbalDescription>
+    <Id>56</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-23T04:14:09.3410227+03:00</OpenTime>
+    <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>gooo!!!</VerbalDescription>
+    <Id>57</Id>
   </Call>
 </ArrayOfCall>
