@@ -52,6 +52,7 @@ namespace PL.Call
                 UpdateMaxFinishTime();
             }
         }
+        private int? observedCallId;
 
         /// <summary>
         /// Whether the window is opened in edit mode
@@ -107,6 +108,23 @@ namespace PL.Call
             //this.Title = $"Call Details - ID: {Call.Id}";
             AddButton.Content = "Update Call";
             SetEditPermissions();
+
+            observedCallId = Call.Id;
+            BlApi.Factory.Get().Call.AddObserver(OnCallChanged);
+            this.Closed += (s, e) => BlApi.Factory.Get().Call.RemoveObserver(OnCallChanged);
+        }
+        private void OnCallChanged()
+        {
+            if (observedCallId.HasValue)
+            {
+                var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
+                // עדכן את כל השדות שאתה מציג בחלון
+                Call = updated;
+                OnPropertyChanged(nameof(Call));
+                // רענון שדות נוספים אם צריך
+                InitializeFromExistingCall();
+                SetEditPermissions();
+            }
         }
 
         #endregion

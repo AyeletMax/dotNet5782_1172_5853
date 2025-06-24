@@ -561,13 +561,33 @@
     <Id>56</Id>
   </Call>
   <Call>
-    <MyCallType>MusicTherapy</MyCallType>
+    <MyCallType>GroupActivities</MyCallType>
     <Address>druk 3 ramat shlomo jerusalem israel</Address>
     <Latitude>31.8109918</Latitude>
     <Longitude>35.2133241</Longitude>
     <OpenTime>2025-06-23T04:14:09.3410227+03:00</OpenTime>
     <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
-    <VerbalDescription>gooo!!!</VerbalDescription>
+    <VerbalDescription>goooddddddddddddd!!!</VerbalDescription>
     <Id>57</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 4 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-24T00:45:44.351049+03:00</OpenTime>
+    <MaxFinishTime>2025-06-25T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>Ayelet go!</VerbalDescription>
+    <Id>58</Id>
+  </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 4 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-24T04:21:03.1018258+03:00</OpenTime>
+    <MaxFinishTime>2025-06-27T23:59:00</MaxFinishTime>
+    <VerbalDescription>come!!!!!!!!!</VerbalDescription>
+    <Id>59</Id>
   </Call>
 </ArrayOfCall>

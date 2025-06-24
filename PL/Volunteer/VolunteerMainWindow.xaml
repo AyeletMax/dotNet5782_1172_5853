@@ -1,13 +1,16 @@
-ï»¿<Window x:Class="VolunteerSystem.VolunteerMainWindow"
+<Window x:Class="VolunteerSystem.VolunteerMainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:VolunteerSystem"
-        Title="×‘×—×™×¨×ª ×§×¨×™××•×ª ×¤×ª×•×—×•×ª" Height="800" Width="1200"
+        Title="áçéøú ÷øéàåú ôúåçåú" Height="800" Width="1200"
         WindowStartupLocation="CenterScreen"
         FlowDirection="RightToLeft">
+    
+    
+      
 
     <Window.Resources>
-        <!-- ×¡×’× ×•× ×•×ª -->
+        <!-- ñâðåðåú -->
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -54,32 +57,32 @@
             <RowDefinition Height="300"/>
         </Grid.RowDefinitions>
 
-        <!-- ×›×•×ª×¨×ª -->
-        <TextBlock Grid.Row="0" Text="×§×¨×™××•×ª ×¤×ª×•×—×•×ª ×œ×˜×™×¤×•×œ" 
+        <!-- ëåúøú -->
+        <TextBlock Grid.Row="0" Text="÷øéàåú ôúåçåú ìèéôåì" 
                    FontSize="24" FontWeight="Bold" 
                    HorizontalAlignment="Center" 
                    Margin="10" Foreground="#2C3E50"/>
 
-        <!-- ×¤×× ×œ ×¡×™× ×•×Ÿ ×•×ž×™×•×Ÿ -->
+        <!-- ôàðì ñéðåï åîéåï -->
         <Border Grid.Row="1" Background="#ECF0F1" Padding="10" Margin="5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="×¡×™× ×•×Ÿ ×œ×¤×™ ×¡×•×’ ×§×¨×™××”:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center"/>
+                <TextBlock Text="ñéðåï ìôé ñåâ ÷øéàä:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center"/>
                 <ComboBox x:Name="CallTypeFilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
                           SelectionChanged="CallTypeFilter_SelectionChanged"/>
 
-                <TextBlock Text="×ž×™×•×Ÿ ×œ×¤×™:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" Margin="20,5,5,5"/>
+                <TextBlock Text="îéåï ìôé:" Style="{StaticResource HeaderTextStyle}" VerticalAlignment="Center" Margin="20,5,5,5"/>
                 <ComboBox x:Name="SortFieldComboBox" Style="{StaticResource FilterComboBoxStyle}"
                           SelectionChanged="SortField_SelectionChanged"/>
 
-                <Button x:Name="RefreshButton" Content="×¨×¢× ×Ÿ ×¨×©×™×ž×”" Style="{StaticResource ButtonStyle}"
+                <Button x:Name="RefreshButton" Content="øòðï øùéîä" Style="{StaticResource ButtonStyle}"
                         Click="RefreshButton_Click" Margin="20,5,5,5"/>
 
-                <Button x:Name="UpdateAddressButton" Content="×¢×“×›×Ÿ ×›×ª×•×‘×ª" Style="{StaticResource ButtonStyle}"
+                <Button x:Name="UpdateAddressButton" Content="òãëï ëúåáú" Style="{StaticResource ButtonStyle}"
                         Click="UpdateAddressButton_Click"/>
             </StackPanel>
         </Border>
 
-        <!-- ×¨×©×™×ž×ª ×”×§×¨×™××•×ª -->
+        <!-- øùéîú ä÷øéàåú -->
         <DataGrid x:Name="OpenCallsDataGrid" Grid.Row="2" 
                   AutoGenerateColumns="False" 
                   SelectionMode="Single"
@@ -92,17 +95,17 @@
                   Margin="10">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="×ž×¡×¤×¨ ×§×¨×™××”" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
-                <DataGridTextColumn Header="×¡×•×’ ×§×¨×™××”" Binding="{Binding MyCallType}" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Header="×›×ª×•×‘×ª" Binding="{Binding Address}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="×–×ž×Ÿ ×¤×ª×™×—×”" Binding="{Binding OpenTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="120" IsReadOnly="True"/>
-                <DataGridTextColumn Header="×–×ž×Ÿ ×¡×™×•× ×ž×§×¡×™×ž×œ×™" Binding="{Binding MaxFinishTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="130" IsReadOnly="True"/>
-                <DataGridTextColumn Header="×ž×¨×—×§ (×§×´×ž)" Binding="{Binding distanceFromVolunteerToCall, StringFormat=F2}" Width="80" IsReadOnly="True"/>
+                <DataGridTextColumn Header="îñôø ÷øéàä" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ñåâ ÷øéàä" Binding="{Binding MyCallType}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ëúåáú" Binding="{Binding Address}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="æîï ôúéçä" Binding="{Binding OpenTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="120" IsReadOnly="True"/>
+                <DataGridTextColumn Header="æîï ñéåí î÷ñéîìé" Binding="{Binding MaxFinishTime, StringFormat='dd/MM/yyyy HH:mm'}" Width="130" IsReadOnly="True"/>
+                <DataGridTextColumn Header="îøç÷ (÷Øî)" Binding="{Binding distanceFromVolunteerToCall, StringFormat=F2}" Width="80" IsReadOnly="True"/>
 
-                <DataGridTemplateColumn Header="×¤×¢×•×œ×”" Width="100">
+                <DataGridTemplateColumn Header="ôòåìä" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="×‘×—×¨ ×œ×˜×™×¤×•×œ" 
+                            <Button Content="áçø ìèéôåì" 
                                     Style="{StaticResource SelectButtonStyle}"
                                     Click="SelectCallButton_Click"
                                     Tag="{Binding Id}"/>
@@ -112,40 +115,40 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- ×¤×× ×œ ×”×ª×™××•×¨ ×•×”×ž×¤×” -->
+        <!-- ôàðì äúéàåø åäîôä -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- ×ª×™××•×¨ ×”×§×¨×™××” -->
+            <!-- úéàåø ä÷øéàä -->
             <Border Grid.Column="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="1" Margin="10">
                 <StackPanel Margin="10">
-                    <TextBlock Text="×¤×™×¨×•×˜ ×”×§×¨×™××” ×”× ×‘×—×¨×ª" Style="{StaticResource HeaderTextStyle}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="ôéøåè ä÷øéàä äðáçøú" Style="{StaticResource HeaderTextStyle}" HorizontalAlignment="Center"/>
                     <Separator Margin="0,5"/>
                     <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
                         <TextBlock x:Name="CallDescriptionTextBlock" 
                                    TextWrapping="Wrap" 
-                                   Text="×‘×—×¨ ×§×¨×™××” ×ž×”×¨×©×™×ž×” ×›×“×™ ×œ×¨××•×ª ××ª ×”×¤×™×¨×•×˜"
+                                   Text="áçø ÷øéàä îäøùéîä ëãé ìøàåú àú äôéøåè"
                                    FontSize="12"
                                    Margin="5"/>
                     </ScrollViewer>
                 </StackPanel>
             </Border>
 
-            <!-- ×ž×¤×” -->
+            <!-- îôä -->
             <Border Grid.Column="1" Background="White" BorderBrush="#DEE2E6" BorderThickness="1" Margin="10">
                 <Grid>
                     <TextBlock x:Name="MapPlaceholder" 
-                               Text="×ž×¤×” ×ª×•×¦×’ ×›××Ÿ&#x0A;(×“×•×¨×© ×©×™×œ×•×‘ ×¢× Google Maps ××• Bing Maps)"
+                               Text="îôä úåöâ ëàï&#x0A;(ãåøù ùéìåá òí Google Maps àå Bing Maps)"
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center"
                                FontSize="14" 
                                Foreground="Gray"
                                TextAlignment="Center"/>
 
-                    <!-- ×›××Ÿ × ×™×ª×Ÿ ×œ×”×•×¡×™×£ WebBrowser ××• Map control -->
+                    <!-- ëàï ðéúï ìäåñéó WebBrowser àå Map control -->
                     <WebBrowser x:Name="MapWebBrowser" Visibility="Collapsed"/>
                 </Grid>
             </Border>
