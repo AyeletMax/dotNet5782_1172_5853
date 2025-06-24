@@ -560,14 +560,4 @@
     <VerbalDescription>quick!!! ####</VerbalDescription>
     <Id>56</Id>
   </Call>
-  <Call>
-    <MyCallType>MusicTherapy</MyCallType>
-    <Address>druk 3 ramat shlomo jerusalem israel</Address>
-    <Latitude>31.8109918</Latitude>
-    <Longitude>35.2133241</Longitude>
-    <OpenTime>2025-06-23T04:14:09.3410227+03:00</OpenTime>
-    <MaxFinishTime>2025-06-24T23:59:00+03:00</MaxFinishTime>
-    <VerbalDescription>gooo!!!</VerbalDescription>
-    <Id>57</Id>
-  </Call>
 </ArrayOfCall>

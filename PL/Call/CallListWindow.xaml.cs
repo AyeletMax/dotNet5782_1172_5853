@@ -241,12 +241,24 @@ namespace PL.Call
             }
         }
 
+        //private IEnumerable<BO.CallInList> FilterCallList()
+        //{
+        //    return (CallStatus == Status.None) ?
+        //      s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
+        //      s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus, null);
+        //}
         private IEnumerable<BO.CallInList> FilterCallList()
         {
-            return (CallStatus == Status.None) ?
-              s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
-              s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus, null);
-        }
+            return (CallType, CallStatus) switch
+            {
+                (CallType.None, Status.None) => s_bl.Call.GetCallList(),
+
+                (CallType.None, var status) when status != Status.None => s_bl.Call.GetCallList(CallInListFields.MyStatus, status, null),
+
+                (var type, Status.None) when type != CallType.None => s_bl.Call.GetCallList(CallInListFields.CallType, type, null),
+            };
+
+}
         private void queryVolunteerList()
         {
             CallList = FilterCallList();
@@ -254,8 +266,8 @@ namespace PL.Call
         private void callListObserver()
                 => queryVolunteerList();
 
-        private void callListWindow_Loaded(object sender, RoutedEventArgs e)
-            => s_bl.Call.AddObserver(callListObserver);
+        //private void callListWindow_Loaded(object sender, RoutedEventArgs e)
+        //    => s_bl.Call.AddObserver(callListObserver);
 
         private void callLisWindow_Closed(object sender, EventArgs e)
             => s_bl.Call.RemoveObserver(callListObserver);
@@ -265,5 +277,12 @@ namespace PL.Call
             new CallWindow().Show();
 
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+                                => s_bl.Call.AddObserver(callListObserver);
+
+        private void Window_Closed(object sender, EventArgs e)
+                   => s_bl.Call.RemoveObserver(callListObserver);
+
     }
 }
