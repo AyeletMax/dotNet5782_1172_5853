@@ -114,7 +114,9 @@ using BO;
 using PL.Volunteer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -134,13 +136,18 @@ namespace PL.Call
     public partial class CallListWindow : Window
     {
 
+        //public event PropertyChangedEventHandler? PropertyChanged;
+        //private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        //    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public CallListWindow()
         {
             InitializeComponent();
+            queryVolunteerList();
         }
-        public CallType CallType { get; set; } = CallType.None;
-        public Status CallStatus { get; set; } = Status.None;
+        //public CallType CallType { get; set; } = CallType.None;
+        //public Status CallStatus { get; set; } = Status.None;
 
         public BO.CallInList? SelectedCall { get; set; }
 
@@ -154,13 +161,39 @@ namespace PL.Call
         public static readonly DependencyProperty CallListProperty =
             DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
 
-        private void comboBoxFilterCallType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            => queryVolunteerList();
+        //private void comboBoxFilterCallType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //    => queryVolunteerList();
 
-        private void comboBoxFilterCallStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
-             => queryVolunteerList();
+        //private void comboBoxFilterCallStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //     => queryVolunteerList();
 
+        private CallType callType = CallType.None;
+        public CallType CallType
+        {
+            get => callType;
+            set
+            {
+                if (callType != value)
+                {
+                    callType = value;
+                    queryVolunteerList();
+                }
+            }
+        }
 
+        private Status callStatus = Status.None;
+        public Status CallStatus
+        {
+            get => callStatus;
+            set
+            {
+                if (callStatus != value)
+                {
+                    callStatus = value;
+                    queryVolunteerList();
+                }
+            }
+        }
 
         private void btnDeleteCall_Click(object sender, RoutedEventArgs e)
         {

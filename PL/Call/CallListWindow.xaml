@@ -262,6 +262,8 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
         </Style>
+        <local:CallTypeCollection x:Key="CallTypeCollection"/>
+        <local:CallStatusCollection x:Key="CallStatusCollection"/>
     </Window.Resources>
 
 
@@ -285,17 +287,15 @@
                 FontSize="24" FontWeight="Bold" Foreground="#3F51B5"
                 HorizontalAlignment="Center" Margin="0,10"/>
             <ComboBox 
-            SelectedValue="{Binding CallType, Mode=TwoWay}"
-            SelectionChanged="comboBoxFilterCallType_SelectionChanged" 
+            SelectedItem="{Binding CallType, Mode=TwoWay}"
             ItemsSource="{Binding Source={StaticResource CallTypeCollection}}" Margin="86,0,0,750" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
             </ComboBox>
 
-            <Label Content="status" HorizontalContentAlignment="Center" Grid.Column="2" Margin="0,0,0,409"/>
+            <Label Content="status" HorizontalContentAlignment="Center" Grid.Column="2" />
             <ComboBox
             Grid.Column="2" 
-            SelectedValue="{Binding CallStatus, Mode=TwoWay}"
-            SelectionChanged="comboBoxFilterCallStatus_SelectionChanged" 
-            ItemsSource="{Binding Source={StaticResource CallStatusCollection}}" Margin="86,0,0,750"/>
+            SelectedItem="{Binding CallStatus, Mode=TwoWay}"
+            ItemsSource="{Binding Source={StaticResource CallStatusCollection}}" />
 
         </Grid>
         <DataGrid
