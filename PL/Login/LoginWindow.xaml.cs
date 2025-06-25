@@ -1,36 +1,10 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using System.Windows.Controls;
-//using System.Windows.Data;
-//using System.Windows.Documents;
-//using System.Windows.Input;
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-//using System.Windows.Shapes;
-
-//namespace PL.Login;
-
-///// <summary>
-///// Interaction logic for LogingWindow.xaml
-///// </summary>
-//public partial class LogingWindow : Window
-//{
-//    public LogingWindow()
-//    {
-//        InitializeComponent();
-//    }
-//}
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using BlApi;
 using BO;
-using VolunteerSystem;
 
 namespace PL.Login;
 
@@ -39,6 +13,20 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
     private readonly IBl _bl = BlApi.Factory.Get();
 
     public LoginWindow() => InitializeComponent();
+
+    private bool _isManagerOptionsVisible = false;
+    public bool IsManagerOptionsVisible
+    {
+        get => _isManagerOptionsVisible;
+        set { _isManagerOptionsVisible = value; OnPropertyChanged(); }
+    }
+
+    private bool _isLoginPanelVisible = true;
+    public bool IsLoginPanelVisible
+    {
+        get => _isLoginPanelVisible;
+        set { _isLoginPanelVisible = value; OnPropertyChanged(); }
+    }
 
     private string? idNumber;
     public string? IdNumber
@@ -76,6 +64,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
         }
     }
 
+    private int _currentLoggedInManagerId = -1;
     private void Login_Click(object sender, RoutedEventArgs e)
     {
         ErrorMessage = "";
@@ -85,10 +74,10 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
             ErrorMessage = "Please Enter a real ID";
             return;
         }
-
         try
         {
             Role role = _bl.Volunteer.Login(id, Password ?? "");
+            IdNumber = null;
 
             if (role == Role.Manager)
             {
@@ -99,13 +88,16 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
                 }
 
                 App.Current.Properties["IsManagerLoggedIn"] = true;
-                new MainWindow();
+
+                _currentLoggedInManagerId=id;  
+                IsLoginPanelVisible = false;
+                IsManagerOptionsVisible = true;
+
+                return;
             }
             else
             {
-                new MainWindow();
-
-                return;
+                new VolunteerMainWindow(id).Show();
             }
 
             Close();
@@ -116,7 +108,21 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            ErrorMessage = "שגיאה כללית: " + ex.Message;
+            ErrorMessage = "General Eroor: " + ex.Message;
         }
+    }
+    private void VolunteerPanel_Click(object sender, RoutedEventArgs e)
+    {
+        new VolunteerMainWindow(_currentLoggedInManagerId).Show();
+        IsLoginPanelVisible = true;
+        IsManagerOptionsVisible = false;
+
+    }
+    private void ManagerPanel_Click(object sender, RoutedEventArgs e)
+    {
+        new MainWindow().Show();
+        IsLoginPanelVisible = true;
+        IsManagerOptionsVisible = false;
+
     }
 }
