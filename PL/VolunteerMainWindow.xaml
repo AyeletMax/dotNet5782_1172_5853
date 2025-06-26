@@ -29,90 +29,43 @@
                 <ColumnDefinition Width="*"/>
 
             </Grid.ColumnDefinitions>
-            <!--<Label  Grid.Column="0" Content="Volunteer Details"  HorizontalAlignment="Center"/>
-            
-            <Label Grid.Column="1" Content="Details for call in treatment"  HorizontalAlignment="Center"/>-->
-            <!--<StackPanel Grid.Column="0" Margin="10">
-                <Label Content="Volunteer Details" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
-                <TextBlock Text="Name:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.Name}" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Phone:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.Phone}" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Email:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.Email}" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Address:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.Address}" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Active:" FontWeight="Bold"/>
-                <CheckBox IsChecked="{Binding Volunteer.Active}" IsEnabled="False" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Role:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.MyRole}" Margin="0,0,0,10"/>
-
-                <TextBlock Text="Total Calls Handled:" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Volunteer.TotalCallsHandled}" Margin="0,0,0,10"/>
-                <Button Content="Update My Details"  Click="UpdateVolunteer_Click" Margin="5"/>
-
-            </StackPanel>-->
+           
             <StackPanel Grid.Column="0" Margin="10">
                 <Label Content="Volunteer Details" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
 
                 <!-- Name -->
                 <TextBlock Text="Name:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Volunteer.Name, UpdateSourceTrigger=PropertyChanged}" 
-             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.Name}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <TextBox Text="{Binding Volunteer.Name, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.Name}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Phone -->
                 <TextBlock Text="Phone:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Volunteer.Phone, UpdateSourceTrigger=PropertyChanged}" 
-             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.Phone}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <TextBox Text="{Binding Volunteer.Phone, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.Phone}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Email -->
                 <TextBlock Text="Email:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Volunteer.Email, UpdateSourceTrigger=PropertyChanged}" 
-             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.Email}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <TextBox Text="{Binding Volunteer.Email, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.Email}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Address -->
                 <TextBlock Text="Address:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Volunteer.Address, UpdateSourceTrigger=PropertyChanged}" 
-             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.Address}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <TextBox Text="{Binding Volunteer.Address, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.Address}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Distance -->
                 <TextBlock Text="Max Distance:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Volunteer.LargestDistance, UpdateSourceTrigger=PropertyChanged}" 
-             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.LargestDistance}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <TextBox Text="{Binding Volunteer.LargestDistance, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.LargestDistance}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Distance Type -->
                 <TextBlock Text="Distance Type:" FontWeight="Bold"/>
-                <ComboBox ItemsSource="{Binding DistanceTypes}" SelectedItem="{Binding Volunteer.MyDistanceType}" 
-              Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Volunteer.MyDistanceType}" 
-               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-               Margin="0,0,0,10"/>
+                <ComboBox ItemsSource="{Binding DistanceTypes}" SelectedItem="{Binding Volunteer.MyDistanceType}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Volunteer.MyDistanceType}" Visibility="{Binding IsEditMode, Converter={StaticResource InverseBoolToVisibilityConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Active -->
                 <TextBlock Text="Active:" FontWeight="Bold"/>
-                <CheckBox IsChecked="{Binding Volunteer.Active}" 
-              IsEnabled="{Binding CurrentCall, Converter={StaticResource NullToBoolConverter}}" 
-              Margin="0,0,0,10"/>
+                <CheckBox IsChecked="{Binding Volunteer.Active}" IsEnabled="{Binding CurrentCall, Converter={StaticResource NullToBoolConverter}}" Margin="0,0,0,10"/>
 
                 <!-- Role (read-only) -->
                 <TextBlock Text="Role:" FontWeight="Bold"/>
@@ -123,20 +76,15 @@
                 <TextBlock Text="{Binding Volunteer.TotalCallsHandled}" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Password:" FontWeight="Bold"/>
-                <!--<PasswordBox Password="{Binding Volunteer.Password, UpdateSourceTrigger=PropertyChanged}" 
-                        Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>-->
-                <PasswordBox x:Name="PasswordBox" 
-                             Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <PasswordBox x:Name="PasswordBox" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                
                 <!-- Update button toggles between Edit/Save -->
-                <Button Content="{Binding IsEditMode, Converter={StaticResource EditModeButtonTextConverter}}" 
-            Click="ToggleEditMode_Click" Margin="5"/>
+                <Button Content="{Binding IsEditMode, Converter={StaticResource EditModeButtonTextConverter}}" Click="ToggleEditMode_Click" Margin="5"/>
             </StackPanel>
 
-            <!-- Current Call Details -->
             <Label Content="Details for call in treatment" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10" Grid.Column="2"/>
 
             <StackPanel Grid.Column="1" Margin="10" Visibility="{Binding CurrentCall, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Invert}">
-                <!--<Label Content="Details for call in treatment" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>-->
 
                 <TextBlock Text="Call ID:" FontWeight="Bold"/>
                 <TextBlock Text="{Binding CurrentCall.CallId}" Margin="0,0,0,10"/>
@@ -183,7 +131,6 @@
             <Button Content="Call History" Click="CallHistory_Click" Margin="5"/>
             <Button Content="Choose a call" Click="ChooseCall_Click" Margin="5"
         Visibility="{Binding CurrentCall, Converter={StaticResource NullToVisibilityConverter}}"/>
-            <!--IsEnabled="{Binding HasCallInTreatment, Converter={StaticResource InverseBoolConverter}}"--> 
         </StackPanel>
 
     </Grid>
