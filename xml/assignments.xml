@@ -440,20 +440,4 @@
     <FinishCallType>TakenCareOf</FinishCallType>
     <Id>55</Id>
   </Assignment>
-  <Assignment>
-    <CallId>52</CallId>
-    <VolunteerId>345810543</VolunteerId>
-    <EntranceTime>2025-06-22T22:21:46</EntranceTime>
-    <ExitTime>2025-06-22T22:21:46</ExitTime>
-    <FinishCallType>CanceledByVolunteer</FinishCallType>
-    <Id>56</Id>
-  </Assignment>
-  <Assignment>
-    <CallId>55</CallId>
-    <VolunteerId>345810543</VolunteerId>
-    <EntranceTime>2025-06-22T22:21:46</EntranceTime>
-    <ExitTime xsi:nil="true" />
-    <FinishCallType xsi:nil="true" />
-    <Id>57</Id>
-  </Assignment>
 </ArrayOfAssignment>
