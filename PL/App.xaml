@@ -5,6 +5,7 @@
              xmlns:conv="clr-namespace:PL.Converters"
              StartupUri="Login/LoginWindow.xaml">
     <Application.Resources>
+        <conv:StatusToColorConverter x:Key="StatusToColorConverter" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <local:CallTypeCollection x:Key="CallTypeCollection" />
         <local:CallStatusCollection x:Key="CallStatusCollection" />
