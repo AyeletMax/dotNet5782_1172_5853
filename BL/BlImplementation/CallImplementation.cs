@@ -273,6 +273,33 @@ internal class CallImplementation : BlApi.ICall
     /// <returns>A sorted list of open calls assigned to the volunteer.</returns>
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer does not exist.</exception>
     /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while retrieving the list.</exception>
+    //public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
+    //{
+    //    try
+    //    {
+    //        var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
+    //        var openCalls = _dal.Call.ReadAll()
+    //            .Where(c => (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk))
+    //            .Select(c => new BO.OpenCallInList
+    //            {
+    //                Id = c.Id,
+    //                MyCallType = (BO.CallType)c.MyCallType,
+    //                VerbalDescription = c.VerbalDescription,
+    //                Address = c.Address,
+    //                OpenTime = c.OpenTime,
+    //                MaxFinishTime = c.MaxFinishTime,
+    //                distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
+    //            });
+    //        return sortField.HasValue
+    //        ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+    //        : openCalls.OrderBy(c => c.Id);
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
+    //    }
+    //}
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
     {
         try
@@ -280,6 +307,7 @@ internal class CallImplementation : BlApi.ICall
             var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
             var openCalls = _dal.Call.ReadAll()
                 .Where(c => (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk))
+                .Where(c => callType == null || (BO.CallType)c.MyCallType == callType) // הוספת סינון לפי callType
                 .Select(c => new BO.OpenCallInList
                 {
                     Id = c.Id,
@@ -291,9 +319,8 @@ internal class CallImplementation : BlApi.ICall
                     distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
                 });
             return sortField.HasValue
-            ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
-            : openCalls.OrderBy(c => c.Id);
-
+                ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
+                : openCalls.OrderBy(c => c.Id);
         }
         catch (Exception ex)
         {
