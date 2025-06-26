@@ -92,6 +92,7 @@ namespace PL
         {
             s_bl.Admin.RemoveClockObserver(ClockObserver);
             s_bl.Admin.RemoveConfigObserver(ConfigObserver);
+            App.Current.Properties["IsManagerLoggedIn"] = false;
         }
         private void InitializeDB_Click(object sender, RoutedEventArgs e)
         {

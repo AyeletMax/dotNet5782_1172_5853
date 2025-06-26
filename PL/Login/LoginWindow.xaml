@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Login"
         mc:Ignorable="d"
-        Title="LogingWindow" Height="640" Width="900"
+        Title="LoginWindow" Height="640" Width="900"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -58,13 +58,13 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
@@ -78,8 +78,8 @@
             Background="#f8f8f8"
             Padding="20"
             CornerRadius="12"
-            Margin="10">
-            <StackPanel Visibility="{Binding IsLoginPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+            Margin="10" Visibility="{Binding IsLoginPanelVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel>
 
                 <TextBlock Text="ID" Margin="0,0,0,5" Grid.Row="2"/>
                 <TextBox Text="{Binding IdNumber, UpdateSourceTrigger=PropertyChanged}"
@@ -102,7 +102,7 @@
 
         </Border>
 
-        <StackPanel Visibility="{Binding IsManagerOptionsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+        <StackPanel Visibility="{Binding IsManagerOptionsVisible, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" Grid.Row="2">
             <TextBlock Text="Where do you want to go?"
           FontSize="16" FontWeight="Bold"
           HorizontalAlignment="Center"/>

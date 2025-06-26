@@ -1,10 +1,10 @@
 ﻿using PL.CallHistory;
+using PL.Volunteer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using VolunteerSystem;
 
 namespace PL
 {
@@ -66,7 +66,7 @@ namespace PL
 
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
-            new CallForTreatment(Volunteer.Id).Show();
+            new CallForTreatment(Volunteer.Id).Show(); 
         }
     }
 }

@@ -135,20 +135,13 @@ namespace PL.Call
     /// </summary>
     public partial class CallListWindow : Window
     {
-
-        //public event PropertyChangedEventHandler? PropertyChanged;
-        //private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        //    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public CallListWindow()
         {
             InitializeComponent();
             queryVolunteerList();
         }
-        //public CallType CallType { get; set; } = CallType.None;
-        //public Status CallStatus { get; set; } = Status.None;
-
+       
         public BO.CallInList? SelectedCall { get; set; }
 
 
@@ -160,12 +153,6 @@ namespace PL.Call
 
         public static readonly DependencyProperty CallListProperty =
             DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
-
-        //private void comboBoxFilterCallType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //    => queryVolunteerList();
-
-        //private void comboBoxFilterCallStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //     => queryVolunteerList();
 
         private CallType callType = CallType.None;
         public CallType CallType
@@ -256,9 +243,10 @@ namespace PL.Call
                 (CallType.None, var status) when status != Status.None => s_bl.Call.GetCallList(CallInListFields.MyStatus, status, null),
 
                 (var type, Status.None) when type != CallType.None => s_bl.Call.GetCallList(CallInListFields.CallType, type, null),
+
             };
 
-}
+        }
         private void queryVolunteerList()
         {
             CallList = FilterCallList();
@@ -266,20 +254,14 @@ namespace PL.Call
         private void callListObserver()
                 => queryVolunteerList();
 
-        //private void callListWindow_Loaded(object sender, RoutedEventArgs e)
-        //    => s_bl.Call.AddObserver(callListObserver);
-
         private void callLisWindow_Closed(object sender, EventArgs e)
             => s_bl.Call.RemoveObserver(callListObserver);
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            new CallWindow().Show();
-
-        }
+            =>new CallWindow().Show();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-                                => s_bl.Call.AddObserver(callListObserver);
+            => s_bl.Call.AddObserver(callListObserver);
 
         private void Window_Closed(object sender, EventArgs e)
                    => s_bl.Call.RemoveObserver(callListObserver);

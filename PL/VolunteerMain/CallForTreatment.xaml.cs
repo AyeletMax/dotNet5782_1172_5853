@@ -1635,7 +1635,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
 
@@ -1782,14 +1781,11 @@ namespace PL.Volunteer
                                  $"Distance from you: {call.distanceFromVolunteerToCall:F2} km\n\n";
 
             if (!string.IsNullOrEmpty(call.VerbalDescription))
-            {
-                description += $"Description:\n{call.VerbalDescription}";
-            }
+                 description += $"Description:\n{call.VerbalDescription}";
+            
             else
-            {
                 description += "No additional description.";
-            }
-
+           
             // Assumes you have a TextBlock named CallDescriptionTextBlock in your XAML
             CallDescriptionTextBlock.Text = description;
         }
@@ -1816,9 +1812,7 @@ namespace PL.Volunteer
         private void SortField_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
-            {
-                QueryOpenCallList();
-            }
+                 QueryOpenCallList();
         }
 
         private void SelectCallButton_Click(object sender, RoutedEventArgs e)
@@ -1860,8 +1854,5 @@ namespace PL.Volunteer
                 }
             }
         }
-
-
-
     }
 }
