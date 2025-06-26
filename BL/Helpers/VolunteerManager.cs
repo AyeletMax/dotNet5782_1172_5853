@@ -173,7 +173,7 @@ internal static class VolunteerManager
             boVolunteer.Email,
             boVolunteer.Active,
             (DO.Role)boVolunteer.MyRole,
-            EncryptPassword(boVolunteer.Password),
+            boVolunteer.Password,
             boVolunteer.Address,
             boVolunteer.Latitude,
             boVolunteer.Longitude,
