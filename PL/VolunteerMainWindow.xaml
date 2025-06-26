@@ -65,7 +65,7 @@
 
                 <!-- Active -->
                 <TextBlock Text="Active:" FontWeight="Bold"/>
-                <CheckBox IsChecked="{Binding Volunteer.Active}" IsEnabled="{Binding CurrentCall, Converter={StaticResource NullToBoolConverter}}" Margin="0,0,0,10"/>
+                <CheckBox IsChecked="{Binding Volunteer.Active}" IsEnabled="{Binding IsEditMode}"/>
 
                 <!-- Role (read-only) -->
                 <TextBlock Text="Role:" FontWeight="Bold"/>

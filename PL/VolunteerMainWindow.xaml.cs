@@ -92,7 +92,11 @@ namespace PL
             {
                 try
                 {
+                    if (!Volunteer.Active && CurrentCall != null)
+                        throw new Exception("Oops! You can't deactivate yourself while you're still handling a call. Please finish or cancel the call first.");
+                    
                     Volunteer.Password = Password;
+
                     if (string.IsNullOrWhiteSpace(Volunteer.Phone) || !Volunteer.Phone.All(char.IsDigit))
                         throw new Exception("Invalid phone number.");
                     if (!Volunteer.Email.Contains("@"))
@@ -114,12 +118,7 @@ namespace PL
 
             IsEditMode = !IsEditMode;
         }
-        //private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        //{
-        //    var passwordBox = sender as System.Windows.Controls.PasswordBox;
-        //    if (passwordBox != null)
-        //        Password = passwordBox.Password;
-        //}
+  
         private void CancelTreatment_Click(object sender, RoutedEventArgs e)
         {
             try
