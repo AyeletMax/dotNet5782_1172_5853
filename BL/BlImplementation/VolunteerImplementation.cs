@@ -142,7 +142,8 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             }
             else
             {
-                VolunteerManager.CheckPassword(boVolunteer.Password);
+                VolunteerManager.CheckPassword(boVolunteer.Password); 
+                boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password);
             }
             if (boVolunteer.Address != null)
             {
@@ -164,7 +165,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
-
+            //if (boVolunteer.Password == "")
+            //{
+            //    doVolunteer = doVolunteer with { Password = existingVolunteer.Password };
+            //}
             _dal.Volunteer.Update(doVolunteer);
             VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id); //stage 5
 
