@@ -18,7 +18,24 @@ namespace PL
             InitializeComponent();
             LoadVolunteer(volunteerId);
         }
+        public bool IsEditMode
+        {
+            get => (bool)GetValue(IsEditModeProperty);
+            set => SetValue(IsEditModeProperty, value);
+        }
 
+        public static readonly DependencyProperty IsEditModeProperty =
+            DependencyProperty.Register("IsEditMode", typeof(bool), typeof(VolunteerMainWindow), new PropertyMetadata(false));
+
+        public string Password
+        {
+            get => (string)GetValue(PasswordProperty);
+            set => SetValue(PasswordProperty, value);
+        }
+
+        public static readonly DependencyProperty PasswordProperty =
+            DependencyProperty.Register(
+                nameof(Password),typeof(string),typeof(VolunteerMainWindow),new PropertyMetadata(string.Empty));
         public BO.Volunteer Volunteer
         {
             get => (BO.Volunteer)GetValue(VolunteerProperty);
@@ -36,7 +53,7 @@ namespace PL
         }
 
         public static readonly DependencyProperty CurrentCallProperty =
-            DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(VolunteerMainWindow));
+            DependencyProperty.Register("CurrentCall", typeof(BO.CallInProgress), typeof(VolunteerMainWindow));
 
 
         public IEnumerable<BO.DistanceType> DistanceTypes =>
@@ -68,6 +85,71 @@ namespace PL
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
             new OpenCallsWindow(Volunteer.Id).Show(); 
+        }
+        private void ToggleEditMode_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsEditMode)
+            {
+                try
+                {
+                    Volunteer.Password = Password;
+                    if (string.IsNullOrWhiteSpace(Volunteer.Phone) || !Volunteer.Phone.All(char.IsDigit))
+                        throw new Exception("Invalid phone number.");
+                    if (!Volunteer.Email.Contains("@"))
+                        throw new Exception("Invalid email address.");
+                    if (string.IsNullOrWhiteSpace(Volunteer.Address))
+                        throw new Exception("Address cannot be empty.");
+                    
+                   
+                    s_bl.Volunteer.UpdateVolunteer(Volunteer.Id, Volunteer);
+
+                    MessageBox.Show("Volunteer details updated successfully.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Update failed:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            IsEditMode = !IsEditMode;
+        }
+        //private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        //{
+        //    var passwordBox = sender as System.Windows.Controls.PasswordBox;
+        //    if (passwordBox != null)
+        //        Password = passwordBox.Password;
+        //}
+        private void CancelTreatment_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (CurrentCall is null) return;
+
+                s_bl.Call.UpdateCallCancellation(Volunteer.Id,Volunteer.CurrentCallInProgress!.Id);
+                MessageBox.Show("Treatment has been canceled.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadVolunteer(Volunteer.Id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void FinishTreatment_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (CurrentCall is null) return;
+
+                s_bl.Call.UpdateCallCompletion(Volunteer.Id,Volunteer.CurrentCallInProgress!.Id);
+                MessageBox.Show("Call marked as finished.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadVolunteer(Volunteer.Id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to finish treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

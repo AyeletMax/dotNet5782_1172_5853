@@ -10,5 +10,9 @@
         <local:CallTypeCollection x:Key="CallTypeCollection" />
         <local:CallStatusCollection x:Key="CallStatusCollection" />
         <local:VolunteerSortFieldCollection x:Key="VolunteerSortFieldCollection" />
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <conv:EditModeButtonTextConverter x:Key="EditModeButtonTextConverter"/>
+        <conv:NullToBoolConverter x:Key="NullToBoolConverter"/>
+
     </Application.Resources>
 </Application>
