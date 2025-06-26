@@ -11,13 +11,21 @@ namespace PL
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-        public MainWindow()
+        public MainWindow( int Id)
         {
             InitializeComponent();
+            Volunteer = s_bl.Volunteer.GetVolunteerDetails(Id);
             this.Loaded += MainWindow_Loaded;
             this.Closed += MainWindow_Closed;
         }
+        public BO.Volunteer Volunteer
+        {
+            get => (BO.Volunteer)GetValue(VolunteerProperty);
+            set => SetValue(VolunteerProperty, value);
+        }
 
+        public static readonly DependencyProperty VolunteerProperty =
+            DependencyProperty.Register("Volunteer", typeof(BO.Volunteer), typeof(MainWindow));
         public DateTime CurrentTime
         {
             get { return (DateTime)GetValue(CurrentTimeProperty); }
@@ -121,7 +129,7 @@ namespace PL
         }
      
         private void HandleVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
-        private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow().Show();
+        private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow(Volunteer.Id).Show();
         //protected override void OnClosed(EventArgs e)
         //{
         //    base.OnClosed(e);

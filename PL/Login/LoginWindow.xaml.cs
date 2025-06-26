@@ -120,7 +120,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
     }
     private void ManagerPanel_Click(object sender, RoutedEventArgs e)
     {
-        new MainWindow().Show();
+        new MainWindow(_currentLoggedInManagerId).Show();
         IsLoginPanelVisible = true;
         IsManagerOptionsVisible = false;
 
