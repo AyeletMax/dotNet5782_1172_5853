@@ -24,11 +24,11 @@ public enum DistanceType
 public enum CallType
 {
     None,
+    GroupActivities,
     MusicPerformance,
     MusicTherapy,
+    PersonalizedMusicCare,
     SingingAndEmotionalSupport,
-    GroupActivities,
-    PersonalizedMusicCare
 }
 
 /// <summary>

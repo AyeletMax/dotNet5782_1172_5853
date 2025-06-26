@@ -318,9 +318,19 @@ internal class CallImplementation : BlApi.ICall
                     MaxFinishTime = c.MaxFinishTime,
                     distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
                 });
-            return sortField.HasValue
-                ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
-                : openCalls.OrderBy(c => c.Id);
+        
+            return sortField switch
+            {
+                OpenCallInListFields.Id => openCalls.OrderBy(c => c.Id),
+                OpenCallInListFields.CallType => openCalls.OrderBy(c => c.MyCallType),
+                OpenCallInListFields.FullAddress => openCalls.OrderBy(c => c.Address),
+                OpenCallInListFields.Start_time => openCalls.OrderBy(c => c.OpenTime),
+                OpenCallInListFields.Max_finish_time => openCalls.OrderBy(c => c.MaxFinishTime),
+                OpenCallInListFields.CallDistance => openCalls.OrderBy(c => c.distanceFromVolunteerToCall),
+                OpenCallInListFields.Verbal_description => openCalls.OrderBy(c => c.VerbalDescription),
+                _ => openCalls.OrderBy(c => c.Id)
+            };
+
         }
         catch (Exception ex)
         {
