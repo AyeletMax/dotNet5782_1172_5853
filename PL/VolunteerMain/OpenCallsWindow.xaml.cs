@@ -451,6 +451,7 @@ namespace PL.Call
             try
             {
                 CurrentVolunteer.Address = CurrentAddress;
+                CurrentVolunteer.Password = "";
                 bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
                 LoadOpenCalls();
                 MessageBox.Show("Address updated.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
