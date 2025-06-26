@@ -1,4 +1,5 @@
-﻿using PL.CallHistory;
+﻿using PL.Call;
+using PL.CallHistory;
 using PL.Volunteer;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ namespace PL
 
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
-            new CallForTreatment(Volunteer.Id).Show(); 
+            new OpenCallsWindow(Volunteer.Id).Show(); 
         }
     }
 }
