@@ -9,18 +9,17 @@ using System.Windows.Controls;
 
 namespace PL.Call
 {
-    public partial class OpenCallsWindow : Window
+    public partial class OpenCallsWindow : Window, INotifyPropertyChanged
     {
-        private readonly IBl bl = Factory.Get();
-        public BO.Volunteer CurrentVolunteer { get; }
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public BO.Volunteer CurrentVolunteer { get; set; }
+        public IEnumerable<OpenCallInListFields> SortFields => Enum.GetValues(typeof(OpenCallInListFields)).Cast<OpenCallInListFields>();
+        public IEnumerable<CallType> CallTypes => Enum.GetValues(typeof(CallType)).Cast<CallType>();
 
         public ObservableCollection<OpenCallInList> OpenCalls { get; set; } = new();
 
-        private OpenCallInListFields _sortField = OpenCallInListFields.Id;
-        public IEnumerable<CallType> VolunteerFields => Enum.GetValues(typeof(CallType)).Cast<CallType>();
-        public IEnumerable<OpenCallInListFields> OpenCallFields => Enum.GetValues(typeof(OpenCallInListFields)).Cast<OpenCallInListFields>();
-
-        public OpenCallInListFields SortField
+        private BO.OpenCallInListFields _sortField = BO.OpenCallInListFields.Id;
+        public BO.OpenCallInListFields SortField
         {
             get => _sortField;
             set
@@ -31,8 +30,8 @@ namespace PL.Call
             }
         }
 
-        private CallType _filterStatus = CallType.None;
-        public CallType FilterStatus
+        private BO.CallType _filterStatus = BO.CallType.None;
+        public BO.CallType FilterStatus
         {
             get => _filterStatus;
             set
@@ -81,21 +80,18 @@ namespace PL.Call
         public OpenCallsWindow(int volunteerId)
         {
             InitializeComponent();
-
-            CurrentVolunteer = bl.Volunteer.GetVolunteerDetails(volunteerId) ?? throw new ArgumentException("Volunteer not found", nameof(volunteerId));
-            CurrentAddress = CurrentVolunteer.Address ?? string.Empty;
-
+            CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
+            CurrentAddress = CurrentVolunteer.Address??string.Empty;
             DataContext = this;
             LoadOpenCalls();
         }
-
         private void LoadOpenCalls()
         {
             try
             {
-                var calls = bl.Call.GetOpenCallsForVolunteer(
+                var calls = s_bl.Call.GetOpenCallsForVolunteer(
                     CurrentVolunteer.Id,
-                    FilterStatus == CallType.None ? null : FilterStatus,
+                    FilterStatus == BO.CallType.None ? null : FilterStatus,
                     SortField);
 
                 OpenCalls.Clear();
@@ -104,7 +100,7 @@ namespace PL.Call
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"שגיאה בטעינת קריאות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -114,13 +110,13 @@ namespace PL.Call
             {
                 try
                 {
-                    bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, call.Id);
+                    s_bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, call.Id);
                     OpenCalls.Remove(call);
-                    MessageBox.Show("The call has been selected for treatment!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("הקריאה נבחרה לטיפול!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error selecting call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"שגיאה בבחירת קריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -141,13 +137,13 @@ namespace PL.Call
             try
             {
                 CurrentVolunteer.Address = CurrentAddress;
-                bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
-                MessageBox.Show("Address updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                LoadOpenCalls(); // refresh distances
+                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
+                MessageBox.Show("הכתובת עודכנה בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadOpenCalls(); // לרענן מרחקים
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error updating address: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("שגיאה בעדכון כתובת: " + ex.Message, "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

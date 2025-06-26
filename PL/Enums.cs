@@ -48,4 +48,10 @@ internal class CallStatusCollection : IEnumerable
         (System.Enum.GetValues(typeof(BO.Status)) as IEnumerable<BO.Status>)!;
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+internal class OpenCallInListCollection : IEnumerable
+{
+    static readonly IEnumerable<BO.OpenCallInListFields> s_enums =
+        (System.Enum.GetValues(typeof(BO.OpenCallInListFields)) as IEnumerable<BO.OpenCallInListFields>)!;
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
 
