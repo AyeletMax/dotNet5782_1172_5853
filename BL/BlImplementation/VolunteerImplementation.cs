@@ -267,5 +267,4 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     public void RemoveObserver(int id, Action observer) =>
             VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
     #endregion Stage 5
-
 }
