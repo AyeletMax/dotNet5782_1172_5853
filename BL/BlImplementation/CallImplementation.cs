@@ -282,7 +282,7 @@ internal class CallImplementation : BlApi.ICall
                 .Where(c => (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk))
                 .Select(c => new BO.OpenCallInList
                 {
-                    Id = volunteerId,
+                    Id = c.Id,
                     MyCallType = (BO.CallType)c.MyCallType,
                     VerbalDescription = c.VerbalDescription,
                     Address = c.Address,
