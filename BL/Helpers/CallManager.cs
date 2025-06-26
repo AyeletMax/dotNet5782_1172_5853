@@ -21,6 +21,9 @@ internal static class CallManager
     public static Status GetCallStatus(int callId)
     {
         var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
+    //    var activeAssignments = s_dal.Assignment.ReadAll()
+    //.Where(a => a.CallId == callId && a.ExitTime == null)
+    //.ToList();
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
         TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
 
@@ -34,6 +37,23 @@ internal static class CallManager
             return Status.AtRisk;
 
         return Status.Opened;
+        //TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
+
+        //if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
+        //    return Status.Expired;
+
+        //if (!activeAssignments.Any())
+        //{
+        //    if (timeLeft <= s_dal.Config.RiskRange)
+        //        return Status.AtRisk;
+
+        //    return Status.Opened;
+        //}
+
+        //if (timeLeft <= s_dal.Config.RiskRange)
+        //    return Status.InProgressAtRisk;
+
+        //return Status.InProgress;
     }
 
     /// <summary>
