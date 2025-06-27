@@ -318,6 +318,7 @@ using BlApi;
 using BO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -422,6 +423,8 @@ namespace PL.Call
                     CurrentVolunteer.Id,
                     FilterStatus == CallType.None ? null : FilterStatus,
                     SortField);
+                OpenCalls = new ObservableCollection<OpenCallInList>(OpenCalls.Where(c => CurrentVolunteer.LargestDistance is null ||
+                c.distanceFromVolunteerToCall <= CurrentVolunteer.LargestDistance));
             }
             catch (Exception ex)
             {
