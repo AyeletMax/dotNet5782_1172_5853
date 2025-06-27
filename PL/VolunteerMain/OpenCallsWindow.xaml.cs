@@ -51,6 +51,8 @@ namespace PL.Call
             }
         }
 
+
+
         private OpenCallInList? _selectedCall;
         public OpenCallInList? SelectedCall
         {
