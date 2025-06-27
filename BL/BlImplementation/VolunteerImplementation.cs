@@ -236,7 +236,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             
             boVolunteer.Latitude = latitude;
             boVolunteer.Longitude = longitude;
-
+            boVolunteer.Password=VolunteerManager.EncryptPassword(boVolunteer.Password!);
 
             DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
             _dal.Volunteer.Create(doVolunteer);

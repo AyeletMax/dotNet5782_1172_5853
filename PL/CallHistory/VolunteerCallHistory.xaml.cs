@@ -16,10 +16,7 @@ public partial class VolunteerCallHistory : Window
 
     public VolunteerCallHistory(int volunteerId)
     {
-
         _volunteerId = volunteerId;
-        //DataContext = this;
-
         CallTypes = Enum.GetValues(typeof(CallType)).Cast<CallType>().ToList();
         SortFields = Enum.GetValues(typeof(ClosedCallInListFields)).Cast<ClosedCallInListFields>().ToList();
         InitializeComponent();
@@ -60,7 +57,7 @@ public partial class VolunteerCallHistory : Window
 
     public static readonly DependencyProperty ClosedCallsProperty =
         DependencyProperty.Register(nameof(ClosedCalls), typeof(IEnumerable<ClosedCallInList>), typeof(VolunteerCallHistory), new PropertyMetadata(null));
-
+   
     private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is VolunteerCallHistory window)

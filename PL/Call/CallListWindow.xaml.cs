@@ -97,21 +97,44 @@ namespace PL.Call
         {
             if (SelectedCall is BO.CallInList call)
             {
+                //MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                //try
+                //{
+                //    if (result == MessageBoxResult.Yes)
+                //        s_bl.Call.UpdateCallCancellation(Volunteer.Id,call.CallId);
+                //    queryVolunteerList();
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //}
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+               if (result == MessageBoxResult.Yes)
                 try
                 {
-                    if (result == MessageBoxResult.Yes)
-                        s_bl.Call.UpdateCallCancellation(Volunteer.Id,call.CallId);
+                    if (SelectedCall is null) return;
+
+                    s_bl.Call.UpdateCallCancellation(Volunteer.Id,call.CallId);
+                    MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryVolunteerList();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            //MessageBox.Show("לא עובד בגלל המורה");
         }
+        //private void LoadVolunteer(int volunteerId)
+        //{
+        //    Volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
 
+        //    var call = Volunteer.CurrentCallInProgress;
+        //    //var call = s_bl.Call.GetCurrentCallOfVolunteer(volunteerId);
+        //    if (call?.MyStatus != BO.Status.Expired && call?.MyStatus != BO.Status.Closed)
+        //        CurrentCall = call;
+        //    else
+        //        CurrentCall = null;
+        //}
         private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
