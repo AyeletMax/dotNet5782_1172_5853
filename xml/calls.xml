@@ -570,4 +570,35 @@
     <VerbalDescription>come</VerbalDescription>
     <Id>60</Id>
   </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-27T16:02:29.7735178+03:00</OpenTime>
+    <MaxFinishTime>2025-06-28T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>dgrfwgreg</VerbalDescription>
+    <Id>61</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 1 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8107731</Latitude>
+    <Longitude>35.2132814</Longitude>
+    <OpenTime>2025-06-27T16:03:03.4581838+03:00</OpenTime>
+    <MaxFinishTime>2025-06-28T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>rehrbhfdswhtrfdb
+fdsbhfdg</VerbalDescription>
+    <Id>62</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Ben Gurion 7 Israel</Address>
+    <Latitude>32.166198699999995</Latitude>
+    <Longitude>34.842963761328534</Longitude>
+    <OpenTime>2025-06-27T16:03:37.1254613+03:00</OpenTime>
+    <MaxFinishTime>2025-06-28T23:59:00+03:00</MaxFinishTime>
+    <VerbalDescription>vfdhgfdvbsrgjhyr</VerbalDescription>
+    <Id>63</Id>
+  </Call>
 </ArrayOfCall>
