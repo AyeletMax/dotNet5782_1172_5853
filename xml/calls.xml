@@ -570,4 +570,34 @@
     <VerbalDescription>come</VerbalDescription>
     <Id>60</Id>
   </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Aharon Hutsin 10 Ramot Jerusalem, Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-06-27T11:50:58.8951388+03:00</OpenTime>
+    <MaxFinishTime>2025-06-29T23:59:00</MaxFinishTime>
+    <VerbalDescription>Sing for a sad old lady and server her cookies and choclate milk</VerbalDescription>
+    <Id>61</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Hillel 23 Ramat Eshkol, Jerusalem, Israel</Address>
+    <Latitude>31.780514</Latitude>
+    <Longitude>35.217981</Longitude>
+    <OpenTime>2025-06-27T11:55:25.7265044+03:00</OpenTime>
+    <MaxFinishTime>2025-06-30T23:59:00</MaxFinishTime>
+    <VerbalDescription>dance and sing with costumes to cheer up a group of special needs children</VerbalDescription>
+    <Id>62</Id>
+  </Call>
+  <Call>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Yaakov Rechter 2 Ramot Jerusalem, Israel</Address>
+    <Latitude>31.759595</Latitude>
+    <Longitude>35.215315</Longitude>
+    <OpenTime>2025-06-27T11:58:16.0412583+03:00</OpenTime>
+    <MaxFinishTime>2025-06-27T15:00:00</MaxFinishTime>
+    <VerbalDescription>a sweet lady having a hard time after birth</VerbalDescription>
+    <Id>63</Id>
+  </Call>
 </ArrayOfCall>
