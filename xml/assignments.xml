@@ -444,8 +444,8 @@
     <CallId>52</CallId>
     <VolunteerId>345810543</VolunteerId>
     <EntranceTime>2025-06-22T22:21:46</EntranceTime>
-    <ExitTime xsi:nil="true" />
-    <FinishCallType xsi:nil="true" />
+    <ExitTime>2025-06-22T22:21:46</ExitTime>
+    <FinishCallType>TakenCareOf</FinishCallType>
     <Id>56</Id>
   </Assignment>
 </ArrayOfAssignment>

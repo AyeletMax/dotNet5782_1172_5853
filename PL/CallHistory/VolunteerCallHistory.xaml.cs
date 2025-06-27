@@ -1,32 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using System.Windows;
-//using System.Windows.Controls;
-//using System.Windows.Data;
-//using System.Windows.Documents;
-//using System.Windows.Input;
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-//using System.Windows.Shapes;
-
-//namespace PL.CallHistory;
-
-///// <summary>
-///// Interaction logic for VolunteerCallHistory.xaml
-///// </summary>
-//public partial class VolunteerCallHistory : Window
-//{
-//    public VolunteerCallHistory()
-//    {
-//        InitializeComponent();
-//    }
-//}
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -38,28 +10,27 @@ namespace PL.CallHistory;
 
 public partial class VolunteerCallHistory : Window
 {
-    //private readonly ICall _callManager = Factory.Call;
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
     private readonly int _volunteerId;
 
     public VolunteerCallHistory(int volunteerId)
     {
-        InitializeComponent();
+
         _volunteerId = volunteerId;
+        //DataContext = this;
 
-        CallTypes = Enum.GetValues(typeof(CallType)).Cast<CallType>();
-        SortFields = Enum.GetValues(typeof(ClosedCallInListFields)).Cast<ClosedCallInListFields>();
-
+        CallTypes = Enum.GetValues(typeof(CallType)).Cast<CallType>().ToList();
+        SortFields = Enum.GetValues(typeof(ClosedCallInListFields)).Cast<ClosedCallInListFields>().ToList();
+        InitializeComponent();
         SelectedCallType = null;
         SelectedSortField = null;
 
         LoadClosedCalls();
-        DataContext = this;
     }
 
-    public IEnumerable<CallType> CallTypes { get; }
-    public IEnumerable<ClosedCallInListFields> SortFields { get; }
+    public IEnumerable<CallType> CallTypes { get; set; }
+    public IEnumerable<ClosedCallInListFields> SortFields { get; set; }
 
     public CallType? SelectedCallType
     {
