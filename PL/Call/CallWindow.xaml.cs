@@ -118,10 +118,8 @@ namespace PL.Call
             if (observedCallId.HasValue)
             {
                 var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
-                // עדכן את כל השדות שאתה מציג בחלון
                 Call = updated;
                 OnPropertyChanged(nameof(Call));
-                // רענון שדות נוספים אם צריך
                 InitializeFromExistingCall();
                 SetEditPermissions();
             }
@@ -180,7 +178,7 @@ namespace PL.Call
         private void UpdateCallStatus()
         {
             if (Call.MyStatus == Status.Closed)
-                return; // לא משנים סטטוס אם הקריאה סגורה
+                return; 
 
             if (Call.MaxFinishTime.HasValue && DateTime.Now > Call.MaxFinishTime.Value)
             {
