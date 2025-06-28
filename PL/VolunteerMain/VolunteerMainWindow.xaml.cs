@@ -156,5 +156,6 @@ namespace PL
                 App.Current.Properties["IsManagerLoggedIn"] = false;
             }
         }
+
     }
 }
