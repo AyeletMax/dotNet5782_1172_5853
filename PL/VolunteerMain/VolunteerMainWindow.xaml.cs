@@ -65,7 +65,6 @@ namespace PL
            Volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
 
            var call = Volunteer.CurrentCallInProgress;
-            //var call = s_bl.Call.GetCurrentCallOfVolunteer(volunteerId);
             if (call?.MyStatus != BO.Status.Expired && call?.MyStatus != BO.Status.Closed)
                 CurrentCall = call;
             else
@@ -84,7 +83,6 @@ namespace PL
 
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
-            //new OpenCallsWindow(Volunteer.Id).Show(); 
             var openCallsWindow = new OpenCallsWindow(Volunteer.Id);
             bool? result = openCallsWindow.ShowDialog();
             if (result == true) {
@@ -119,12 +117,7 @@ namespace PL
 
             IsEditMode = !IsEditMode;
         }
-        //private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        //{
-        //    var passwordBox = sender as System.Windows.Controls.PasswordBox;
-        //    if (passwordBox != null)
-        //        Password = passwordBox.Password;
-        //}
+       
         private void CancelTreatment_Click(object sender, RoutedEventArgs e)
         {
             try
