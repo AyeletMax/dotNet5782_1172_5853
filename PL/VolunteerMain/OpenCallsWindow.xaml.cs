@@ -127,6 +127,7 @@ namespace PL.Call
                     bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, call.Id);
                     LoadOpenCalls();
                     MessageBox.Show("Call successfully selected for treatment.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.DialogResult = true;
                 }
                 catch (Exception ex)
                 {

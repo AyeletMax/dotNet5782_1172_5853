@@ -84,7 +84,12 @@ namespace PL
 
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
-            new OpenCallsWindow(Volunteer.Id).Show(); 
+            //new OpenCallsWindow(Volunteer.Id).Show(); 
+            var openCallsWindow = new OpenCallsWindow(Volunteer.Id);
+            bool? result = openCallsWindow.ShowDialog();
+            if (result == true) {
+                LoadVolunteer(Volunteer.Id);
+            }
         }
         private void ToggleEditMode_Click(object sender, RoutedEventArgs e)
         {
@@ -149,6 +154,13 @@ namespace PL
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to finish treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            if (Volunteer.MyRole == BO.Role.Manager) {
+                base.OnClosed(e);
+                App.Current.Properties["IsManagerLoggedIn"] = false;
             }
         }
     }
