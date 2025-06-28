@@ -87,9 +87,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
                     return;
                 }
 
-                App.Current.Properties["IsManagerLoggedIn"] = true;
-
-                _currentLoggedInManagerId=id;  
+                _currentLoggedInManagerId =id;  
                 IsLoginPanelVisible = false;
                 IsManagerOptionsVisible = true;
 
@@ -120,6 +118,8 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
     }
     private void ManagerPanel_Click(object sender, RoutedEventArgs e)
     {
+        App.Current.Properties["IsManagerLoggedIn"] = true;
+
         new MainWindow(_currentLoggedInManagerId).Show();
         IsLoginPanelVisible = true;
         IsManagerOptionsVisible = false;

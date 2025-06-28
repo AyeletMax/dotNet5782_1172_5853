@@ -130,10 +130,5 @@ namespace PL
      
         private void HandleVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
         private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow(Volunteer.Id).Show();
-        //protected override void OnClosed(EventArgs e)
-        //{
-        //    base.OnClosed(e);
-        //    App.Current.Properties["IsManagerLoggedIn"] = false;
-        //}
     }
 }
