@@ -97,17 +97,6 @@ namespace PL.Call
         {
             if (SelectedCall is BO.CallInList call)
             {
-                //MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                //try
-                //{
-                //    if (result == MessageBoxResult.Yes)
-                //        s_bl.Call.UpdateCallCancellation(Volunteer.Id,call.CallId);
-                //    queryVolunteerList();
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(ex.Message);
-                //}
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                if (result == MessageBoxResult.Yes)
                 try
@@ -124,17 +113,7 @@ namespace PL.Call
                 }
             }
         }
-        //private void LoadVolunteer(int volunteerId)
-        //{
-        //    Volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
-
-        //    var call = Volunteer.CurrentCallInProgress;
-        //    //var call = s_bl.Call.GetCurrentCallOfVolunteer(volunteerId);
-        //    if (call?.MyStatus != BO.Status.Expired && call?.MyStatus != BO.Status.Closed)
-        //        CurrentCall = call;
-        //    else
-        //        CurrentCall = null;
-        //}
+    
         private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
@@ -143,15 +122,9 @@ namespace PL.Call
                 var editWindow = new CallWindow(callDetails);
                 editWindow.Show();
             }
-            // new CallWindow(SelectedCall).Show();
         }
 
-        //private IEnumerable<BO.CallInList> FilterCallList()
-        //{
-        //    return (CallStatus == Status.None) ?
-        //      s_bl?.Call.GetCallList() ?? Enumerable.Empty<BO.CallInList>() :
-        //      s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus, null);
-        //}
+     
         private IEnumerable<BO.CallInList> FilterCallList()
         {
             return (CallType, CallStatus) switch
