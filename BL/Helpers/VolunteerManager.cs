@@ -83,7 +83,7 @@ internal static class VolunteerManager
     {
         return volunteers.Select(v =>
         {
-            lock (AdminManager.BlMutex) //stage 7
+            lock (BlMutex) //stage 7
             {
                 var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
 
@@ -239,5 +239,55 @@ internal static class VolunteerManager
 
         return true; 
     }
+    private static readonly object BlMutex = new();
+
+
+    private static readonly Random s_rand = new();
+        private static int s_simulatorCounter = 0;
+
+        internal static void SimulateVolunteerActivity()
+        {
+            Thread.CurrentThread.Name = $"VolunteerSimulator{++s_simulatorCounter}";
+            LinkedList<int> volunteersToNotify = new();
+            List<DO.Volunteer> activeVolunteers;
+
+            lock (BlMutex)
+            {
+                activeVolunteers = s_dal.Volunteer.ReadAll(v => v.Active).ToList();
+            }
+
+            foreach (var volunteer in activeVolunteers)
+            {
+                bool updated = false;
+
+                lock (BlMutex)
+                {
+                    var assignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == volunteer.Id && a.ExitTime == null).ToList();
+
+                    if (assignments.Any())
+                    {
+                    var updatedAssignment = assignment with
+                    {
+                        ExitTime = DateTime.Now,
+                        FinishCallType = DO.FinishCallType.TakenCareOf
+                    };
+                    s_dal.Assignment.Update(updatedAssignment);
+
+                        updated = true;
+                    }
+                }
+
+                if (updated)
+                {
+                    volunteersToNotify.AddLast(volunteer.Id);
+                }
+            }
+
+            foreach (var id in volunteersToNotify)
+            {
+                Observers.NotifyItemUpdated(id);
+            }
+        }
+    
 }
 
