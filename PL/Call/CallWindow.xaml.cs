@@ -36,7 +36,11 @@ namespace PL.Call
                 {
                     _maxFinishDate = value;
                     OnPropertyChanged();
-                    UpdateMaxFinishTime();
+                    // רק עדכן את זמן הסיום אם לא במצב עריכה או אם זה שינוי של תאריך בלבד
+                    if (!IsEditMode || value != null)
+                    {
+                        UpdateMaxFinishTime();
+                    }
                 }
             }
         }
@@ -50,10 +54,11 @@ namespace PL.Call
             get => _maxFinishTime;
             set
             {
-                if (_maxFinishTime != value)
+                if (_maxFinishTime != value && !string.IsNullOrWhiteSpace(value))
                 {
                     _maxFinishTime = value;
                     OnPropertyChanged();
+                    // עדכן את זמן הסיום רק אם זה שינוי אמיתי
                     UpdateMaxFinishTime();
                 }
             }
@@ -181,11 +186,30 @@ namespace PL.Call
         {
             if (observedCallId.HasValue)
             {
-                var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
-                Call = updated;
-                OnPropertyChanged(nameof(Call));
-                InitializeFromExistingCall();
-                SetEditPermissions();
+                try
+                {
+                    var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
+
+                    // שמירת הסטטוס המקורי לפני העדכון
+                    var originalStatus = Call.MyStatus;
+
+                    Call = updated;
+
+                    // וידוא שהסטטוס לא השתנה באופן לא רצוי
+                    if (IsEditMode && Call.MyStatus != originalStatus)
+                    {
+                        // אם הסטטוס השתנה באופן לא רצוי, החזר אותו
+                        Call.MyStatus = originalStatus;
+                    }
+
+                    OnPropertyChanged(nameof(Call));
+                    InitializeFromExistingCall();
+                    SetEditPermissions();
+                }
+                catch (Exception)
+                {
+                    // במקרה של שגיאה, פשוט התעלם מהעדכון
+                }
             }
         }
 
@@ -225,24 +249,34 @@ namespace PL.Call
         /// </summary>
         private void InitializeFromExistingCall()
         {
+            // שמירת הסטטוס המקורי
+            var originalStatus = Call.MyStatus;
+
             if (Call.MaxFinishTime.HasValue)
             {
-                MaxFinishDate = Call.MaxFinishTime.Value.Date;
-                MaxFinishTime = Call.MaxFinishTime.Value.ToString("HH:mm");
+                // מניעת עדכון אוטומטי בזמן האתחול
+                _maxFinishDate = Call.MaxFinishTime.Value.Date;
+                _maxFinishTime = Call.MaxFinishTime.Value.ToString("HH:mm");
             }
             else
             {
-                MaxFinishDate = DateTime.Today.AddDays(1);
-                MaxFinishTime = "23:59";
+                _maxFinishDate = DateTime.Today.AddDays(1);
+                _maxFinishTime = "23:59";
             }
 
-            // Don't change status when viewing - preserve original status
-            // UpdateCallStatus();
+            // החזרת הסטטוס המקורי במקרה שהוא השתנה
+            if (Call.MyStatus != originalStatus)
+            {
+                Call.MyStatus = originalStatus;
+            }
 
             // Notify property changes
+            OnPropertyChanged(nameof(MaxFinishDate));
+            OnPropertyChanged(nameof(MaxFinishTime));
             OnPropertyChanged(nameof(Call));
             OnPropertyChanged(nameof(SelectedCallType));
             OnPropertyChanged(nameof(WindowTitle));
+            OnPropertyChanged(nameof(HasAssignments));
         }
 
         /// <summary>
@@ -250,11 +284,16 @@ namespace PL.Call
         /// </summary>
         private void UpdateCallStatus()
         {
-            // Only update status for new calls or when explicitly saving
+            // רק עבור קריאות חדשות - לא במצב עריכה
             if (IsEditMode)
                 return;
 
+            // לא לשנות סטטוס שכבר סגור
             if (Call.MyStatus == Status.Closed)
+                return;
+
+            // לא לשנות סטטוס שכבר פג תוקף
+            if (Call.MyStatus == Status.Expired)
                 return;
 
             if (Call.MaxFinishTime.HasValue && DateTime.Now > Call.MaxFinishTime.Value)
@@ -506,12 +545,12 @@ namespace PL.Call
             if (string.IsNullOrWhiteSpace(timeString))
                 return false;
 
-            // Check HH:MM format
+            // Check HH:MM format - תיקון הרגקס לתמיכה בפורמט מלא
             var timePattern = @"^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$";
             if (!Regex.IsMatch(timeString, timePattern))
                 return false;
 
-            // Check if it can be parsed to valid time
+            // Check if it can be parsed to valid time - תיקון אופן הפירוש
             return TimeSpan.TryParseExact(timeString, @"h\:mm", CultureInfo.InvariantCulture, out _) ||
                    TimeSpan.TryParseExact(timeString, @"hh\:mm", CultureInfo.InvariantCulture, out _);
         }
@@ -525,18 +564,50 @@ namespace PL.Call
         /// </summary>
         private void UpdateMaxFinishTime()
         {
-            if (MaxFinishDate.HasValue && IsValidTimeFormat(MaxFinishTime))
+            
+            if (Call == null)
+                return;
+
+            if (MaxFinishDate.HasValue && !string.IsNullOrWhiteSpace(MaxFinishTime))
             {
-                if (TimeSpan.TryParseExact(MaxFinishTime, @"h\:mm", CultureInfo.InvariantCulture, out TimeSpan time) ||
-                    TimeSpan.TryParseExact(MaxFinishTime, @"hh\:mm", CultureInfo.InvariantCulture, out time))
+                try
                 {
-                    Call.MaxFinishTime = MaxFinishDate.Value.Date.Add(time);
+                
+                    var timeParts = MaxFinishTime.Split(':');
+                    if (timeParts.Length == 2 &&
+                        int.TryParse(timeParts[0], out int hours) &&
+                        int.TryParse(timeParts[1], out int minutes) &&
+                        hours >= 0 && hours <= 23 &&
+                        minutes >= 0 && minutes <= 59)
+                    {
+                        
+                        var newMaxFinishTime = new DateTime(
+                            MaxFinishDate.Value.Year,
+                            MaxFinishDate.Value.Month,
+                            MaxFinishDate.Value.Day,
+                            hours,
+                            minutes,
+                            0);
+
+                        if (Call.MaxFinishTime != newMaxFinishTime)
+                        {
+                            Call.MaxFinishTime = newMaxFinishTime;
+
+                            if (!IsEditMode)
+                            {
+                                UpdateCallStatus();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid time format. Please enter a valid time in HH:mm format.");
+                    }
                 }
-            }
-            // Only update status for new calls
-            if (!IsEditMode)
-            {
-                UpdateCallStatus();
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}");
+                }
             }
         }
 
