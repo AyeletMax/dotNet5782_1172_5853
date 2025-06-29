@@ -23,6 +23,7 @@ internal class AdminImplementation : IAdmin
     /// <param name="unit">The time unit to add (minute, hour, day, month, year).</param>
     public void AdvanceClock(TimeUnit unit)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DateTime newClock = unit switch
         {
             TimeUnit.MINUTE => AdminManager.Now.AddMinutes(1),
@@ -39,11 +40,21 @@ internal class AdminImplementation : IAdmin
 
     public void InitializeDB()
     {
-        AdminManager.InitializeDB();
+        //AdminManager.InitializeDB();
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.InitializeDB(); //stage 7
+
     }
     public void ResetDB()
     {
-        AdminManager.ResetDB();
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
+        //AdminManager.ResetDB();//Stage 4
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ResetDB(); //stage 7
+
     }
 
     /// <summary>
@@ -51,7 +62,7 @@ internal class AdminImplementation : IAdmin
     /// </summary>
     public TimeSpan GetMaxRange()
     {
-        return AdminManager.RiskRange;
+        return AdminManager.MaxRange;
     }
     /// <summary>
     /// Sets the maximum risk range in the system.
@@ -59,11 +70,21 @@ internal class AdminImplementation : IAdmin
     /// <param name="maxRange">The new risk range to be set.</param>
     public void SetMaxRange(TimeSpan maxRange)
     {
-        AdminManager.RiskRange = maxRange;
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
+        AdminManager.MaxRange = maxRange;
     }
     /// <summary>
     /// Resets the database and system clock.
     /// </summary>
+    /// 
+    public void StartSimulator(int interval)  //stage 7
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.Start(interval); //stage 7
+    }
+    public void StopSimulator()
+    => AdminManager.Stop(); //stage 7
     public void AddClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers += clockObserver;
     public void RemoveClockObserver(Action clockObserver) => AdminManager.ClockUpdatedObservers -= clockObserver;
     public void AddConfigObserver(Action configObserver) => AdminManager.ConfigUpdatedObservers += configObserver;

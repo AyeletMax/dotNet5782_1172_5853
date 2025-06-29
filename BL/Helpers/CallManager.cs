@@ -20,10 +20,11 @@ internal static class CallManager
     /// <returns>The current status of the call.</returns>
     public static Status GetCallStatus(int callId)
     {
+
         var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
-    //    var activeAssignments = s_dal.Assignment.ReadAll()
-    //.Where(a => a.CallId == callId && a.ExitTime == null)
-    //.ToList();
+        //    var activeAssignments = s_dal.Assignment.ReadAll()
+        //.Where(a => a.CallId == callId && a.ExitTime == null)
+        //.ToList();
         var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
         TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
 
@@ -116,37 +117,51 @@ internal static class CallManager
     /// </summary>
     /// <param name="oldClock">The previous clock time.</param>
     /// <param name="newClock">The new clock time.</param>
+    private static int s_periodicCounter = 0;
+
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
-        List<DO.Call> expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
-
-        expiredCalls.ForEach(call =>
-        {
-            List<DO.Assignment> assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
-            if (!assignments.Any()) { 
-                s_dal.Assignment.Create(new DO.Assignment(
-                CallId: call.Id,
-                VolunteerId: 0,
-                EntranceTime: AdminManager.Now,
-                ExitTime: AdminManager.Now,
-                FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
-            ));
-                Observers.NotifyItemUpdated(call.Id);
-
-            }
-            List<DO.Assignment> assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
-            if (assignmentsWithNull.Any())
+        Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+        List<DO.Call> expiredCalls;
+        List<DO.Assignment> assignments;
+        List<DO.Assignment> assignmentsWithNull;
+        lock (AdminManager.BlMutex) //stage 7
+               expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
+            expiredCalls.ForEach(call =>
             {
-                assignments.ForEach(assignment =>
-                    s_dal.Assignment.Update(assignment with
+                lock (AdminManager.BlMutex)
+                {//stage 7
+                    assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
+                    if (!assignments.Any())
                     {
-                        ExitTime = AdminManager.Now,
-                        FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
-                    }));
+                        s_dal.Assignment.Create(new DO.Assignment(
+                        CallId: call.Id,
+                        VolunteerId: 0,
+                        EntranceTime: AdminManager.Now,
+                        ExitTime: AdminManager.Now,
+                        FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
+                    ));
+                    }
+                }
                 Observers.NotifyItemUpdated(call.Id);
-            }
-        });
 
+                
+                lock (AdminManager.BlMutex) //stage 7
+                    assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
+                    if (assignmentsWithNull.Any())
+                    {
+                        lock (AdminManager.BlMutex) //stage 7
+                               assignments.ForEach(assignment =>
+                               s_dal.Assignment.Update(assignment with
+                               {
+                                   ExitTime = AdminManager.Now,
+                                   FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
+                               }));
+                        Observers.NotifyItemUpdated(call.Id);
+                    }
+               
+            });
+        
     }
 
     /// <summary>
@@ -156,20 +171,23 @@ internal static class CallManager
     /// <param name="assignment">The canceled assignment.</param>
     internal static void SendEmailToVolunteer(DO.Volunteer volunteer, DO.Assignment assignment)
     {
-        var call = s_dal.Call.Read(assignment.CallId)!;
-        string subject = "הקצאה בוטלה";
-        string body = $"Hello {volunteer.Name},\n\n" +
-                      $"Your allocation to handle the call {assignment.Id} has been canceled by the manager.\n" +
-                      $"Call Details:\n" +
-                      $"Call Number: {assignment.CallId}\n" +
-                      $"Call Type: {call.MyCallType}\n" +
-                      $"Call Address: {call.Address}\n" +
-                      $"Openning Time: {call.OpenTime}\n" +
-                      $"Verbal Description: {call.VerbalDescription}\n" +
-                      $"Call Entrance Time : {assignment.EntranceTime}\n\n" +
-                      $"בברכה,\nמערכת ניהול קריאות";
-
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            var call = s_dal.Call.Read(assignment.CallId)!;
+            string subject = "הקצאה בוטלה";
+            string body = $"Hello {volunteer.Name},\n\n" +
+                          $"Your allocation to handle the call {assignment.Id} has been canceled by the manager.\n" +
+                          $"Call Details:\n" +
+                          $"Call Number: {assignment.CallId}\n" +
+                          $"Call Type: {call.MyCallType}\n" +
+                          $"Call Address: {call.Address}\n" +
+                          $"Openning Time: {call.OpenTime}\n" +
+                          $"Verbal Description: {call.VerbalDescription}\n" +
+                          $"Call Entrance Time : {assignment.EntranceTime}\n\n" +
+                          $"בברכה,\nמערכת ניהול קריאות";
+        
         Tools.SendEmail(volunteer.Email, subject, body);
+        } 
     }
 
 
@@ -179,23 +197,26 @@ internal static class CallManager
     /// <param name="call">The new call to notify about.</param>
     internal static void NotifyVolunteers(BO.Call call)
     {
-        List<DO.Volunteer> volunteers = s_dal.Volunteer.ReadAll().Where(v => v.Active).ToList();
-        foreach (var volunteer in volunteers)
+        lock (AdminManager.BlMutex) //stage 7
         {
-            if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
+            List<DO.Volunteer> volunteers = s_dal.Volunteer.ReadAll().Where(v => v.Active).ToList();
+            foreach (var volunteer in volunteers)
             {
-                double distance = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude);
-                if (distance <= volunteer.LargestDistance.Value)
+                if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
                 {
-                    string body = $"A new call is available near you: " +
-                        $"Call Type: {call.MyCallType}\n" +
-                        $"Verbal Description: {call.VerbalDescription}\n" +
-                        $"Call Address: {call.Address}\n" +
-                        $"Openning Time: {call.OpenTime}\n" +
-                        $"Call Status:{call.MyStatus}";
+                    double distance = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude);
+                    if (distance <= volunteer.LargestDistance.Value)
+                    {
+                        string body = $"A new call is available near you: " +
+                            $"Call Type: {call.MyCallType}\n" +
+                            $"Verbal Description: {call.VerbalDescription}\n" +
+                            $"Call Address: {call.Address}\n" +
+                            $"Openning Time: {call.OpenTime}\n" +
+                            $"Call Status:{call.MyStatus}";
 
 
-                    Tools.SendEmail(volunteer.Email, "New Volunteer Call", $"A new call is available near you: {call}");
+                        Tools.SendEmail(volunteer.Email, "New Volunteer Call", $"A new call is available near you: {call}");
+                    }
                 }
             }
         }

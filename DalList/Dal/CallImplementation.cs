@@ -1,6 +1,8 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// Implements CRUD operations for Call entities.
 /// </summary>
@@ -8,6 +10,8 @@ using DO;
 internal class CallImplementation : ICall
 {
     /// <summary>Creates a new Call and adds it to the data source.</summary>
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Call item)
     {
         int newId = Config.NextCallId;
@@ -16,6 +20,7 @@ internal class CallImplementation : ICall
     }
 
     /// <summary>Deletes a Call by ID. Throws DalDoesNotExistException if not found.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         Call? call = Read(id);
@@ -30,21 +35,28 @@ internal class CallImplementation : ICall
         }
     }
     /// <summary>Deletes all Calls from the data source.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.Calls.Clear();
     }
     /// <summary>Reads a Call by ID.</summary>
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(int id)
     {
         return DataSource.Calls.FirstOrDefault(item => item.Id == id);
     }
     /// <summary>Reads all Calls, optionally filtered.</summary>
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
    => filter == null
        ? DataSource.Calls.Select(item => item)
        : DataSource.Calls.Where(filter);
     /// <summary>Updates an existing Call. Throws DalDoesNotExistException if not found.</summary>
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Call item)
     {
         Call? existingCall = Read(item.Id);
@@ -60,6 +72,8 @@ internal class CallImplementation : ICall
     }
 
     /// <summary>Reads the first Call that matches a filter.</summary>
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Call? Read(Func<Call, bool> filter)
     {
         return DataSource.Calls.FirstOrDefault(filter);

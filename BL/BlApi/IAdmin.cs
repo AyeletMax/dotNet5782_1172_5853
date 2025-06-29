@@ -24,6 +24,9 @@ public interface IAdmin
     // Advances the system clock by a specified time unit (e.g., days, months, etc.).
     // Parameters:
     // unit: The time unit (e.g., day, month) by which the clock should be advanced.
+
+    void StartSimulator(int interval); //stage 7
+    void StopSimulator(); //stage 7
     void AdvanceClock(BO.TimeUnit unit);
     void AddConfigObserver(Action configObserver);
     void RemoveConfigObserver(Action configObserver);

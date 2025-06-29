@@ -83,28 +83,31 @@ internal static class VolunteerManager
     {
         return volunteers.Select(v =>
         {
-            var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
-
-            var totalHandled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf);
-            var totalCanceled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByManager);
-            var totalExpired = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.Expired);
-
-            var currentAssignment = volunteerAssignments.FirstOrDefault(a => a.ExitTime == null);
-            var assignedResponseId = currentAssignment?.CallId;
-
-            return new BO.VolunteerInList
+            lock (AdminManager.BlMutex) //stage 7
             {
-                Id = v.Id,
-                Name = v.Name,
-                Active = v.Active,
-                TotalResponsesHandled = totalHandled,
-                TotalResponsesCancelled = totalCanceled,
-                TotalExpiredResponses = totalExpired,
-                AssignedResponseId = assignedResponseId,
-                MyCallType = assignedResponseId.HasValue
-                    ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.MyCallType ?? DO.CallType.None)
-                    : BO.CallType.None
-            };
+                var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
+
+                var totalHandled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf);
+                var totalCanceled = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByManager);
+                var totalExpired = volunteerAssignments.Count(a => a.FinishCallType == DO.FinishCallType.Expired);
+
+                var currentAssignment = volunteerAssignments.FirstOrDefault(a => a.ExitTime == null);
+                var assignedResponseId = currentAssignment?.CallId;
+
+                return new BO.VolunteerInList
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Active = v.Active,
+                    TotalResponsesHandled = totalHandled,
+                    TotalResponsesCancelled = totalCanceled,
+                    TotalExpiredResponses = totalExpired,
+                    AssignedResponseId = assignedResponseId,
+                    MyCallType = assignedResponseId.HasValue
+                        ? (BO.CallType)(s_dal.Call.Read(assignedResponseId.Value)?.MyCallType ?? DO.CallType.None)
+                        : BO.CallType.None
+                };
+            }
         });
     }
     

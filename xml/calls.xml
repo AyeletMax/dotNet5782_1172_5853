@@ -500,4 +500,14 @@
     <VerbalDescription>Singing and emotional activity for a bedridden patient</VerbalDescription>
     <Id>50</Id>
   </Call>
+  <Call>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>Druk 30 Ramat Shlomo Jerusalem Israel</Address>
+    <Latitude>31.811466</Latitude>
+    <Longitude>35.2137616</Longitude>
+    <OpenTime>2025-06-29T10:13:24.3638491+03:00</OpenTime>
+    <MaxFinishTime>2025-06-30T23:59:00</MaxFinishTime>
+    <VerbalDescription>a singing perfomance for a sad lady</VerbalDescription>
+    <Id>51</Id>
+  </Call>
 </ArrayOfCall>

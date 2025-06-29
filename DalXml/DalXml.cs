@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Dal;
 /// <summary>
@@ -18,11 +19,12 @@ sealed internal class DalXml : IDal
     public IVolunteer Volunteer { get; } = new VolunteerImplementation();
 
     public IConfig Config { get; } = new ConfigImplementation();
-    
+
     /// <summary>
     /// Resets the database by deleting all assignments, calls, and volunteers, 
     /// and resetting the system configuration.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void ResetDB()
     {
         Assignment.DeleteAll();

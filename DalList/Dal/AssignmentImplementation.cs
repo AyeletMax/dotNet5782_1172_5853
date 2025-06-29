@@ -3,6 +3,8 @@ using DalApi;
 using DO;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// Implements CRUD operations for Assignment entities.
 /// </summary>
@@ -10,6 +12,7 @@ using System.Linq;
 internal class AssignmentImplementation : IAssignment
 {
     /// <summary>Creates a new Assignment and adds it to the data source.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Assignment item)
     {
         int newId = Config.NextAssignmentId;
@@ -18,6 +21,7 @@ internal class AssignmentImplementation : IAssignment
     }
 
     /// <summary>Deletes a Assignment by ID. Throws DalDoesNotExistException if not found.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         Assignment? assignment = Read(id);
@@ -33,22 +37,26 @@ internal class AssignmentImplementation : IAssignment
     }
 
     /// <summary>Deletes all Assignments from the data source.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.Assignments.Clear();
     }
     /// <summary>Reads an Assignment by ID.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(int id)
     {
         return DataSource.Assignments.FirstOrDefault(item => item.Id == id);
-    }  
+    }
     /// <summary>Reads all Assignments, optionally filtered.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
   => filter == null
       ? DataSource.Assignments.Select(item => item)
       : DataSource.Assignments.Where(filter);
 
     /// <summary>Updates an existing Assignment. Throws DalDoesNotExistException if not found.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Assignment item)
     {
         Assignment? existingAssignment = Read(item.Id);
@@ -64,6 +72,7 @@ internal class AssignmentImplementation : IAssignment
     }
 
     /// <summary>Reads the first Assignment that matches a filter.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         return DataSource.Assignments.FirstOrDefault(filter);

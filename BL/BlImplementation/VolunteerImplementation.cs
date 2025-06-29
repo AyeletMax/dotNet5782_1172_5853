@@ -16,10 +16,13 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Id == id);
-            DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
-            throw new BO.BlDoesNotExistException("Incorrect username or password.");
-            return (BO.Role)matchingVolunteer.MyRole;
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v => v.Id == id);
+                DO.Volunteer? matchingVolunteer = volunteers.FirstOrDefault(v => VolunteerManager.VerifyPassword(password, v.Password!)) ??
+                throw new BO.BlDoesNotExistException("Incorrect username or password.");
+                return (BO.Role)matchingVolunteer.MyRole;
+            }
         }
         catch (BO.BlDoesNotExistException)
         {
@@ -33,29 +36,32 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     // Retrieve a list of volunteers, with optional filters for activity status and sorting criteria.
     public IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, BO.VolunteerSortField? sortBy = null, BO.CallType? filterField = null)
     {
-       
+
         try
         {
-            IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
+            lock (AdminManager.BlMutex) //stage 7
+            {
+                IEnumerable<DO.Volunteer> volunteers = _dal.Volunteer.ReadAll(v =>
                 !isActive.HasValue || v.Active == isActive.Value);
 
-        
-            var volunteerList = VolunteerManager.GetVolunteerList(volunteers)
-            .Where(vol => !filterField.HasValue || vol.MyCallType == filterField.Value);
 
-            volunteerList = sortBy.HasValue ? sortBy.Value switch
-            {
-                BO.VolunteerSortField.Name => volunteerList.OrderBy(v => v.Name),
-                BO.VolunteerSortField.TotalResponsesHandled => volunteerList.OrderByDescending(v => v.TotalResponsesHandled),
-                BO.VolunteerSortField.TotalResponsesCancelled => volunteerList.OrderByDescending(v => v.TotalResponsesCancelled),
-                BO.VolunteerSortField.TotalExpiredResponses => volunteerList.OrderByDescending(v => v.TotalExpiredResponses),
-                //BO.VolunteerSortField.SumOfCalls => volunteerList.OrderBy(v => v.TotalResponsesHandled),
-                //BO.VolunteerSortField.SumOfCancellation => volunteerList.OrderBy(v => v.TotalResponsesCancelled),
-                //BO.VolunteerSortField.SumOfExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredResponses),
-                _ => volunteerList.OrderBy(v => v.Id)
-            } : volunteerList.OrderBy(v => v.Id);
+                var volunteerList = VolunteerManager.GetVolunteerList(volunteers)
+                .Where(vol => !filterField.HasValue || vol.MyCallType == filterField.Value);
 
-            return volunteerList;
+                volunteerList = sortBy.HasValue ? sortBy.Value switch
+                {
+                    BO.VolunteerSortField.Name => volunteerList.OrderBy(v => v.Name),
+                    BO.VolunteerSortField.TotalResponsesHandled => volunteerList.OrderByDescending(v => v.TotalResponsesHandled),
+                    BO.VolunteerSortField.TotalResponsesCancelled => volunteerList.OrderByDescending(v => v.TotalResponsesCancelled),
+                    BO.VolunteerSortField.TotalExpiredResponses => volunteerList.OrderByDescending(v => v.TotalExpiredResponses),
+                    //BO.VolunteerSortField.SumOfCalls => volunteerList.OrderBy(v => v.TotalResponsesHandled),
+                    //BO.VolunteerSortField.SumOfCancellation => volunteerList.OrderBy(v => v.TotalResponsesCancelled),
+                    //BO.VolunteerSortField.SumOfExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredResponses),
+                    _ => volunteerList.OrderBy(v => v.Id)
+                } : volunteerList.OrderBy(v => v.Id);
+
+                return volunteerList;
+            }
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -72,51 +78,54 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-
-            var doVolunteer = _dal.Volunteer.Read(volunteerId)??
-               throw new DO.DalDoesNotExistException ($"Volunteer with ID={volunteerId} does not exist");
-            var assigments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
-            var currentAssignment = assigments.FirstOrDefault(a => a.ExitTime == null);
-            BO.CallInProgress? callInProgress = null;
-            if (currentAssignment != null)
+            lock (AdminManager.BlMutex) //stage 7
             {
-                var callDetails = _dal.Call.Read(currentAssignment.CallId);
-                if (callDetails != null) {
-                    callInProgress = new BO.CallInProgress
+                var doVolunteer = _dal.Volunteer.Read(volunteerId) ??
+               throw new DO.DalDoesNotExistException($"Volunteer with ID={volunteerId} does not exist");
+                var assigments = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
+                var currentAssignment = assigments.FirstOrDefault(a => a.ExitTime == null);
+                BO.CallInProgress? callInProgress = null;
+                if (currentAssignment != null)
+                {
+                    var callDetails = _dal.Call.Read(currentAssignment.CallId);
+                    if (callDetails != null)
                     {
-                        Id = currentAssignment.Id,
-                        CallId = currentAssignment.CallId,
-                        MyCallType = (BO.CallType)callDetails.MyCallType,
-                        VerbalDescription = callDetails.VerbalDescription,
-                        Address = callDetails.Address,
-                        OpenTime = callDetails.OpenTime,
-                        MaxFinishTime = callDetails.MaxFinishTime,
-                        EntranceTime = currentAssignment.EntranceTime,
-                        VolunteerResponseDistance = Tools.CalculateDistance((BO.DistanceType)doVolunteer.MyDistanceType, doVolunteer.Latitude ?? double.MaxValue, doVolunteer.Longitude ?? double.MaxValue, callDetails.Latitude, callDetails.Longitude),
-                        MyStatus = Tools.CalculateStatus(currentAssignment, callDetails, 30)
-                    };
+                        callInProgress = new BO.CallInProgress
+                        {
+                            Id = currentAssignment.Id,
+                            CallId = currentAssignment.CallId,
+                            MyCallType = (BO.CallType)callDetails.MyCallType,
+                            VerbalDescription = callDetails.VerbalDescription,
+                            Address = callDetails.Address,
+                            OpenTime = callDetails.OpenTime,
+                            MaxFinishTime = callDetails.MaxFinishTime,
+                            EntranceTime = currentAssignment.EntranceTime,
+                            VolunteerResponseDistance = Tools.CalculateDistance((BO.DistanceType)doVolunteer.MyDistanceType, doVolunteer.Latitude ?? double.MaxValue, doVolunteer.Longitude ?? double.MaxValue, callDetails.Latitude, callDetails.Longitude),
+                            MyStatus = Tools.CalculateStatus(currentAssignment, callDetails, 30)
+                        };
+                    }
                 }
-            }
-            return new BO.Volunteer
-            {
-                Id = volunteerId,
-                Name= doVolunteer.Name,
-                Phone = doVolunteer.Phone,
-                Email = doVolunteer.Email,
-                Active = doVolunteer.Active,
-                MyRole = (BO.Role)doVolunteer.MyRole,
-                Password = doVolunteer.Password,
-                Address = doVolunteer.Address,
-                Longitude = doVolunteer.Longitude,
-                Latitude = doVolunteer.Latitude,
-                LargestDistance = doVolunteer.LargestDistance,
-                MyDistanceType = (BO.DistanceType)doVolunteer.MyDistanceType,
-                TotalCallsHandled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf),
-                TotalCallsCancelled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByVolunteer),
-                TotalExpiredCallsChosen = assigments.Count(a => a.FinishCallType == DO.FinishCallType.Expired),
-                CurrentCallInProgress = callInProgress
+                return new BO.Volunteer
+                {
+                    Id = volunteerId,
+                    Name = doVolunteer.Name,
+                    Phone = doVolunteer.Phone,
+                    Email = doVolunteer.Email,
+                    Active = doVolunteer.Active,
+                    MyRole = (BO.Role)doVolunteer.MyRole,
+                    Password = doVolunteer.Password,
+                    Address = doVolunteer.Address,
+                    Longitude = doVolunteer.Longitude,
+                    Latitude = doVolunteer.Latitude,
+                    LargestDistance = doVolunteer.LargestDistance,
+                    MyDistanceType = (BO.DistanceType)doVolunteer.MyDistanceType,
+                    TotalCallsHandled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.TakenCareOf),
+                    TotalCallsCancelled = assigments.Count(a => a.FinishCallType == DO.FinishCallType.CanceledByVolunteer),
+                    TotalExpiredCallsChosen = assigments.Count(a => a.FinishCallType == DO.FinishCallType.Expired),
+                    CurrentCallInProgress = callInProgress
 
-            };
+                };
+            }
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -134,47 +143,50 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-            var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
-            VolunteerManager.ValidateInputFormat(boVolunteer);
-            if(boVolunteer.Password == "")
+            AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+            lock (AdminManager.BlMutex) //stage 7
             {
-                boVolunteer.Password = existingVolunteer.Password;
+                var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
+                VolunteerManager.ValidateInputFormat(boVolunteer);
+                if (boVolunteer.Password == "")
+                {
+                    boVolunteer.Password = existingVolunteer.Password;
+                }
+                else
+                {
+                    VolunteerManager.CheckPassword(boVolunteer.Password);
+                    boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password);
+                }
+                if (boVolunteer.Address != null)
+                {
+                    var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
+                    boVolunteer.Latitude = latitude;
+                    boVolunteer.Longitude = longitude;
+                }
+                else
+                {
+                    boVolunteer.Address = existingVolunteer.Address;
+                    boVolunteer.Latitude = existingVolunteer.Latitude;
+                    boVolunteer.Longitude = existingVolunteer.Longitude;
+                }
+                VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
+
+                var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
+                var changedFields = VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
+                if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
+                    throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
+
+                DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
+                //if (boVolunteer.Password == "")
+                //{
+                //    doVolunteer = doVolunteer with { Password = existingVolunteer.Password };
+                //}
+                _dal.Volunteer.Update(doVolunteer);
+
+                VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id); //stage 5
+
+                VolunteerManager.Observers.NotifyListUpdated(); //stage 5
             }
-            else
-            {
-                VolunteerManager.CheckPassword(boVolunteer.Password); 
-                boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password);
-            }
-            if (boVolunteer.Address != null)
-            {
-                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
-                boVolunteer.Latitude = latitude;
-                boVolunteer.Longitude = longitude;
-            }
-            else
-            {
-                boVolunteer.Address = existingVolunteer.Address;
-                boVolunteer.Latitude = existingVolunteer.Latitude;
-                boVolunteer.Longitude = existingVolunteer.Longitude;
-            }
-            VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
-
-            var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
-            var changedFields =VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
-            if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
-                throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
-
-            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
-            //if (boVolunteer.Password == "")
-            //{
-            //    doVolunteer = doVolunteer with { Password = existingVolunteer.Password };
-            //}
-            _dal.Volunteer.Update(doVolunteer);
-            VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id); //stage 5
-
-            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
-
-
         }
         catch (BO.BlInvalidFormatException)
         {
@@ -195,15 +207,19 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-            var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
-            IEnumerable<DO.Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
-            if (assignmentsWithVolunteer.Any())
+            AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+            lock (AdminManager.BlMutex) //stage 7
             {
-                throw new BO.BlDeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
-            }
-            _dal.Volunteer.Delete(volunteerId);//stage 4
-            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+                var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new DO.DalDoesNotExistException($"Volunteer with ID {volunteerId} does not exist.");
+                IEnumerable<DO.Assignment> assignmentsWithVolunteer = _dal.Assignment.ReadAll(a => a.VolunteerId == volunteerId);
+                if (assignmentsWithVolunteer.Any())
+                {
+                    throw new BO.BlDeletionException($"Volunteer with ID {volunteerId} cannot be deleted because they are or have been assigned to tasks.");
+                }
+                _dal.Volunteer.Delete(volunteerId);//stage 4
+                VolunteerManager.Observers.NotifyListUpdated(); //stage 5
 
+            }
         }
         catch (BO.BlDeletionException)
         {
@@ -225,28 +241,33 @@ internal class VolunteerImplementation : BlApi.IVolunteer
     {
         try
         {
-            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
-            if (existingVolunteer != null)
+            AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+            lock (AdminManager.BlMutex) //stage 7
             {
-                throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
-            }
-            VolunteerManager.ValidateInputFormat(boVolunteer);
-            VolunteerManager.CheckPassword(boVolunteer.Password!);
-            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
-            
-            boVolunteer.Latitude = latitude;
-            boVolunteer.Longitude = longitude;
-            boVolunteer.Password=VolunteerManager.EncryptPassword(boVolunteer.Password!);
+                var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
+                if (existingVolunteer != null)
+                {
+                    throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
+                }
+                VolunteerManager.ValidateInputFormat(boVolunteer);
+                VolunteerManager.CheckPassword(boVolunteer.Password!);
+                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
 
-            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
-            _dal.Volunteer.Create(doVolunteer);
-            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+                boVolunteer.Latitude = latitude;
+                boVolunteer.Longitude = longitude;
+                boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password!);
+
+                DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
+                _dal.Volunteer.Create(doVolunteer);
+                VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+            }
         }
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new BO.BlAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
         }
-        catch (BO.BlInvalidFormatException) {
+        catch (BO.BlInvalidFormatException)
+        {
             throw;
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Dal;
+﻿using System.Runtime.CompilerServices;
+
+namespace Dal;
 /// <summary>
 /// Static class that manages system settings and global data.
 /// Responsible for reading and updating values from various XML files (system settings, volunteers, assignments, calls).
@@ -15,30 +17,39 @@ internal static class Config
     /// Gets the next available Assignment/Call ID from the 'data-config.xml' file and updates it.
     internal static int NextAssignmentId
     {
+        [MethodImpl(MethodImplOptions.Synchronized)]
         get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextAssignmentId");
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextAssignmentId", value);
     }
     internal static int NextCallId
     {
+        [MethodImpl(MethodImplOptions.Synchronized)]
         get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextCallId");
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextCallId", value);
     }
 
     /// Gets the current date and time from the 'data-config.xml' file and updates it.
     internal static DateTime Clock
     {
+        [MethodImpl(MethodImplOptions.Synchronized)]
         get => XMLTools.GetConfigDateVal(s_data_config_xml, "Clock");
+        [MethodImpl(MethodImplOptions.Synchronized)]
         set => XMLTools.SetConfigDateVal(s_data_config_xml, "Clock", value);
     }
     /// Gets the current Risk Range from the 'data-config.xml' file and updates it.
     internal static TimeSpan RiskRange
     {
+        [MethodImpl(MethodImplOptions.Synchronized)]
         get => XMLTools.GetConfigTimeSpanVal(s_data_config_xml, "RiskRange");
+        [MethodImpl(MethodImplOptions.Synchronized)]
         set => XMLTools.SetConfigTimeSpanVal(s_data_config_xml, "RiskRange", value);
     }
 
     // Reset Method
     /// Resets all configuration values to their default values:
+    [MethodImpl(MethodImplOptions.Synchronized)]
     internal static void Reset()
     {
         NextAssignmentId = 1;
