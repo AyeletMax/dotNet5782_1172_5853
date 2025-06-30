@@ -250,7 +250,6 @@ internal static class VolunteerManager
             Thread.CurrentThread.Name = $"VolunteerSimulator{++s_simulatorCounter}";
             LinkedList<int> volunteersToNotify = new();
             List<DO.Volunteer> activeVolunteers;
-
             lock (BlMutex)
             {
                 activeVolunteers = s_dal.Volunteer.ReadAll(v => v.Active).ToList();
@@ -266,7 +265,8 @@ internal static class VolunteerManager
 
                     if (assignments.Any())
                     {
-                    var updatedAssignment = assignment with
+                    var assignmentToUpdate = assignments[s_rand.Next(assignments.Count)];
+                    var updatedAssignment = assignmentToUpdate with
                     {
                         ExitTime = DateTime.Now,
                         FinishCallType = DO.FinishCallType.TakenCareOf
