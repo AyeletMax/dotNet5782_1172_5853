@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL
 {
@@ -60,15 +61,21 @@ namespace PL
             Enum.GetValues(typeof(BO.DistanceType)).Cast<BO.DistanceType>();
 
 
+        private volatile DispatcherOperation? _loadVolunteerOperation = null;
+
         private void LoadVolunteer(int volunteerId)
         {
-           Volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
+            if (_loadVolunteerOperation is null || _loadVolunteerOperation.Status == DispatcherOperationStatus.Completed)
+                _loadVolunteerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    Volunteer = s_bl.Volunteer.GetVolunteerDetails(volunteerId);
 
-           var call = Volunteer.CurrentCallInProgress;
-            if (call?.MyStatus != BO.Status.Expired && call?.MyStatus != BO.Status.Closed)
-                CurrentCall = call;
-            else
-                CurrentCall = null;
+                    var call = Volunteer.CurrentCallInProgress;
+                    if (call?.MyStatus != BO.Status.Expired && call?.MyStatus != BO.Status.Closed)
+                        CurrentCall = call;
+                    else
+                        CurrentCall = null;
+                });
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

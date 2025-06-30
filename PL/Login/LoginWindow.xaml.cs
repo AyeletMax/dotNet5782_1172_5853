@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 using BlApi;
 using BO;
 
@@ -65,49 +66,54 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
     }
 
     private int _currentLoggedInManagerId = -1;
+    private volatile DispatcherOperation? _loginOperation = null;
     private void Login_Click(object sender, RoutedEventArgs e)
     {
-        ErrorMessage = "";
-
-        if (!int.TryParse(IdNumber, out int id))
-        {
-            ErrorMessage = "Please Enter a real ID";
-            return;
-        }
-        try
-        {
-            Role role = _bl.Volunteer.Login(id, Password ?? "");
-            IdNumber = null;
-
-            if (role == Role.Manager)
+        if (_loginOperation is null || _loginOperation.Status == DispatcherOperationStatus.Completed)
+            _loginOperation = Dispatcher.BeginInvoke(() =>
             {
-                if (App.Current.Properties["IsManagerLoggedIn"] is true)
+                ErrorMessage = "";
+
+                if (!int.TryParse(IdNumber, out int id))
                 {
-                    ErrorMessage = "A Manager is already logged in to the system.";
+                    ErrorMessage = "Please Enter a real ID";
                     return;
                 }
+                try
+                {
+                    Role role = _bl.Volunteer.Login(id, Password ?? "");
+                    IdNumber = null;
 
-                _currentLoggedInManagerId =id;  
-                IsLoginPanelVisible = false;
-                IsManagerOptionsVisible = true;
+                    if (role == Role.Manager)
+                    {
+                        if (App.Current.Properties["IsManagerLoggedIn"] is true)
+                        {
+                            ErrorMessage = "A Manager is already logged in to the system.";
+                            return;
+                        }
 
-                return;
-            }
-            else
-            {
-                new VolunteerMainWindow(id).Show();
-            }
+                        _currentLoggedInManagerId = id;
+                        IsLoginPanelVisible = false;
+                        IsManagerOptionsVisible = true;
 
-            Close();
-        }
-        catch (BlDoesNotExistException ex)
-        {
-            ErrorMessage = ex.Message;
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = "General Eroor: " + ex.Message;
-        }
+                        return;
+                    }
+                    else
+                    {
+                        new VolunteerMainWindow(id).Show();
+                    }
+
+                    Close();
+                }
+                catch (BlDoesNotExistException ex)
+                {
+                    ErrorMessage = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = "General Eroor: " + ex.Message;
+                }
+            });
     }
     private void VolunteerPanel_Click(object sender, RoutedEventArgs e)
     {

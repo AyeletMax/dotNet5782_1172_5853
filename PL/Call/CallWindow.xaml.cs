@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using BO;
 
 namespace PL.Call
@@ -134,6 +135,8 @@ namespace PL.Call
         /// </summary>
         public bool HasAssignments => Call?.CallAssignments?.Any() == true;
 
+        private volatile DispatcherOperation? _onCallChangedOperation = null;
+
         /// <summary>
         /// Button text based on mode
         /// </summary>
@@ -184,32 +187,35 @@ namespace PL.Call
 
         private void OnCallChanged()
         {
-            if (observedCallId.HasValue)
+            if (_onCallChangedOperation is null || _onCallChangedOperation.Status == DispatcherOperationStatus.Completed)
             {
-                try
+                _onCallChangedOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
-
-                    // שמירת הסטטוס המקורי לפני העדכון
-                    var originalStatus = Call.MyStatus;
-
-                    Call = updated;
-
-                    // וידוא שהסטטוס לא השתנה באופן לא רצוי
-                    if (IsEditMode && Call.MyStatus != originalStatus)
+                    if (observedCallId.HasValue)
                     {
-                        // אם הסטטוס השתנה באופן לא רצוי, החזר אותו
-                        Call.MyStatus = originalStatus;
-                    }
+                        try
+                        {
+                            var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
 
-                    OnPropertyChanged(nameof(Call));
-                    InitializeFromExistingCall();
-                    SetEditPermissions();
-                }
-                catch (Exception)
-                {
-                    // במקרה של שגיאה, פשוט התעלם מהעדכון
-                }
+                            var originalStatus = Call.MyStatus;
+
+                            Call = updated;
+
+                            if (IsEditMode && Call.MyStatus != originalStatus)
+                            {
+                                Call.MyStatus = originalStatus;
+                            }
+
+                            OnPropertyChanged(nameof(Call));
+                            InitializeFromExistingCall();
+                            SetEditPermissions();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"An error occurred while updating call details:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                });
             }
         }
 
@@ -249,12 +255,10 @@ namespace PL.Call
         /// </summary>
         private void InitializeFromExistingCall()
         {
-            // שמירת הסטטוס המקורי
             var originalStatus = Call.MyStatus;
 
             if (Call.MaxFinishTime.HasValue)
             {
-                // מניעת עדכון אוטומטי בזמן האתחול
                 _maxFinishDate = Call.MaxFinishTime.Value.Date;
                 _maxFinishTime = Call.MaxFinishTime.Value.ToString("HH:mm");
             }
@@ -264,7 +268,6 @@ namespace PL.Call
                 _maxFinishTime = "23:59";
             }
 
-            // החזרת הסטטוס המקורי במקרה שהוא השתנה
             if (Call.MyStatus != originalStatus)
             {
                 Call.MyStatus = originalStatus;
@@ -284,15 +287,12 @@ namespace PL.Call
         /// </summary>
         private void UpdateCallStatus()
         {
-            // רק עבור קריאות חדשות - לא במצב עריכה
             if (IsEditMode)
                 return;
 
-            // לא לשנות סטטוס שכבר סגור
             if (Call.MyStatus == Status.Closed)
                 return;
 
-            // לא לשנות סטטוס שכבר פג תוקף
             if (Call.MyStatus == Status.Expired)
                 return;
 
