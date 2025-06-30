@@ -12,6 +12,21 @@ namespace PL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private volatile DispatcherOperation? _clockObserverOperation = null;
         private volatile DispatcherOperation? _configObserverOperation = null;
+        public int Interval
+        {
+            get { return (int)GetValue(IntervalProperty); }
+            set { SetValue(IntervalProperty, value); }
+        }
+        public static readonly DependencyProperty IntervalProperty =
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow), new PropertyMetadata(1));
+
+        public bool IsSimulatorRunning
+        {
+            get { return (bool)GetValue(IsSimulatorRunningProperty); }
+            set { SetValue(IsSimulatorRunningProperty, value); }
+        }
+        public static readonly DependencyProperty IsSimulatorRunningProperty =
+            DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
         public MainWindow( int Id)
         {
             InitializeComponent();
@@ -110,6 +125,7 @@ namespace PL
             s_bl.Admin.RemoveClockObserver(ClockObserver);
             s_bl.Admin.RemoveConfigObserver(ConfigObserver);
             App.Current.Properties["IsManagerLoggedIn"] = false;
+            s_bl.Admin.StopSimulator();
         }
         private void InitializeDB_Click(object sender, RoutedEventArgs e)
         {
@@ -139,5 +155,30 @@ namespace PL
      
         private void HandleVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
         private void HandleCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow(Volunteer.Id).Show();
+        private void SimulatorToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!IsSimulatorRunning)
+                {
+                    s_bl.Admin.StartSimulator(Interval);
+                    IsSimulatorRunning = true;
+                }
+                else
+                {
+                    s_bl.Admin.StopSimulator();
+                    IsSimulatorRunning = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+
     }
+
+
+
 }

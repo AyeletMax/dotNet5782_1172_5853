@@ -13,6 +13,8 @@
         <conv:EditModeButtonTextConverter x:Key="EditModeButtonTextConverter"/>
         <conv:NullToBoolConverter x:Key="NullToBoolConverter"/>
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <local:SimulatorButtonContentConverter x:Key="SimulatorButtonContentConverter"/>
+        <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
     </Application.Resources>
 </Application>
