@@ -19,6 +19,7 @@ namespace PL.Call
     {
         #region Properties
 
+        private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         /// <summary>
         /// The call object (new or existing)
         /// </summary>
@@ -151,6 +152,7 @@ namespace PL.Call
 
         #region Constructor
 
+
         /// <summary>
         /// Constructor for adding a new call
         /// </summary>
@@ -181,8 +183,8 @@ namespace PL.Call
             OnPropertyChanged(nameof(ButtonText));
 
             observedCallId = Call.Id;
-            BlApi.Factory.Get().Call.AddObserver(OnCallChanged);
-            this.Closed += (s, e) => BlApi.Factory.Get().Call.RemoveObserver(OnCallChanged);
+            s_bl.Call.AddObserver(OnCallChanged);
+            this.Closed += (s, e) => s_bl.Call.RemoveObserver(OnCallChanged);
         }
 
         private void OnCallChanged()
@@ -195,7 +197,7 @@ namespace PL.Call
                     {
                         try
                         {
-                            var updated = BlApi.Factory.Get().Call.GetCallDetails(observedCallId.Value);
+                            var updated = s_bl.Call.GetCallDetails(observedCallId.Value);
 
                             var originalStatus = Call.MyStatus;
 
@@ -231,7 +233,8 @@ namespace PL.Call
             Call = new BO.Call
             {
                 MyStatus = Status.Opened,
-                OpenTime = DateTime.Now,
+                //OpenTime = DateTime.Now,
+                OpenTime = s_bl.Admin.GetClock(),
                 MyCallType = CallType.None,
                 Address = string.Empty,
                 VerbalDescription = string.Empty,
@@ -403,13 +406,13 @@ namespace PL.Call
                 // Send to business logic layer
                 if (IsEditMode)
                 {
-                    BlApi.Factory.Get().Call.UpdateCallDetails(Call);
+                    s_bl.Call.UpdateCallDetails(Call);
                     MessageBox.Show("Call updated successfully!", "Success",
                                   MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    BlApi.Factory.Get().Call.AddCall(Call);
+                    s_bl.Call.AddCall(Call);
                     MessageBox.Show("Call added successfully!\nEmail sent to appropriate volunteers.",
                                   "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -564,7 +567,7 @@ namespace PL.Call
         /// </summary>
         private void UpdateMaxFinishTime()
         {
-            
+
             if (Call == null)
                 return;
 
@@ -572,7 +575,7 @@ namespace PL.Call
             {
                 try
                 {
-                
+
                     var timeParts = MaxFinishTime.Split(':');
                     if (timeParts.Length == 2 &&
                         int.TryParse(timeParts[0], out int hours) &&
@@ -580,7 +583,7 @@ namespace PL.Call
                         hours >= 0 && hours <= 23 &&
                         minutes >= 0 && minutes <= 59)
                     {
-                        
+
                         var newMaxFinishTime = new DateTime(
                             MaxFinishDate.Value.Year,
                             MaxFinishDate.Value.Month,
