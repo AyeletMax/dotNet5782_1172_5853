@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -20,6 +21,8 @@ namespace PL.Call
     public partial class CallListWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+        private volatile DispatcherOperation? _callListObserverOperation = null;
         public CallListWindow(int Id)
         {
             InitializeComponent();
@@ -141,7 +144,15 @@ namespace PL.Call
             CallList = FilterCallList();
         }
         private void callListObserver()
-                => queryVolunteerList();
+        {
+            if (_callListObserverOperation == null || _callListObserverOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _callListObserverOperation = Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    queryVolunteerList();
+                }));
+            }
+        }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
             =>new CallWindow().Show();

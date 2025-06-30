@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -20,13 +21,19 @@ namespace PL.Volunteer
             RefreshVolunteerList();
             s_bl?.Volunteer.AddObserver(RefreshVolunteerList);
         }
-
+        private volatile DispatcherOperation? _refreshOperation = null;
         private void RefreshVolunteerList()
         {
-            VolunteerList = s_bl.Volunteer.GetVolunteersList(
-                isActive: null,
-                sortBy: SelectedSortField == BO.VolunteerSortField.None ? null : SelectedSortField,
-                filterField: SelectedCallType == BO.CallType.None ? null : SelectedCallType);
+            if (_refreshOperation == null || _refreshOperation.Status == DispatcherOperationStatus.Completed)
+            {
+                _refreshOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    VolunteerList = s_bl.Volunteer.GetVolunteersList(
+                        isActive: null,
+                        sortBy: SelectedSortField == BO.VolunteerSortField.None ? null : SelectedSortField,
+                        filterField: SelectedCallType == BO.CallType.None ? null : SelectedCallType);
+                });
+            }
         }
 
 

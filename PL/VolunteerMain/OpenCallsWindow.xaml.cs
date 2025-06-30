@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -17,6 +18,8 @@ namespace PL.Call
         public BO.Volunteer CurrentVolunteer { get; set; }
         public IEnumerable<CallType> CallTypes { get; set; }
         public IEnumerable<OpenCallInListFields> SortFields { get; set; }
+
+        private volatile DispatcherOperation? _loadOpenCallsOperation = null;
 
         public IEnumerable<OpenCallInList> OpenCalls
         {
@@ -103,18 +106,24 @@ namespace PL.Call
 
         private void LoadOpenCalls()
         {
-            try
+            if (_loadOpenCallsOperation == null || _loadOpenCallsOperation.Status == DispatcherOperationStatus.Completed)
             {
-                OpenCalls = bl.Call.GetOpenCallsForVolunteer(
-                    CurrentVolunteer.Id,
-                    FilterStatus == CallType.None ? null : FilterStatus,
-                    SortField);
-                OpenCalls = new ObservableCollection<OpenCallInList>(OpenCalls.Where(c => CurrentVolunteer.LargestDistance is null ||
-                c.distanceFromVolunteerToCall <= CurrentVolunteer.LargestDistance));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to load open calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _loadOpenCallsOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    try
+                    {
+                        OpenCalls = bl.Call.GetOpenCallsForVolunteer(
+                            CurrentVolunteer.Id,
+                            FilterStatus == CallType.None ? null : FilterStatus,
+                            SortField);
+                        OpenCalls = new ObservableCollection<OpenCallInList>(OpenCalls.Where(c => CurrentVolunteer.LargestDistance is null ||
+                        c.distanceFromVolunteerToCall <= CurrentVolunteer.LargestDistance));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to load open calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
         }
 

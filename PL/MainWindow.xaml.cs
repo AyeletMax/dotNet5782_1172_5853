@@ -10,7 +10,8 @@ namespace PL
     public partial class MainWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+        private volatile DispatcherOperation? _clockObserverOperation = null;
+        private volatile DispatcherOperation? _configObserverOperation = null;
         public MainWindow( int Id)
         {
             InitializeComponent();
@@ -84,9 +85,17 @@ namespace PL
             }
         }
 
-        private void ClockObserver() => CurrentTime = s_bl.Admin.GetClock();
+        private void ClockObserver()
+        {
+            if (_clockObserverOperation == null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
+                _clockObserverOperation = Dispatcher.BeginInvoke(() => CurrentTime = s_bl.Admin.GetClock());
+        }
 
-        private void ConfigObserver() => RiskRange = s_bl.Admin.GetMaxRange();
+        private void ConfigObserver()
+        {
+            if (_configObserverOperation == null || _configObserverOperation.Status == DispatcherOperationStatus.Completed)
+                _configObserverOperation = Dispatcher.BeginInvoke(() => RiskRange = s_bl.Admin.GetMaxRange());
+        }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BO;
 using BlApi;
+using System.Windows.Threading;
 
 namespace PL.CallHistory;
 
@@ -14,6 +15,7 @@ public partial class VolunteerCallHistory : Window
 
     private readonly int _volunteerId;
 
+    private volatile DispatcherOperation? _loadClosedCallsOperation = null;
     public VolunteerCallHistory(int volunteerId)
     {
         _volunteerId = volunteerId;
@@ -66,13 +68,17 @@ public partial class VolunteerCallHistory : Window
 
     private void LoadClosedCalls()
     {
-        try
-        {
-            ClosedCalls = s_bl.Call.GetClosedCallsByVolunteer(_volunteerId, SelectedCallType, SelectedSortField);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error loading call history: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        if (_loadClosedCallsOperation is null || _loadClosedCallsOperation.Status == DispatcherOperationStatus.Completed)
+            _loadClosedCallsOperation = Dispatcher.BeginInvoke(() =>
+            {
+                try
+                {
+                    ClosedCalls = s_bl.Call.GetClosedCallsByVolunteer(_volunteerId, SelectedCallType, SelectedSortField);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading call history: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
     }
 }
