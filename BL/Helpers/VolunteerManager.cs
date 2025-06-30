@@ -263,31 +263,48 @@ internal static class VolunteerManager
                 {
                     var assignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == volunteer.Id && a.ExitTime == null).ToList();
 
-                    if (assignments.Any())
-                    {
+                if (assignments.Any())
+                {
                     var assignmentToUpdate = assignments[s_rand.Next(assignments.Count)];
                     var updatedAssignment = assignmentToUpdate with
                     {
-                        ExitTime = DateTime.Now,
-                        FinishCallType = DO.FinishCallType.TakenCareOf
+                    ExitTime = DateTime.Now,
+                    FinishCallType = DO.FinishCallType.TakenCareOf
                     };
                     s_dal.Assignment.Update(updatedAssignment);
-
                         updated = true;
                     }
                 }
-
                 if (updated)
                 {
                     volunteersToNotify.AddLast(volunteer.Id);
                 }
             }
-
             foreach (var id in volunteersToNotify)
             {
                 Observers.NotifyItemUpdated(id);
             }
         }
-    
+    public static async Task UpdateVolunteerCoordinatesAsync(int volunteerId, string address)
+    {
+        var coords = await Tools.GetCoordinatesFromAddress(address);
+        if (coords is not null)
+        {
+            lock (AdminManager.BlMutex)
+            {
+                var doVolunteer = s_dal.Volunteer.Read(volunteerId);
+                doVolunteer = doVolunteer with
+                {
+                    Latitude = coords.Value.Item1,
+                    Longitude = coords.Value.Item2
+                };
+                s_dal.Volunteer.Update(doVolunteer);
+            }
+
+            Observers.NotifyItemUpdated(volunteerId);
+            Observers.NotifyListUpdated();
+        }
+    }
+
 }
 

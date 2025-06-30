@@ -25,11 +25,11 @@ public class Call
     /// <summary>
     /// Gets or sets the latitude coordinate of the call location.
     /// </summary>
-    public double Latitude { get; set; }
+    public double? Latitude { get; set; }
     /// <summary>
     /// Gets or sets the longitude coordinate of the call location.
     /// </summary>
-    public double Longitude { get; set; }
+    public double? Longitude { get; set; }
     /// <summary>
     /// Gets or sets the time when the call was opened.
     /// </summary>

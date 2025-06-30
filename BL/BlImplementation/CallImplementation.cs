@@ -146,20 +146,59 @@ internal class CallImplementation : BlApi.ICall
     /// Updates the details of an existing call after validation.
     /// </summary>
     /// <param name="call">The updated call object.</param>
+    //public void UpdateCallDetails(BO.Call call)
+    //{
+    //    try
+    //    {
+    //        DO.Call callToUpdate;
+    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+    //        lock (AdminManager.BlMutex) //stage 7
+    //        {
+    //            var existingCall = _dal.Call.Read(call.Id) ?? throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exist");
+    //            CallManager.ValidateCallDetails(call);
+    //            if (call.Address != "No Address")
+    //            {
+    //                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address!);
+    //                call.Latitude = latitude;
+    //                call.Longitude = longitude;
+    //            }
+    //            else
+    //            {
+    //                call.Address = existingCall.Address;
+    //                call.Latitude = existingCall.Latitude;
+    //                call.Longitude = existingCall.Longitude;
+    //            }
+    //            callToUpdate = CallManager.ConvertBoCallToDoCall(call);
+    //            _dal.Call.Update(callToUpdate);
+    //        }
+    //        CallManager.NotifyVolunteers(call);
+    //        CallManager.Observers.NotifyItemUpdated(callToUpdate.Id); // Stage 5
+    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
+    //    }
+    //    catch (DO.DalDoesNotExistException ex)
+    //    {
+    //        throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exists", ex);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while update.", ex);
+    //    }
+    //}
     public void UpdateCallDetails(BO.Call call)
     {
         try
         {
+            DO.Call callToUpdate;
             AdminManager.ThrowOnSimulatorIsRunning();//stage 7
             lock (AdminManager.BlMutex) //stage 7
             {
                 var existingCall = _dal.Call.Read(call.Id) ?? throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exist");
                 CallManager.ValidateCallDetails(call);
+
                 if (call.Address != "No Address")
                 {
-                    var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address!);
-                    call.Latitude = latitude;
-                    call.Longitude = longitude;
+                    call.Latitude = null;
+                    call.Longitude = null;
                 }
                 else
                 {
@@ -167,11 +206,15 @@ internal class CallImplementation : BlApi.ICall
                     call.Latitude = existingCall.Latitude;
                     call.Longitude = existingCall.Longitude;
                 }
-                DO.Call callToUpdate = CallManager.ConvertBoCallToDoCall(call);
-                    _dal.Call.Update(callToUpdate);
-                CallManager.Observers.NotifyItemUpdated(callToUpdate.Id); // Stage 5
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+
+                callToUpdate = CallManager.ConvertBoCallToDoCall(call);
+                _dal.Call.Update(callToUpdate);
             }
+            CallManager.Observers.NotifyItemUpdated(callToUpdate.Id);
+            CallManager.Observers.NotifyListUpdated();
+
+            if (call.Address != "No Address")
+                _ = CallManager.UpdateCallCoordinatesAsync(call.Id, call.Address);
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -182,6 +225,7 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while update.", ex);
         }
     }
+
     /// <summary>
     /// Deletes a call from the system by its ID.
     /// </summary>
@@ -201,9 +245,9 @@ internal class CallImplementation : BlApi.ICall
                 {
                     throw new BO.BlDeletionException($"The call with ID:{callId} cannot be deleted.");
                 }
-                    _dal.Call.Delete(callId);
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+                _dal.Call.Delete(callId); 
             }
+                CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BlDeletionException)
         {
@@ -218,20 +262,52 @@ internal class CallImplementation : BlApi.ICall
     /// Adds a new call to the system after validating its details.
     /// </summary>
     /// <param name="call">The call object to add.</param>
+    //public void AddCall(BO.Call call)
+    //{
+    //    try
+    //    {
+    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+    //        CallManager.ValidateCallDetails(call);
+    //        var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
+    //        call.Latitude = latitude;
+    //        call.Longitude = longitude;
+    //        DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
+    //        lock (AdminManager.BlMutex) //stage 7
+    //            _dal.Call.Create(dataCall);
+    //        CallManager.NotifyVolunteers(call);
+    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
+    //    }
+    //    catch (BlInvalidFormatException)
+    //    {
+    //        throw;
+    //    }
+    //    catch (DO.DalAlreadyExistsException)
+    //    {
+    //        throw new BO.BlAlreadyExistsException("Failed to add the call to the system.");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while add.", ex);
+    //    }
+    //}
     public void AddCall(BO.Call call)
     {
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();//stage 7
             CallManager.ValidateCallDetails(call);
-            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
-            call.Latitude = latitude;
-            call.Longitude = longitude;
+
+            call.Latitude = null;
+            call.Longitude = null;
+
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             lock (AdminManager.BlMutex) //stage 7
                 _dal.Call.Create(dataCall);
-            CallManager.Observers.NotifyListUpdated(); // Stage 5
 
+            CallManager.Observers.NotifyListUpdated();
+
+            if (call.Address != "No Address")
+                _ = CallManager.UpdateCallCoordinatesAsync(call.Id, call.Address);
         }
         catch (BlInvalidFormatException)
         {
@@ -246,6 +322,7 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while add.", ex);
         }
     }
+
     /// <summary>
     /// Retrieves the list of closed calls for a specific volunteer.
     /// </summary>

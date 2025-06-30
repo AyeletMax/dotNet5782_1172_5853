@@ -70,8 +70,8 @@ internal static class CallManager
             MyCallType = (DO.CallType)call.MyCallType,
             VerbalDescription = call.VerbalDescription,
             Address = call.Address,
-            Latitude = call.Latitude,
-            Longitude = call.Longitude,
+            Latitude = call.Latitude.Value,
+            Longitude = call.Longitude.Value,
             OpenTime = call.OpenTime,
             MaxFinishTime = call.MaxFinishTime,
         };
@@ -163,7 +163,25 @@ internal static class CallManager
             });
         
     }
-
+    public static async Task UpdateCallCoordinatesAsync(int callId, string address)
+    {
+        var coords = await Tools.GetCoordinatesFromAddress(address);
+        if (coords is not null)
+        {
+            lock (AdminManager.BlMutex)
+            {
+                var doCall = s_dal.Call.Read(callId);
+                doCall = doCall with
+                {
+                    Latitude = coords.Value.Item1,
+                    Longitude = coords.Value.Item2
+                };
+                s_dal.Call.Update(doCall);
+            }
+            Observers.NotifyItemUpdated(callId);
+            Observers.NotifyListUpdated();
+        }
+    }
     /// <summary>
     /// Sends an email to a volunteer regarding a canceled assignment.
     /// </summary>
@@ -202,9 +220,9 @@ internal static class CallManager
             List<DO.Volunteer> volunteers = s_dal.Volunteer.ReadAll().Where(v => v.Active).ToList();
             foreach (var volunteer in volunteers)
             {
-                if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue)
+                if (volunteer.Latitude.HasValue && volunteer.Longitude.HasValue && volunteer.LargestDistance.HasValue && call.Latitude.HasValue && call.Longitude.HasValue)
                 {
-                    double distance = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude, call.Longitude);
+                    double distance = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude.Value, volunteer.Longitude.Value, call.Latitude.Value, call.Longitude.Value);
                     if (distance <= volunteer.LargestDistance.Value)
                     {
                         string body = $"A new call is available near you: " +

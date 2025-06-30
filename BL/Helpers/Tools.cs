@@ -108,7 +108,7 @@ internal static class Tools
     /// <summary>
     /// Retrieves latitude and longitude coordinates for a given address using an API.
     /// </summary>
-    public static (double, double) GetCoordinatesFromAddress(string address)
+    public static async Task<(double, double)?> GetCoordinatesFromAddress(string address)
     {
         using var client = new HttpClient();
         string url = $"https://us1.locationiq.com/v1/search.php?key={apiKey}&q={Uri.EscapeDataString(address)}&format=json";
