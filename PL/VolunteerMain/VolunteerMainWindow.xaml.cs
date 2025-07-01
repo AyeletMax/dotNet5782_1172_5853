@@ -13,10 +13,11 @@ namespace PL
     public partial class VolunteerMainWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+        private readonly int _volunteerId;
         public VolunteerMainWindow(int volunteerId)
         {
             InitializeComponent();
+            _volunteerId = volunteerId;
             LoadVolunteer(volunteerId);
         }
         public bool IsEditMode
@@ -80,7 +81,22 @@ namespace PL
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadVolunteer(Volunteer.Id);
+            //try
+            //{
+            //    if (Volunteer?.Id != 0)
+            //    {
+            //        s_bl.Volunteer.AddObserver(Volunteer.Id, VolunteerObserver);
+            //        s_bl.Call.AddObserver(OpenCallListObserver);
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    MessageBox.Show(
+            //        "An error occurred while setting up automatic updates. You may need to close and reopen the window.",
+            //        "Initialization Error",
+            //        MessageBoxButton.OK,
+            //        MessageBoxImage.Error);
+            //}
         }
 
         private void CallHistory_Click(object sender, RoutedEventArgs e)
@@ -162,6 +178,45 @@ namespace PL
                 base.OnClosed(e);
                 App.Current.Properties["IsManagerLoggedIn"] = false;
             }
+        }
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+        private void VolunteerObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    if (Volunteer == null)
+                        return;
+
+                    int id = Volunteer.Id;
+                    Volunteer = null;
+                    Volunteer = s_bl.Volunteer.GetVolunteerDetails(id);
+                });
+        }
+        private volatile DispatcherOperation? _observerOperation2 = null; //stage 7
+
+        private void OpenCallListObserver()
+        {
+            if (_observerOperation2 is null || _observerOperation2.Status == DispatcherOperationStatus.Completed)
+                _observerOperation2 = Dispatcher.BeginInvoke(() =>
+                {
+                    try
+                    {
+                        if (Volunteer?.Id != 0)
+                        {
+                            var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(Volunteer!.Id);
+                            CurrentCall = updatedVolunteer?.CurrentCallInProgress;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(
+                            "An error occurred while updating the call list. Please try refreshing the window.",
+                            "Data Update Error",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                });
         }
 
     }
