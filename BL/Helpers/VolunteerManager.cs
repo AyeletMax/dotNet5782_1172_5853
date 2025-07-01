@@ -176,11 +176,12 @@ internal static class VolunteerManager
             boVolunteer.Email,
             boVolunteer.Active,
             (DO.Role)boVolunteer.MyRole,
-            boVolunteer.Password,
-            boVolunteer.Address,
             boVolunteer.Latitude,
             boVolunteer.Longitude,
             boVolunteer.LargestDistance,
+            boVolunteer.Password,
+            boVolunteer.Address,
+           
             (DO.DistanceType)boVolunteer.MyDistanceType
         );
     }
@@ -239,195 +240,221 @@ internal static class VolunteerManager
 
         return true; 
     }
-    private static readonly Random s_rand = new();
-    private static int s_simulatorCounter = 0;
-    internal static void SimulateVolunteerActivity()
-    {
-        try
-        {
-            Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
-
-            LinkedList<int> callsToUpdate = new(); //stage 7
-            List<DO.Volunteer> doVolunteerList;
-
-            lock (AdminManager.BlMutex) //stage 7
-                doVolunteerList = s_dal.Volunteer.ReadAll(st => st.Active == true).ToList();
-
-            foreach (var doVolunteer in doVolunteerList)
-            {
-                //int volunteerId = 0;
-                lock (AdminManager.BlMutex) //stage 7
-                {
-
-                    var BoVol = GetBoVolunteer(doVolunteer.Id);
-                    if (BoVol == null)
-                        return;
-                    if (BoVol.CurrentCallInProgress == null)
-                    {
-                        var openCalls = CallManager.GetOpenCallsForVolunteer(doVolunteer.Id);
-                        openCalls = openCalls.Where(c => doVolunteer.LargestDistance is null || c.CallingDistanceFromVolunteer <= doVolunteer.LargestDistance);
-                        if (s_rand.Next(1, 101) <= 20)
-                        {
-                            if (openCalls.Any())
-                            {
-                                var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
-                                if (selectedCall != null)
-                                {
-                                    callsToUpdate.AddLast(selectedCall.Id);
-                                    CallManager.SelectCall(doVolunteer.Id, selectedCall.Id);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var currentCall = BoVol.CurrentCallInProgress;
-
-                        TimeSpan timeInTreatment = DateTime.Now - currentCall.EntryTimeTreatment;
-
-                        // Calculate base treatment time (5-15 minutes)
-                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 10); // 5-15 minutes
-
-                        // Calculate travel time (1-2 minutes per km)
-                        double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km
-                        double travelMinutes = (currentCall.CallDistanceFromCaringVolunteer ?? 0) * travelTimePerKm;
-
-                        // Total required time is base treatment time + travel time
-                        TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
-
-                        // Add some random variation (0-5 minutes)
-                        TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
-                        requiredTime = requiredTime.Add(randomVariation);
-
-                        if (timeInTreatment >= requiredTime)
-                        {
-                            callsToUpdate.AddLast(currentCall.CallId);
-
-                            // Enough time has passed - close the call as treated
-                            CallManager.CloseCallTreatment(doVolunteer.Id, currentCall.Id);
-                        }
-                        else
-                        {
-                            // 10% chance to cancel the treatment
-                            if (s_rand.Next(1, 101) <= 10)
-                            {
-                                callsToUpdate.AddLast(currentCall.CallId);
-                                CallManager.CancelCallTreatment(doVolunteer.Id, currentCall.Id);
-                            }
-                        }
-                    }
-
-                    //var coursesNotRegistered = CourseManager.GetUnRegisteredCoursesForStudent(doStudent.Id, studentYear);
-
-                    //int cntNotRegCourses = coursesNotRegistered.Count();
-                    //if (cntNotRegCourses != 0)
-                    //{
-                    //    int courseId = coursesNotRegistered.Skip(s_rand.Next(0, cntNotRegCourses)).First()!.Id;
-                    //    LinkManager.LinkStudentToCourse(doStudent.Id, courseId);
-                    //    studentId = doStudent.Id;
-                    //}
-
-                    ////simulate setting grade of course for selected student
-                    //var coursesRegistered =
-                    //    s_dal.Course.ReadAll(course => LinkManager.IsStudentLinkedToCourse(doStudent.Id, course.Id) && course.InYear == (DO.Year)studentYear);
-                    //int cntRegCourses = coursesRegistered.Count();
-                    //if (cntRegCourses != 0)
-                    //{
-                    //    int courseId = coursesRegistered.Skip(s_rand.Next(0, cntRegCourses)).First()!.Id;
-                    //    LinkManager.UpdateCourseGradeForStudent(doStudent.Id, courseId, Math.Round(s_rand.NextDouble() * 100, 2));
-                    //    studentId = doStudent.Id;
-                    //}
-
-                    //if (studentId != 0)
-                    //    studentsToUpdate.AddLast(doStudent.Id);
-                } //lock
-            }
-
-            foreach (int id in callsToUpdate)
-                Observers.NotifyItemUpdated(id);
-        }
-
-        catch (BlInvalidLogicException ex)
-        {
-            throw new ArgumentException(ex.Message, ex);
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException("This object does not exist", ex);
-        }
-        catch (BLTemporaryNotAvailableException)
-        {
-            throw;
-        }
-    }
-}
-
-    //private static readonly object BlMutex = new();
-
-
     //private static readonly Random s_rand = new();
-    //    private static int s_simulatorCounter = 0;
-
+    //private static int s_simulatorCounter = 0;
     //    internal static void SimulateVolunteerActivity()
     //    {
-    //        Thread.CurrentThread.Name = $"VolunteerSimulator{++s_simulatorCounter}";
-    //        LinkedList<int> volunteersToNotify = new();
-    //        List<DO.Volunteer> activeVolunteers;
-    //        lock (BlMutex)
+    //        try
     //        {
-    //            activeVolunteers = s_dal.Volunteer.ReadAll(v => v.Active).ToList();
-    //        }
+    //            Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
 
-    //        foreach (var volunteer in activeVolunteers)
-    //        {
-    //            bool updated = false;
+    //            LinkedList<int> callsToUpdate = new(); //stage 7
+    //            List<DO.Volunteer> doVolunteerList;
 
-    //            lock (BlMutex)
+    //            lock (AdminManager.BlMutex) //stage 7
+    //                doVolunteerList = s_dal.Volunteer.ReadAll(st => st.Active == true).ToList();
+
+    //            foreach (var doVolunteer in doVolunteerList)
     //            {
-    //                var assignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == volunteer.Id && a.ExitTime == null).ToList();
-
-    //            if (assignments.Any())
-    //            {
-    //                var assignmentToUpdate = assignments[s_rand.Next(assignments.Count)];
-    //                var updatedAssignment = assignmentToUpdate with
+    //                //int volunteerId = 0;
+    //                lock (AdminManager.BlMutex) //stage 7
     //                {
-    //                ExitTime = DateTime.Now,
-    //                FinishCallType = DO.FinishCallType.TakenCareOf
-    //                };
-    //                s_dal.Assignment.Update(updatedAssignment);
-    //                    updated = true;
-    //                }
+
+    //                    var BoVol = GetBoVolunteer(doVolunteer.Id);
+    //                    if (BoVol == null)
+    //                        return;
+    //                    if (BoVol.CurrentCallInProgress == null)
+    //                    {
+    //                        var openCalls = CallManager.GetOpenCallsForVolunteer(doVolunteer.Id);
+    //                        openCalls = openCalls.Where(c => doVolunteer.LargestDistance is null || c.CallingDistanceFromVolunteer <= doVolunteer.LargestDistance);
+    //                        if (s_rand.Next(1, 101) <= 20)
+    //                        {
+    //                            if (openCalls.Any())
+    //                            {
+    //                                var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
+    //                                if (selectedCall != null)
+    //                                {
+    //                                    callsToUpdate.AddLast(selectedCall.Id);
+    //                                    CallManager.SelectCall(doVolunteer.Id, selectedCall.Id);
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                    else
+    //                    {
+    //                        var currentCall = BoVol.CurrentCallInProgress;
+
+    //                        TimeSpan timeInTreatment = DateTime.Now - currentCall.EntryTimeTreatment;
+
+    //                        // Calculate base treatment time (5-15 minutes)
+    //                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 10); // 5-15 minutes
+
+    //                        // Calculate travel time (1-2 minutes per km)
+    //                        double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km
+    //                        double travelMinutes = (currentCall.CallDistanceFromCaringVolunteer ?? 0) * travelTimePerKm;
+
+    //                        // Total required time is base treatment time + travel time
+    //                        TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
+
+    //                        // Add some random variation (0-5 minutes)
+    //                        TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
+    //                        requiredTime = requiredTime.Add(randomVariation);
+
+    //                        if (timeInTreatment >= requiredTime)
+    //                        {
+    //                            callsToUpdate.AddLast(currentCall.CallId);
+
+    //                            // Enough time has passed - close the call as treated
+    //                            CallManager.CloseCallTreatment(doVolunteer.Id, currentCall.Id);
+    //                        }
+    //                        else
+    //                        {
+    //                            // 10% chance to cancel the treatment
+    //                            if (s_rand.Next(1, 101) <= 10)
+    //                            {
+    //                                callsToUpdate.AddLast(currentCall.CallId);
+    //                                CallManager.CancelCallTreatment(doVolunteer.Id, currentCall.Id);
+    //                            }
+    //                        }
+    //                    }
+
+    //                    //var coursesNotRegistered = CourseManager.GetUnRegisteredCoursesForStudent(doStudent.Id, studentYear);
+
+    //                    //int cntNotRegCourses = coursesNotRegistered.Count();
+    //                    //if (cntNotRegCourses != 0)
+    //                    //{
+    //                    //    int courseId = coursesNotRegistered.Skip(s_rand.Next(0, cntNotRegCourses)).First()!.Id;
+    //                    //    LinkManager.LinkStudentToCourse(doStudent.Id, courseId);
+    //                    //    studentId = doStudent.Id;
+    //                    //}
+
+    //                    ////simulate setting grade of course for selected student
+    //                    //var coursesRegistered =
+    //                    //    s_dal.Course.ReadAll(course => LinkManager.IsStudentLinkedToCourse(doStudent.Id, course.Id) && course.InYear == (DO.Year)studentYear);
+    //                    //int cntRegCourses = coursesRegistered.Count();
+    //                    //if (cntRegCourses != 0)
+    //                    //{
+    //                    //    int courseId = coursesRegistered.Skip(s_rand.Next(0, cntRegCourses)).First()!.Id;
+    //                    //    LinkManager.UpdateCourseGradeForStudent(doStudent.Id, courseId, Math.Round(s_rand.NextDouble() * 100, 2));
+    //                    //    studentId = doStudent.Id;
+    //                    //}
+
+    //                    //if (studentId != 0)
+    //                    //    studentsToUpdate.AddLast(doStudent.Id);
+    //                } //lock
     //            }
-    //            if (updated)
-    //            {
-    //                volunteersToNotify.AddLast(volunteer.Id);
-    //            }
+
+    //            foreach (int id in callsToUpdate)
+    //                Observers.NotifyItemUpdated(id);
     //        }
-    //        foreach (var id in volunteersToNotify)
+
+    //        catch (BlInvalidLogicException ex)
     //        {
-    //            Observers.NotifyItemUpdated(id);
+    //            throw new ArgumentException(ex.Message, ex);
+    //        }
+    //        catch (DO.DalDoesNotExistException ex)
+    //        {
+    //            throw new BO.BlDoesNotExistException("This object does not exist", ex);
+    //        }
+    //        catch (BLTemporaryNotAvailableException)
+    //        {
+    //            throw;
     //        }
     //    }
-    public static async Task UpdateVolunteerCoordinatesAsync(int volunteerId, string address)
+    //}
+
+    private static readonly object BlMutex = new();
+
+
+    private static readonly Random s_rand = new();
+    private static int s_simulatorCounter = 0;
+
+    internal static void SimulateVolunteerActivity()
     {
-        var coords = await Tools.GetCoordinatesFromAddress(address);
+        Thread.CurrentThread.Name = $"VolunteerSimulator{++s_simulatorCounter}";
+        LinkedList<int> volunteersToNotify = new();
+        List<DO.Volunteer> activeVolunteers;
+        lock (BlMutex)
+        {
+            activeVolunteers = s_dal.Volunteer.ReadAll(v => v.Active).ToList();
+        }
+
+        foreach (var volunteer in activeVolunteers)
+        {
+            bool updated = false;
+
+            lock (BlMutex)
+            {
+                var assignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == volunteer.Id && a.ExitTime == null).ToList();
+
+                if (assignments.Any())
+                {
+                    var assignmentToUpdate = assignments[s_rand.Next(assignments.Count)];
+                    var updatedAssignment = assignmentToUpdate with
+                    {
+                        ExitTime = DateTime.Now,
+                        FinishCallType = DO.FinishCallType.TakenCareOf
+                    };
+                    s_dal.Assignment.Update(updatedAssignment);
+                    updated = true;
+                }
+            }
+            if (updated)
+            {
+                volunteersToNotify.AddLast(volunteer.Id);
+            }
+        }
+        foreach (var id in volunteersToNotify)
+        {
+            Observers.NotifyItemUpdated(id);
+        }
+    }
+    //public static async Task UpdateVolunteerCoordinatesAsync(int volunteerId, string address)
+    //{
+    //    var coords = await Tools.GetCoordinatesFromAddress(address);
+    //    if (coords is not null)
+    //    {
+    //        lock (AdminManager.BlMutex)
+    //        {
+    //            var doVolunteer = s_dal.Volunteer.Read(volunteerId);
+    //            doVolunteer = doVolunteer with
+    //            {
+    //                Latitude = coords.Value.Item1,
+    //                Longitude = coords.Value.Item2
+    //            };
+    //            s_dal.Volunteer.Update(doVolunteer);
+    //        }
+
+    //        Observers.NotifyItemUpdated(volunteerId);
+    //        Observers.NotifyListUpdated();
+    //    }
+    public static async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer volunteer)
+    {
+        var coords = await Tools.GetCoordinatesFromAddress(volunteer.Address);
         if (coords is not null)
         {
+            var (latitude, longitude) = coords.Value;
+
             lock (AdminManager.BlMutex)
             {
-                var doVolunteer = s_dal.Volunteer.Read(volunteerId);
-                doVolunteer = doVolunteer with
+                //var doVolunteer = s_dal.Volunteer.Read(volunteer.Id);
+                volunteer =volunteer with
                 {
-                    Latitude = coords.Value.Item1,
-                    Longitude = coords.Value.Item2
+                    Latitude = latitude,
+                    Longitude = longitude
                 };
-                s_dal.Volunteer.Update(doVolunteer);
+                s_dal.Volunteer.Update(volunteer);
             }
 
-            Observers.NotifyItemUpdated(volunteerId);
+            Observers.NotifyItemUpdated(volunteer.Id);
             Observers.NotifyListUpdated();
         }
     }
+
+
+
+
+
 
 }
 

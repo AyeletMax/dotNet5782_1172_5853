@@ -202,6 +202,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();
+            DO.Volunteer doVolunteer;
             lock (AdminManager.BlMutex)
             {
                 var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
@@ -238,7 +239,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
                     throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
 
-                var doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
+                doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
                 _dal.Volunteer.Update(doVolunteer);
             }
 
@@ -247,7 +248,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
             // אסינכרונית - מבלי להמתין!
             if (boVolunteer.Address != null)
-                _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(boVolunteer.Id, boVolunteer.Address);
+                _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
         }
         catch (BO.BlInvalidFormatException) { throw; }
         catch (DO.DalDoesNotExistException ex)
@@ -343,6 +344,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();//stage 7
+            DO.Volunteer doVolunteer;
             lock (AdminManager.BlMutex) //stage 7
             {
                 var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
@@ -357,13 +359,18 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 boVolunteer.Longitude = null;
                 boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password!);
 
-                DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
+                doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
                 _dal.Volunteer.Create(doVolunteer);
-            }
-            VolunteerManager.Observers.NotifyListUpdated();
+                VolunteerManager.Observers.NotifyListUpdated();
 
-            if (boVolunteer.Address != null)
-                _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(boVolunteer.Id, boVolunteer.Address);
+
+            }
+
+            //DO.Volunteer volunteer1 = _dal.Volunteer.Read(c => c.Id == doVolunteer.Id)!;
+
+            if (boVolunteer.Address != "No Address")
+                _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
+
         }
         catch (DO.DalAlreadyExistsException ex)
         {

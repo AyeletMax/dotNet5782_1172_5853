@@ -240,7 +240,7 @@ namespace DalTest
             Console.Write("Distance Type (Air, Drive or Walk): ");
             DistanceType myDistanceType = (DistanceType)Enum.Parse(typeof(DistanceType), Console.ReadLine()!, true);
             // Creates the Volunteer using provided details.
-            s_dal!.Volunteer.Create(new(id, name, phoneNumber, email, active, role, password, address, latitude, longitude, largestDistance, myDistanceType));
+            s_dal!.Volunteer.Create(new(id, name, phoneNumber, email, active, role, latitude, longitude, largestDistance, password, address, myDistanceType));
             Console.WriteLine("Volunteer created successfully!");
         }
         /// <summary>
@@ -409,7 +409,7 @@ namespace DalTest
             Console.Write("Distance Type (Air or Walk): ");
             string myDistanceType = Console.ReadLine()!;
             DistanceType distanceType = string.IsNullOrEmpty(myDistanceType) ? existingVolunteer.MyDistanceType : (DistanceType)Enum.Parse(typeof(DistanceType), myDistanceType);
-            return new Volunteer(existingVolunteer.Id, name, phoneNumber, email, isActive, role, password, address, latitude, longitude, maxDistance, distanceType);
+            return new Volunteer(existingVolunteer.Id, name, phoneNumber, email, isActive, role, latitude, longitude, maxDistance, password, address, distanceType);
         }
         /// <summary>
         /// Prompts the user to update details of an existing Call entity.
