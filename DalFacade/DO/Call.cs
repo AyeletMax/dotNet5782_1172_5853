@@ -14,8 +14,8 @@ public record Call
 (
     CallType MyCallType,
     string Address,
-    double Latitude,
-    double Longitude,
+    double? Latitude,
+    double? Longitude,
     DateTime OpenTime,
     DateTime? MaxFinishTime = null,
     string? VerbalDescription=null
@@ -26,5 +26,5 @@ public record Call
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Call() : this( default(CallType), "", 0, 0, DateTime.MinValue) { }
+    public Call() : this( default(CallType), "", null, null, DateTime.MinValue) { }
 }

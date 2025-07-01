@@ -143,7 +143,7 @@ internal static class Tools
     /// <summary>
     /// Calculates the distance between two locations based on the selected distance type.
     /// </summary>
-    public static double CalculateDistance(DistanceType type, double latitudeV, double longitudeV, double latitudeC, double longitudeC)
+    public static double CalculateDistance(DistanceType type, double? latitudeV, double? longitudeV, double? latitudeC, double? longitudeC)
     {
         return type switch
         {
@@ -156,7 +156,7 @@ internal static class Tools
     /// <summary>
     /// Retrieves the route distance between two locations using an external API.
     /// </summary>
-    private static double GetRouteDistance(double latitudeV, double longitudeV, double latitudeC, double longitudeC, string travelMode)
+    private static double GetRouteDistance(double? latitudeV, double? longitudeV, double? latitudeC, double? longitudeC, string travelMode)
     {
         using HttpClient client = new HttpClient();
         string url = $"https://api.tomtom.com/routing/1/calculateRoute/{latitudeV},{longitudeV}:{latitudeC},{longitudeC}/json?key={apiKey1}&travelMode={travelMode}";
@@ -188,7 +188,7 @@ internal static class Tools
     /// <summary>
     /// Calculates the great-circle distance between two points using the Haversine formula.
     /// </summary>
-    private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+    private static double HaversineDistance(double? lat1, double? lon1, double? lat2, double? lon2)
     {
         const double R = 6371;
         lat1 = DegreesToRadians(lat1);
@@ -196,16 +196,17 @@ internal static class Tools
         lat2 = DegreesToRadians(lat2);
         lon2 = DegreesToRadians(lon2);
 
-        double dLat = lat2 - lat1;
-        double dLon = lon2 - lon1;
+        double dLat = lat2.Value - lat1.Value;
+        double dLon = lon2.Value - lon1.Value;
 
         double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                   Math.Cos(lat1) * Math.Cos(lat2) *
+                   Math.Cos(lat1.Value) * Math.Cos(lat2.Value) *
                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
 
         double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
         return R * c;
     }
-    private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
+
+    private static double DegreesToRadians(double? degrees) => degrees.HasValue ? degrees.Value * Math.PI / 180 : throw new ArgumentNullException(nameof(degrees), "Degrees cannot be null");
 }

@@ -425,10 +425,10 @@ namespace DalTest
             string address = string.IsNullOrEmpty(Console.ReadLine()) ? existingCall.Address : Console.ReadLine()!;
             Console.Write("Latitude: ");
             string latitudeInput = Console.ReadLine()!;
-            double latitude = string.IsNullOrEmpty(latitudeInput) ? existingCall.Latitude : double.Parse(latitudeInput);
+            double? latitude = string.IsNullOrEmpty(latitudeInput) ? existingCall.Latitude : double.Parse(latitudeInput);
             Console.Write("Longitude: ");
             string longitudeInput = Console.ReadLine()!;
-            double longitude = string.IsNullOrEmpty(longitudeInput) ? existingCall.Longitude : double.Parse(longitudeInput);
+            double? longitude = string.IsNullOrEmpty(longitudeInput) ? existingCall.Longitude : double.Parse(longitudeInput);
             Console.Write("Open Time (yyyy-MM-dd HH:mm:ss): ");
             string openingTimeInput = Console.ReadLine()!;
             DateTime openingTime = string.IsNullOrEmpty(openingTimeInput) || !DateTime.TryParse(openingTimeInput, out DateTime ot) ? existingCall.OpenTime : ot;

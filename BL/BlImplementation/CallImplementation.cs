@@ -1,4 +1,5 @@
 ﻿using BO;
+using DO;
 using Helpers;
 
 namespace BlImplementation;
@@ -214,7 +215,7 @@ internal class CallImplementation : BlApi.ICall
             CallManager.Observers.NotifyListUpdated();
 
             if (call.Address != "No Address")
-                _ = CallManager.UpdateCallCoordinatesAsync(call.Id, call.Address);
+                _ = CallManager.UpdateCallCoordinatesAsync(callToUpdate);
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -303,11 +304,19 @@ internal class CallImplementation : BlApi.ICall
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             lock (AdminManager.BlMutex) //stage 7
                 _dal.Call.Create(dataCall);
-
+            
             CallManager.Observers.NotifyListUpdated();
+            DO.Call call1 = _dal.Call.Read(c => (dataCall.Address == c.Address &&
+            dataCall.VerbalDescription == c.VerbalDescription &&
+            dataCall.MaxFinishTime == c.MaxFinishTime &&
+            dataCall.OpenTime == c.OpenTime &&
+            dataCall.Latitude == c.Latitude &&
+            dataCall.Longitude == c.Longitude && dataCall.MyCallType == c.MyCallType))!;
+            CallManager.NotifyVolunteers(call);
+            if (call1.Address != "No Address")
+                _ = CallManager.UpdateCallCoordinatesAsync(call1);
+         
 
-            if (call.Address != "No Address")
-                _ = CallManager.UpdateCallCoordinatesAsync(call.Id, call.Address);
         }
         catch (BlInvalidFormatException)
         {
@@ -526,7 +535,6 @@ internal class CallImplementation : BlApi.ICall
                     ExitTime = AdminManager.Now,
                     FinishCallType = (assignment.VolunteerId == volunteerId) ? DO.FinishCallType.CanceledByVolunteer : DO.FinishCallType.CanceledByManager
                 };
-                //פה הוספתי
                 CallManager.SendEmailToVolunteer(volunteer, assignment);
                     _dal.Assignment.Update(assignment);
                 //CallManager.Observers.NotifyItemUpdated(assignment.Id); // Stage 5

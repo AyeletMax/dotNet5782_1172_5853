@@ -2,6 +2,7 @@
 using BO;
 using DalApi;
 using DO;
+using System.Net.Mail;
 
 namespace Helpers;
 
@@ -70,8 +71,8 @@ internal static class CallManager
             MyCallType = (DO.CallType)call.MyCallType,
             VerbalDescription = call.VerbalDescription,
             Address = call.Address,
-            Latitude = call.Latitude.Value,
-            Longitude = call.Longitude.Value,
+            Latitude = call.Latitude,
+            Longitude = call.Longitude,
             OpenTime = call.OpenTime,
             MaxFinishTime = call.MaxFinishTime,
         };
@@ -84,12 +85,12 @@ internal static class CallManager
     /// <exception cref="BlInvalidFormatException">Thrown when call details are invalid.</exception>
     internal static void ValidateCallDetails(BO.Call call)
     {
-        if (string.IsNullOrWhiteSpace(call.Address) ||
-            !(call.Latitude >= -90 && call.Latitude <= 90 &&
-              call.Longitude >= -180 && call.Longitude <= 180))
-        {
-            throw new BlInvalidFormatException("The address must be valid with latitude and longitude.");
-        }
+        //if (string.IsNullOrWhiteSpace(call.Address) ||
+        //    !(call.Latitude >= -90 && call.Latitude <= 90 &&
+        //      call.Longitude >= -180 && call.Longitude <= 180))
+        //{
+        //    throw new BlInvalidFormatException("The address must be valid with latitude and longitude.");
+        //}
         if (!Enum.IsDefined(typeof(BO.CallType), call.MyCallType))
         {
             throw new BlInvalidFormatException("Invalid call type.");
@@ -163,22 +164,25 @@ internal static class CallManager
             });
         
     }
-    public static async Task UpdateCallCoordinatesAsync(int callId, string address)
+    public static async Task UpdateCallCoordinatesAsync(DO.Call call)
     {
-        var coords = await Tools.GetCoordinatesFromAddress(address);
+        var coords = await Tools.GetCoordinatesFromAddress(call.Address);
         if (coords is not null)
         {
+            var (latitude, longitude) = coords.Value;
+
             lock (AdminManager.BlMutex)
             {
-                var doCall = s_dal.Call.Read(callId);
-                doCall = doCall with
+                //var doCall = s_dal.Call.Read(callId);
+                call = call with
                 {
-                    Latitude = coords.Value.Item1,
-                    Longitude = coords.Value.Item2
+                    Latitude = latitude,
+                    Longitude = longitude
                 };
-                s_dal.Call.Update(doCall);
+                s_dal.Call.Update(call);
             }
-            Observers.NotifyItemUpdated(callId);
+
+            Observers.NotifyItemUpdated(call.Id);
             Observers.NotifyListUpdated();
         }
     }
