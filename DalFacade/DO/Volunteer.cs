@@ -21,16 +21,18 @@ public record Volunteer
     string Email,
     bool Active,
     Role MyRole ,
+    double? Latitude,
+    double? Longitude,
+    double? LargestDistance,
     string? Password = null,
     string? Address = null,
-    double? Latitude = null,
-    double? Longitude = null,
-    double? LargestDistance = null,
     DistanceType MyDistanceType = DistanceType.Air
+
+
 )
 {
     /// <summary>
     /// Default constructor
     /// </summary>
-    public Volunteer() : this(0, "", "", "", false, Role.Volunteer, "", "", 0, 0,0, DistanceType.Air) { }
+    public Volunteer() : this(0, "", "", "", false, Role.Volunteer, null, null, null, "", "", DistanceType.Air ) { }
 }

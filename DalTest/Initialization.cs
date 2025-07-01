@@ -74,8 +74,8 @@ public static class Initialization
         };
         for (int i = 0; i < FullNames.Length; i++)
         {
-            s_dal!.Volunteer!.Create(new Volunteer(GenerateValidIsraeliId(s_rand), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer, EncryptPassword(passwords[i]), addresses[i],
-                latitudes[i], longitudes[i], s_rand.Next(0, 8)));
+            s_dal!.Volunteer!.Create(new Volunteer(GenerateValidIsraeliId(s_rand), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer,
+                latitudes[i], longitudes[i], s_rand.Next(0, 8), EncryptPassword(passwords[i]), addresses[i] ));
         }
     }
     private static int GenerateValidIsraeliId(Random rand)
