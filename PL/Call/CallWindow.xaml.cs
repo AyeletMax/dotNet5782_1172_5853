@@ -69,6 +69,9 @@ namespace PL.Call
                 OnPropertyChanged(nameof(CanEditOnlyMaxTime));
                 OnPropertyChanged(nameof(CannotEdit));
                 OnPropertyChanged(nameof(CanEdit));
+                OnPropertyChanged(nameof(CannotEditMaxFinishTime));
+                OnPropertyChanged(nameof(MaxFinishDate));
+                OnPropertyChanged(nameof(MaxFinishTime));
             }
         }
 
@@ -108,6 +111,37 @@ namespace PL.Call
             CurrentCall is { MyStatus: BO.Status.Closed or BO.Status.Expired };
 
         public bool CanEdit => CanEditDetails || CanEditMaxFinishTime;
+
+        public bool CannotEditMaxFinishTime => !CanEditMaxFinishTime;
+
+        // Properties for separate date and time handling
+        public DateTime? MaxFinishDate
+        {
+            get => CurrentCall?.MaxFinishTime?.Date;
+            set
+            {
+                if (CurrentCall != null && value.HasValue)
+                {
+                    var timeOfDay = CurrentCall.MaxFinishTime?.TimeOfDay ?? TimeSpan.Zero;
+                    CurrentCall.MaxFinishTime = value.Value.Date.Add(timeOfDay);
+                    OnPropertyChanged(nameof(MaxFinishDate));
+                }
+            }
+        }
+
+        public string MaxFinishTime
+        {
+            get => CurrentCall?.MaxFinishTime?.ToString("HH:mm") ?? "";
+            set
+            {
+                if (CurrentCall != null && TimeSpan.TryParse(value, out var time))
+                {
+                    var date = CurrentCall.MaxFinishTime?.Date ?? DateTime.Today;
+                    CurrentCall.MaxFinishTime = date.Add(time);
+                    OnPropertyChanged(nameof(MaxFinishTime));
+                }
+            }
+        }
 
         private void RefreshCallObserver()
         {
