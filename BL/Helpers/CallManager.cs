@@ -143,10 +143,10 @@ internal static class CallManager
         {
             throw new BlInvalidFormatException("Assignments cannot start before the call's open time.");
         }
-        if (call.OpenTime > DateTime.Now)
-        {
-            throw new BlInvalidFormatException("The open time cannot be in the future.");
-        }
+        //if (call.OpenTime > DateTime.Now)
+        //{
+        //    throw new BlInvalidFormatException("The open time cannot be in the future.");
+        //}
         if (call.MaxFinishTime.HasValue && call.MaxFinishTime.Value <= call.OpenTime)
         {
             throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
