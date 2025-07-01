@@ -19,45 +19,85 @@ internal static class CallManager
     /// </summary>
     /// <param name="callId">The ID of the call.</param>
     /// <returns>The current status of the call.</returns>
-    public static Status GetCallStatus(int callId)
+    //public static Status GetCallStatus(int callId)
+    //{
+
+    //    var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
+    //    //    var activeAssignments = s_dal.Assignment.ReadAll()
+    //    //.Where(a => a.CallId == callId && a.ExitTime == null)
+    //    //.ToList();
+    //    var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
+    //    TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
+
+    //    if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
+    //        return Status.Expired;
+    //    if (assignment != null && timeLeft <= s_dal.Config.RiskRange)
+    //        return Status.InProgressAtRisk;
+    //    if (assignment != null)
+    //        return Status.InProgress;
+    //    if (timeLeft <= s_dal.Config.RiskRange)
+    //        return Status.AtRisk;
+
+    //    return Status.Opened;
+    //    //TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
+
+    //    //if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
+    //    //    return Status.Expired;
+
+    //    //if (!activeAssignments.Any())
+    //    //{
+    //    //    if (timeLeft <= s_dal.Config.RiskRange)
+    //    //        return Status.AtRisk;
+
+    //    //    return Status.Opened;
+    //    //}
+
+    //    //if (timeLeft <= s_dal.Config.RiskRange)
+    //    //    return Status.InProgressAtRisk;
+
+    //    //return Status.InProgress;
+    //}
+    internal static Status GetCallStatus(int callId)
     {
+        try
+        {
+            DO.Call? call;
+            IEnumerable<DO.Assignment> assignments;
+            lock (AdminManager.BlMutex)
+            {
 
-        var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
-        //    var activeAssignments = s_dal.Assignment.ReadAll()
-        //.Where(a => a.CallId == callId && a.ExitTime == null)
-        //.ToList();
-        var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
-        TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
+                call = s_dal.Call.Read(callId);
+                assignments = s_dal.Assignment.ReadAll(a => a.CallId == callId);
+            }
 
-        if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
-            return Status.Expired;
-        if (assignment != null && timeLeft <= s_dal.Config.RiskRange)
-            return Status.InProgressAtRisk;
-        if (assignment != null)
-            return Status.InProgress;
-        if (timeLeft <= s_dal.Config.RiskRange)
-            return Status.AtRisk;
+            if (!assignments.Any() ||
+                assignments.Any(a => (a.ExitTime.HasValue
+                && (a.FinishCallType == DO.FinishCallType.CanceledByManager || a.FinishCallType == DO.FinishCallType.CanceledByVolunteer)
+                 && !assignments.Any(a => (!a.ExitTime.HasValue && a.FinishCallType == null || a.FinishCallType == DO.FinishCallType.TakenCareOf)))))
+            {
+                BO.Status myStatus = Tools.CalculateStatus(call!);
+                if (myStatus == BO.Status.InProgress)
+                    return BO.Status.Opened;
+                else if (myStatus == BO.Status.Expired)
+                    return BO.Status.Expired;
+                else
+                    return BO.Status.InProgressAtRisk;
+            }
 
-        return Status.Opened;
-        //TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
+            if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType != DO.FinishCallType.CanceledByVolunteer
+            && a.FinishCallType != DO.FinishCallType.CanceledByManager))
+                return BO.Status.Closed;
 
-        //if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
-        //    return Status.Expired;
+            if (call!.MaxFinishTime.HasValue && call.MaxFinishTime.Value < AdminManager.Now)
+                return BO.Status.Expired;
 
-        //if (!activeAssignments.Any())
-        //{
-        //    if (timeLeft <= s_dal.Config.RiskRange)
-        //        return Status.AtRisk;
-
-        //    return Status.Opened;
-        //}
-
-        //if (timeLeft <= s_dal.Config.RiskRange)
-        //    return Status.InProgressAtRisk;
-
-        //return Status.InProgress;
+            return Tools.CalculateStatus(call);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Call with ID={callId} does not exist", ex);
+        }
     }
-
     /// <summary>
     /// Converts a business object (BO) call to a data object (DO) call.
     /// </summary>
