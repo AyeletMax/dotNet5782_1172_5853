@@ -101,16 +101,6 @@
     <Id>10</Id>
   </Call>
   <Call>
-    <MyCallType>GroupActivities</MyCallType>
-    <Address>Eilat, Israel</Address>
-    <Latitude>32.0916</Latitude>
-    <Longitude>34.7618</Longitude>
-    <OpenTime>2025-06-29T00:21:00</OpenTime>
-    <MaxFinishTime>2025-06-29T02:33:00</MaxFinishTime>
-    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
-    <Id>11</Id>
-  </Call>
-  <Call>
     <MyCallType>MusicPerformance</MyCallType>
     <Address>Tel Aviv, Israel</Address>
     <Latitude>32.0744</Latitude>
@@ -509,5 +499,15 @@
     <MaxFinishTime>2025-06-30T23:59:00</MaxFinishTime>
     <VerbalDescription>a singing perfomance for a sad lady</VerbalDescription>
     <Id>51</Id>
+  </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>Eilat, Israel</Address>
+    <Latitude>29.554030599999997</Latitude>
+    <Longitude>34.94527476661743</Longitude>
+    <OpenTime>2025-06-29T00:21:00</OpenTime>
+    <MaxFinishTime>2025-06-29T02:05:00</MaxFinishTime>
+    <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
+    <Id>11</Id>
   </Call>
 </ArrayOfCall>
