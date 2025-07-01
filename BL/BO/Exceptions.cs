@@ -85,4 +85,14 @@ public class BlInvalidOperationException : Exception
     public BlInvalidOperationException(string? message, Exception? innerException)
         : base(message, innerException) { }
 }
+public class BlInvalidLogicException : Exception
+{
+    public BlInvalidLogicException(string? message) : base(message) { }
 
+    public BlInvalidLogicException(string? message, Exception? innerException)
+        : base(message, innerException) { }
+}
+public class BLTemporaryNotAvailableException : Exception
+{
+    public BLTemporaryNotAvailableException(string? message) : base(message) { }
+}
