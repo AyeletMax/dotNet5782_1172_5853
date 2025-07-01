@@ -110,7 +110,7 @@
                   ItemsSource="{Binding CallList}"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
-                  SelectedItem="{Binding SelectedCall}"
+                  SelectedItem="{Binding SelectedCall,Mode=TwoWay}"
                   EnableRowVirtualization="True"
                   MouseDoubleClick="DataGrid_MouseDoubleClick"
                   HorizontalAlignment="Center">

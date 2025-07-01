@@ -482,8 +482,8 @@ internal class CallImplementation : BlApi.ICall
                     ExitTime = AdminManager.Now
                 };
                     _dal.Assignment.Update(updatedAssignment);
-                //CallManager.Observers.NotifyItemUpdated(updatedAssignment.Id); // Stage 5
-                //CallManager.Observers.NotifyListUpdated(); // Stage 5
+                CallManager.Observers.NotifyItemUpdated(updatedAssignment.CallId); // Stage 5
+                CallManager.Observers.NotifyListUpdated(); // Stage 5
             }
         }
         catch (BlUnauthorizedAccessException)
@@ -516,9 +516,8 @@ internal class CallImplementation : BlApi.ICall
             lock (AdminManager.BlMutex) //stage 7
             {
                 var assignment = _dal.Assignment.Read(assignmentId) ?? throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
-
                 var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
-                if (volunteer.MyRole != DO.Role.Manager || assignment.VolunteerId != volunteerId)
+                if (volunteer.MyRole != DO.Role.Manager && assignment.VolunteerId != volunteerId)
                 {
                     throw new BO.BlUnauthorizedAccessException("You do not have permission to cancel this assignment.");
                 }
@@ -537,8 +536,8 @@ internal class CallImplementation : BlApi.ICall
                 };
                 CallManager.SendEmailToVolunteer(volunteer, assignment);
                     _dal.Assignment.Update(assignment);
-                //CallManager.Observers.NotifyItemUpdated(assignment.Id); // Stage 5
-                //CallManager.Observers.NotifyListUpdated(); // Stage 5
+                CallManager.Observers.NotifyItemUpdated(assignment.CallId); // Stage 5
+                CallManager.Observers.NotifyListUpdated(); // Stage 5
             }
         }
         catch (KeyNotFoundException ex)
@@ -589,7 +588,7 @@ internal class CallImplementation : BlApi.ICall
                     FinishCallType: null
                 );
                     _dal.Assignment.Create(newAssignment);
-                //CallManager.Observers.NotifyListUpdated(); // Stage 5
+                CallManager.Observers.NotifyListUpdated(); // Stage 5
             }
         }
         catch (BO.BlInvalidOperationException ex)

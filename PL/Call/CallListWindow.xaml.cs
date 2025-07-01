@@ -3,6 +3,7 @@ using DO;
 using PL.Volunteer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -41,14 +42,14 @@ namespace PL.Call
         public BO.CallInList? SelectedCall { get; set; }
 
 
-        public IEnumerable<BO.CallInList> CallList
+        public ObservableCollection<BO.CallInList> CallList
         {
-            get { return (IEnumerable<BO.CallInList>)GetValue(CallListProperty); }
+            get { return (ObservableCollection<BO.CallInList>)GetValue(CallListProperty); }
             set { SetValue(CallListProperty, value); }
         }
 
         public static readonly DependencyProperty CallListProperty =
-            DependencyProperty.Register("CallList", typeof(IEnumerable<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("CallList", typeof(ObservableCollection<BO.CallInList>), typeof(PL.Call.CallListWindow), new PropertyMetadata(null));
 
         private BO.CallType callType = BO.CallType.None;
         public BO.CallType CallType
@@ -101,22 +102,22 @@ namespace PL.Call
             if (SelectedCall is BO.CallInList call)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-               if (result == MessageBoxResult.Yes)
-                try
-                {
-                    if (SelectedCall is null) return;
+                if (result == MessageBoxResult.Yes)
+                    try
+                    {
+                        if (SelectedCall is null) return;
 
-                    s_bl.Call.UpdateCallCancellation(Volunteer.Id,call.CallId);
-                    MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    queryVolunteerList();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                        s_bl.Call.UpdateCallCancellation(Volunteer.Id, call.CallId);
+                        MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                        queryVolunteerList();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
             }
         }
-    
+
         private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
@@ -127,18 +128,25 @@ namespace PL.Call
             }
         }
 
-     
-        private IEnumerable<BO.CallInList> FilterCallList()
+
+
+        private ObservableCollection<BO.CallInList> FilterCallList()
         {
-            return (CallType, CallStatus) switch
-            {
-                (BO.CallType.None, Status.None) => s_bl.Call.GetCallList(),
+            IEnumerable<BO.CallInList> result;
 
-                (BO.CallType.None, var status) when status != Status.None => s_bl.Call.GetCallList(CallInListFields.MyStatus, status, null),
+            if (CallType != BO.CallType.None && CallStatus != Status.None)
+                result = s_bl.Call.GetCallList(CallInListFields.CallType, CallType)
+                                 .Where(c => c.MyStatus == CallStatus);
+            else if (CallType != BO.CallType.None)
+                result = s_bl.Call.GetCallList(CallInListFields.CallType, CallType);
+            else if (CallStatus != Status.None)
+                result = s_bl.Call.GetCallList(CallInListFields.MyStatus, CallStatus);
+            else
+                result = s_bl.Call.GetCallList();
 
-                (var type, Status.None) when type != BO.CallType.None => s_bl.Call.GetCallList(CallInListFields.CallType, type, null),
-            };
+            return new ObservableCollection<BO.CallInList>(result);
         }
+
         private void queryVolunteerList()
         {
             CallList = FilterCallList();
@@ -155,7 +163,7 @@ namespace PL.Call
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
-            =>new CallWindow().Show();
+            => new CallWindow().Show();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
             => s_bl.Call.AddObserver(callListObserver);
