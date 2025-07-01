@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using BlApi;
 using BO;
+using PL.Helpers;
 
 namespace PL.Login;
 
@@ -105,13 +106,23 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
 
                     Close();
                 }
-                catch (BlDoesNotExistException ex)
-                {
-                    ErrorMessage = ex.Message;
-                }
+                //catch (BlDoesNotExistException ex)
+                //{
+                //    ErrorMessage = ex.Message;
+                //}
+                //catch (Exception ex)
+                //{
+                //    ErrorMessage = "General Eroor: " + ex.Message;
+                //}
                 catch (Exception ex)
                 {
-                    ErrorMessage = "General Eroor: " + ex.Message;
+                    if (ex is BlDoesNotExistException or BlUnauthorizedAccessException)
+                        ErrorMessage = ex.Message;
+                    else
+                    {
+                        BlExceptionHelper.ShowBlException(ex);
+                        ErrorMessage = "Login failed due to system error.";
+                    }
                 }
             });
     }

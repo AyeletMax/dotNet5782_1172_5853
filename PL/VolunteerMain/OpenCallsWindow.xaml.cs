@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using BO;
+using PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -121,7 +122,7 @@ namespace PL.Call
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Failed to load open calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        BlExceptionHelper.ShowBlException(ex);
                     }
                 });
             }
@@ -140,7 +141,7 @@ namespace PL.Call
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to select call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    BlExceptionHelper.ShowBlException(ex);
                 }
             }
         }
@@ -157,7 +158,7 @@ namespace PL.Call
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to update address: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
 

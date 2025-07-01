@@ -1,4 +1,5 @@
 ﻿using BO;
+using PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -123,15 +124,9 @@ namespace PL.Volunteer
             {
                 s_bl.Volunteer.DeleteVolunteer(volunteerId);
             }
-            catch (BO.BlDeletionException ex)
-            {
-                MessageBox.Show($"Cannot delete volunteer:\n{ex.Message}",
-                    "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unexpected error:\n{ex.Message}",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
 
@@ -154,15 +149,9 @@ namespace PL.Volunteer
                 if (SelectedVolunteer != null)
                     new VolunteerWindow(SelectedVolunteer.Id).Show();
             }
-            catch (BlDoesNotExistException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Unexpected error:\n{ex.Message};",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show($"Unexpected error:\n{ex.Message};",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
 
         }

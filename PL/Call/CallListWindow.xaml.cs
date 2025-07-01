@@ -1,5 +1,6 @@
 ﻿using BO;
 using DO;
+using PL.Helpers;
 using PL.Volunteer;
 using System;
 using System.Collections.Generic;
@@ -85,14 +86,19 @@ namespace PL.Call
             if (SelectedCall is BO.CallInList call)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {call.CallId}?", "Delete Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result != MessageBoxResult.Yes) return;
+
                 try
                 {
-                    if (result == MessageBoxResult.Yes)
-                        s_bl.Call.DeleteCall(call.CallId);
+                    //if (result == MessageBoxResult.Yes)
+                    //    s_bl.Call.DeleteCall(call.CallId);
+                    s_bl.Call.DeleteCall(call.CallId);
+                    MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    // MessageBox.Show(ex.Message);
+                    BlExceptionHelper.ShowBlException(ex);
                 }
             }
         }
@@ -102,31 +108,48 @@ namespace PL.Call
             if (SelectedCall is BO.CallInList call)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to unassign  {call.CallId}?", "Unassiagn Call", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                    try
-                    {
-                        if (SelectedCall is null) return;
+                if (result != MessageBoxResult.Yes) return;
+                try
+                {
+                    if (SelectedCall is null) return;
 
-                        s_bl.Call.UpdateCallCancellation(Volunteer.Id, call.CallId);
-                        MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                        queryVolunteerList();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    s_bl.Call.UpdateCallCancellation(Volunteer.Id, call.CallId);
+                    MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                    queryVolunteerList();
+                }
+                catch (Exception ex)
+                {
+                    BlExceptionHelper.ShowBlException(ex);
+                }
             }
         }
 
+        //private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
+        //{
+        //    if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
+        //    {
+        //        var callDetails = BlApi.Factory.Get().Call.GetCallDetails(selectedCall.Id.Value);
+        //        var editWindow = new CallWindow(callDetails.Id);
+        //        editWindow.Show();
+        //    }
+        //}
         private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
             {
-                var callDetails = BlApi.Factory.Get().Call.GetCallDetails(selectedCall.Id.Value);
-                var editWindow = new CallWindow(callDetails.Id);
-                editWindow.Show();
+                try
+                {
+                    var callDetails = s_bl.Call.GetCallDetails(selectedCall.Id.Value);
+                    var editWindow = new CallWindow(callDetails.Id);
+                    editWindow.Show();
+                }
+                catch (Exception ex)
+                {
+                    BlExceptionHelper.ShowBlException(ex);
+                }
             }
         }
+
 
 
 
@@ -171,5 +194,29 @@ namespace PL.Call
         private void Window_Closed(object sender, EventArgs e)
                    => s_bl.Call.RemoveObserver(callListObserver);
 
+
+        //private void ShowBlException(Exception ex)
+        //{
+        //    switch (ex)
+        //    {
+        //        case BlAlreadyExistsException:
+        //        case BlDoesNotExistException:
+        //        case BlDeletionException:
+        //        case BlInvalidLogicException:
+        //        case BlInvalidOperationException:
+        //        case BlUnauthorizedAccessException:
+        //        case BlApiRequestException:
+        //        case BlInvalidFormatException:
+        //        case BlGeolocationNotFoundException:
+        //        case BlGeneralDatabaseException:
+        //        case BLTemporaryNotAvailableException:
+        //            MessageBox.Show(ex.Message, "Business Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //            break;
+
+        //        default:
+        //            MessageBox.Show($"Unexpected error:\n{ex.Message}", "System Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //            break;
+        //    }
+        //}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PL.Call;
 using PL.CallHistory;
+using PL.Helpers;
 using PL.Volunteer;
 using System;
 using System.Collections.Generic;
@@ -133,7 +134,7 @@ namespace PL
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Update failed:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    BlExceptionHelper.ShowBlException(ex);
                     return;
                 }
             }
@@ -153,7 +154,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to cancel treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
 
@@ -169,7 +170,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to finish treatment:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
         protected override void OnClosed(EventArgs e)
@@ -208,14 +209,11 @@ namespace PL
                             CurrentCall = updatedVolunteer?.CurrentCallInProgress;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show(
-                            "An error occurred while updating the call list. Please try refreshing the window.",
-                            "Data Update Error",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error);
+                        BlExceptionHelper.ShowBlException(ex);
                     }
+
                 });
         }
 

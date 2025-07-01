@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using BO;
 using BlApi;
 using System.Windows.Threading;
+using PL.Helpers;
 
 namespace PL.CallHistory;
 
@@ -77,7 +78,7 @@ public partial class VolunteerCallHistory : Window
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error loading call history: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    BlExceptionHelper.ShowBlException(ex);
                 }
             });
     }

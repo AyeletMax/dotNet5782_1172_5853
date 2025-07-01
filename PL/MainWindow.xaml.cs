@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using Helpers;
 using PL.Volunteer;
 using PL.Call;
+using PL.Helpers;
 
 namespace PL
 {
@@ -91,8 +92,9 @@ namespace PL
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"An error occurred while updating the risk range: {ex.Message}");
+                    BlExceptionHelper.ShowBlException(ex);
                 }
+
             }
             else
             {
@@ -136,7 +138,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while initializing the database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
 
@@ -149,7 +151,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while resetting the database: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
      
@@ -172,13 +174,8 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                BlExceptionHelper.ShowBlException(ex);
             }
         }
-
-
     }
-
-
-
 }

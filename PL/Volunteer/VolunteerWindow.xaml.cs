@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Windows.Threading;
+using PL.Helpers;
 
 namespace PL.Volunteer;
 
@@ -142,7 +143,7 @@ public partial class VolunteerWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error: {ex.Message}");
+            BlExceptionHelper.ShowBlException(ex);
         }
     }
 
