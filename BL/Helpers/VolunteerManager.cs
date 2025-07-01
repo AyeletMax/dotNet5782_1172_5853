@@ -307,7 +307,7 @@ internal static class VolunteerManager
                         TimeSpan timeInTreatment = DateTime.Now - currentCall.EntranceTime.Value;
 
                         // Calculate base treatment time (5-15 minutes)
-                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 10); // 5-15 minutes
+                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 2); // 5-15 minutes
 
                         // Calculate travel time (1-2 minutes per km)
                         double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km

@@ -123,7 +123,7 @@ namespace PL.Call
             if (sender is DataGrid callsDataGrid && callsDataGrid.SelectedItem is BO.CallInList selectedCall && selectedCall.Id.HasValue)
             {
                 var callDetails = BlApi.Factory.Get().Call.GetCallDetails(selectedCall.Id.Value);
-                var editWindow = new CallWindow(callDetails);
+                var editWindow = new CallWindow(callDetails.Id);
                 editWindow.Show();
             }
         }
