@@ -52,7 +52,7 @@ public class CallInProgress
     /// <summary>
     /// Gets the distance the volunteer responded from.
     /// </summary>
-    public double VolunteerResponseDistance { get; init; }
+    public double? VolunteerResponseDistance { get; init; }
 
     /// <summary>
     /// Gets the current status of the call in progress.

@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BlImplementation;
 using BO;
 using DalApi;
 using DO;
@@ -16,6 +17,8 @@ internal static class VolunteerManager
     /// An instance of the data access layer (DAL).
     /// </summary>
     private static readonly DalApi.IDal s_dal = DalApi.Factory.Get;
+    //private static readonly BlApi.ICall callBl = new CallImplementation();
+    //private static readonly BlApi.IVolunteer volunteerBl = new VolunteerImplementation();
 
     internal static ObserverManager Observers = new(); //stage 5 
     /// <summary>
@@ -83,7 +86,7 @@ internal static class VolunteerManager
     {
         return volunteers.Select(v =>
         {
-            lock (BlMutex) //stage 7
+            lock (AdminManager.BlMutex) //stage 7
             {
                 var volunteerAssignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == v.Id);
 
@@ -363,52 +366,236 @@ internal static class VolunteerManager
     //    }
     //}
 
-    private static readonly object BlMutex = new();
+    //private static readonly object BlMutex = new();
 
 
     private static readonly Random s_rand = new();
     private static int s_simulatorCounter = 0;
+    private static readonly BlApi.ICall callBl = new CallImplementation();
+    private static readonly BlApi.IVolunteer volunteerBl = new VolunteerImplementation();
 
     internal static void SimulateVolunteerActivity()
     {
-        Thread.CurrentThread.Name = $"VolunteerSimulator{++s_simulatorCounter}";
-        LinkedList<int> volunteersToNotify = new();
-        List<DO.Volunteer> activeVolunteers;
-        lock (BlMutex)
+        try
         {
-            activeVolunteers = s_dal.Volunteer.ReadAll(v => v.Active).ToList();
-        }
+            Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
 
-        foreach (var volunteer in activeVolunteers)
-        {
-            bool updated = false;
+            LinkedList<int> callsToUpdate = new(); //stage 7
+            List<DO.Volunteer> doVolunteerList;
 
-            lock (BlMutex)
+            lock (AdminManager.BlMutex) //stage 7
+                doVolunteerList = s_dal.Volunteer.ReadAll(st => st.Active == true).ToList();
+
+            foreach (var doVolunteer in doVolunteerList)
             {
-                var assignments = s_dal.Assignment.ReadAll(a => a.VolunteerId == volunteer.Id && a.ExitTime == null).ToList();
-
-                if (assignments.Any())
+                lock (AdminManager.BlMutex) //stage 7
                 {
-                    var assignmentToUpdate = assignments[s_rand.Next(assignments.Count)];
-                    var updatedAssignment = assignmentToUpdate with
+                    var BoVol = volunteerBl.GetVolunteerDetails(doVolunteer.Id);
+                    if (BoVol == null)
+                        continue; // שינוי מ-return ל-continue כדי לא לעצור את כל הלולאה
+
+                    if (BoVol.CurrentCallInProgress == null)
                     {
-                        ExitTime = DateTime.Now,
-                        FinishCallType = DO.FinishCallType.TakenCareOf
-                    };
-                    s_dal.Assignment.Update(updatedAssignment);
-                    updated = true;
+                        var openCalls = callBl.GetOpenCallsForVolunteer(doVolunteer.Id);
+                        openCalls = openCalls.Where(c => doVolunteer.LargestDistance is null || c.distanceFromVolunteerToCall <= doVolunteer.LargestDistance);
+
+                        if (s_rand.Next(1, 101) <= 20)
+                        {
+                            if (openCalls.Any())
+                            {
+                                var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
+                                if (selectedCall != null)
+                                {
+                                    // תיקון: להוסיף את ה-CallId רק אחרי שהפעולה הצליחה
+                                    try
+                                    {
+                                        callBl.SelectCallForTreatment(doVolunteer.Id, selectedCall.Id);
+                                        callsToUpdate.AddLast(selectedCall.Id);
+                                    }
+                                    catch (BO.BlInvalidOperationException)
+                                    {
+                                        // הקריאה כבר נלקחה על ידי מתנדב אחר - זה תקין במצב של מספר threads
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var currentCall = BoVol.CurrentCallInProgress;
+
+                        // וידוא שהערכים קיימים
+                        if (currentCall.EntranceTime == null)
+                            continue;
+
+                        TimeSpan timeInTreatment = DateTime.Now - currentCall.EntranceTime.Value;
+
+                        // Calculate base treatment time (5-15 minutes)
+                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 10); // 5-15 minutes
+
+                        // Calculate travel time (1-2 minutes per km)
+                        double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km
+                        double travelMinutes = (currentCall.VolunteerResponseDistance ?? 0) * travelTimePerKm;
+
+                        // Total required time is base treatment time + travel time
+                        TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
+
+                        // Add some random variation (0-5 minutes)
+                        TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
+                        requiredTime = requiredTime.Add(randomVariation);
+
+                        if (timeInTreatment >= requiredTime)
+                        {
+                            // תיקון: לנסות לעדכן ורק במקרה של הצלחה להוסיף לרשימת העדכונים
+                            try
+                            {
+                                callBl.UpdateCallCompletion(doVolunteer.Id, currentCall.Id);
+                                callsToUpdate.AddLast(currentCall.CallId); // תיקון: CallId במקום assignmentId
+                            }
+                            catch (BO.BlInvalidOperationException)
+                            {
+                                // הטיפול כבר הושלם או בוטל - זה תקין במצב של מספר threads
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            // 10% chance to cancel the treatment
+                            if (s_rand.Next(1, 101) <= 10)
+                            {
+                                try
+                                {
+                                    callBl.UpdateCallCancellation(doVolunteer.Id, currentCall.Id);
+                                    callsToUpdate.AddLast(currentCall.CallId); // תיקון: CallId במקום assignmentId
+                                }
+                                catch (BO.BlInvalidOperationException)
+                                {
+                                    // הטיפול כבר הושלם או בוטל - זה תקין במצב של מספר threads
+                                    continue;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            if (updated)
-            {
-                volunteersToNotify.AddLast(volunteer.Id);
-            }
+
+            // עדכון ההתראות מחוץ ל-lock כדי למנוע deadlocks
+            foreach (int id in callsToUpdate)
+                Observers.NotifyItemUpdated(id);
         }
-        foreach (var id in volunteersToNotify)
+        catch (BlInvalidLogicException ex)
         {
-            Observers.NotifyItemUpdated(id);
+            throw new BlInvalidLogicException(ex.Message, ex);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException("This object does not exist", ex);
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
     }
+    //private static readonly Random s_rand = new();
+    //private static int s_simulatorCounter = 0;
+    //internal static void SimulateVolunteerActivity()
+    //{
+    //    try
+    //    {
+    //        Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
+
+    //        LinkedList<int> callsToUpdate = new(); //stage 7
+    //        List<DO.Volunteer> doVolunteerList;
+
+    //        lock (AdminManager.BlMutex) //stage 7
+    //            doVolunteerList = s_dal.Volunteer.ReadAll(st => st.Active == true).ToList();
+
+    //        foreach (var doVolunteer in doVolunteerList)
+    //        {
+    //            //int volunteerId = 0;
+    //            lock (AdminManager.BlMutex) //stage 7
+    //            {
+
+    //                var BoVol = volunteerBl.GetVolunteerDetails(doVolunteer.Id);
+    //                if (BoVol == null)
+    //                    return;
+    //                if (BoVol.CurrentCallInProgress == null)
+    //                {
+    //                    var openCalls = callBl.GetOpenCallsForVolunteer(doVolunteer.Id);
+    //                    openCalls = openCalls.Where(c => doVolunteer.LargestDistance is null || c.distanceFromVolunteerToCall <= doVolunteer.LargestDistance);
+    //                    if (s_rand.Next(1, 101) <= 20)
+    //                    {
+    //                        if (openCalls.Any())
+    //                        {
+    //                            var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
+    //                            if (selectedCall != null)
+    //                            {
+    //                                callsToUpdate.AddLast(selectedCall.Id);
+    //                                callBl.SelectCallForTreatment(doVolunteer.Id, selectedCall.Id);
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    var currentCall = BoVol.CurrentCallInProgress;
+
+    //                    TimeSpan timeInTreatment = currentCall.EntranceTime.HasValue
+    //                    ? DateTime.Now - currentCall.EntranceTime.Value:TimeSpan.Zero;
+
+    //                    // Calculate base treatment time (5-15 minutes)
+    //                    double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 10); // 5-15 minutes
+
+    //                    // Calculate travel time (1-2 minutes per km)
+    //                    double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km
+    //                    double travelMinutes = (currentCall.VolunteerResponseDistance ?? 0) * travelTimePerKm;
+
+    //                    // Total required time is base treatment time + travel time
+    //                    TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
+
+    //                    // Add some random variation (0-5 minutes)
+    //                    TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
+    //                    requiredTime = requiredTime.Add(randomVariation);
+
+    //                    if (timeInTreatment >= requiredTime)
+    //                    {
+    //                        callsToUpdate.AddLast(currentCall.CallId);
+
+    //                        // Enough time has passed - close the call as treated
+    //                        callBl.UpdateCallCompletion(doVolunteer.Id, currentCall.Id);
+    //                    }
+    //                    else
+    //                    {
+    //                        // 10% chance to cancel the treatment
+    //                        if (s_rand.Next(1, 101) <= 10)
+    //                        {
+    //                            callsToUpdate.AddLast(currentCall.CallId);
+    //                            callBl.UpdateCallCancellation(doVolunteer.Id, currentCall.Id);
+    //                        }
+    //                    }
+    //                }
+    //            } 
+    //        }
+
+    //        foreach (int id in callsToUpdate)
+    //            Observers.NotifyItemUpdated(id);
+    //    }
+
+    //    catch (BlInvalidLogicException ex)
+    //    {
+    //        throw new ArgumentException(ex.Message, ex);
+    //    }
+    //    catch (DO.DalDoesNotExistException ex)
+    //    {
+    //        throw new BO.BlDoesNotExistException("This object does not exist", ex);
+    //    }
+    //    catch (BLTemporaryNotAvailableException)
+    //    {
+    //        throw;
+    //    }
+    //}
+
     //public static async Task UpdateVolunteerCoordinatesAsync(int volunteerId, string address)
     //{
     //    var coords = await Tools.GetCoordinatesFromAddress(address);

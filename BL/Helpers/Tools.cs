@@ -17,6 +17,7 @@ internal static class Tools
     /// <summary>
     /// Converts an object's properties to a formatted string representation.
     /// </summary>
+    private static readonly DalApi.IDal _dal = DalApi.Factory.Get; //stage 4
     public static string ToStringProperty<T>(this T t)
     {
         if (t == null)
@@ -52,29 +53,47 @@ internal static class Tools
     /// <summary>
     /// Calculates the status of an assignment based on its timing and risk threshold.
     /// </summary>
-    public static Status CalculateStatus(DO.Assignment assignment, DO.Call call, int riskThreshold = 30)
-    {
-        if (assignment.ExitTime == null)
-        {
-            if (call.MaxFinishTime.HasValue)
-            {
-                var remainingTime = call.MaxFinishTime.Value - DateTime.Now;
+    //public static Status CalculateStatus(DO.Assignment assignment, DO.Call call, int riskThreshold = 30)
+    //{
+    //    if (assignment.ExitTime == null)
+    //    {
+    //        if (call.MaxFinishTime.HasValue)
+    //        {
+    //            var remainingTime = call.MaxFinishTime.Value - DateTime.Now;
 
-                if (remainingTime.TotalMinutes <= riskThreshold)
-                {
-                    return Status.InProgressAtRisk;
-                }
-                else
-                {
-                    return Status.InProgress;
-                }
-            }
+    //            if (remainingTime.TotalMinutes <= riskThreshold)
+    //            {
+    //                return Status.InProgressAtRisk;
+    //            }
+    //            else
+    //            {
+    //                return Status.InProgress;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            return Status.InProgress;
+    //        }
+    //    }
+    //    return Status.Closed;
+    //}
+    public static BO.Status CalculateStatus(DO.Call call)
+    {
+        TimeSpan riskRange = _dal.Config.RiskRange;
+        if (call.MaxFinishTime.HasValue)
+        {
+            TimeSpan remainingTime = call.MaxFinishTime.Value - AdminManager.Now;
+            if (remainingTime < TimeSpan.Zero)
+                return BO.Status.Expired;
+            if (remainingTime <= riskRange)
+                return BO.Status.InProgressAtRisk;
             else
-            {
-                return Status.InProgress;
-            }
+                return BO.Status.InProgress;
         }
-        return Status.Closed;
+        else
+        {
+            return BO.Status.InProgress;
+        }
     }
 
     /// <summary>
