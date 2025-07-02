@@ -304,7 +304,7 @@ internal static class VolunteerManager
                         if (currentCall.EntranceTime == null)
                             continue;
 
-                        TimeSpan timeInTreatment = DateTime.Now - currentCall.EntranceTime.Value;
+                        TimeSpan timeInTreatment = AdminManager.Now - currentCall.EntranceTime.Value;
 
                         // Calculate base treatment time (5-15 minutes)
                         double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 2); // 5-15 minutes

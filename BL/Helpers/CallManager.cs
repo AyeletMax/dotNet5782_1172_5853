@@ -331,7 +331,6 @@ internal static class CallManager
         { //stage 5
             Observers.NotifyListUpdated();
             VolunteerManager.Observers.NotifyListUpdated();
-
         }//stage 5
     }
     public static async Task UpdateCallCoordinatesAsync(DO.Call call)
