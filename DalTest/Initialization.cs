@@ -35,7 +35,7 @@ public static class Initialization
         "0547766901", "0583221100", "0501100223", "0525544332", "0549988776"
         };
         string[] passwords = {
-            "A1b@D2eF", "X3y#Z9aH", "P@ssw0rD1", "T#4oP@r7", "M1n#0F8z", "G#tX9jQ2", "L8!mT9uB", "D9v@Zq7X", "B5a#cG3e", "K#p9J1xQ",
+            "Aa123456!", "X3y#Z9aH", "P@ssw0rD1", "T#4oP@r7", "M1n#0F8z", "G#tX9jQ2", "L8!mT9uB", "D9v@Zq7X", "B5a#cG3e", "K#p9J1xQ",
         "Q8@tW5oP", "R3v@C9fX", "S4z#D8oY", "N7f#L9pB", "C3uZ#hT1", "A2b@C3dE", "X9y#T1uV", "Z@xP7qR5", "M#n1B2v3", "H1j#K2lM",
         "P@L3mN8z", "G#W9xQ2z", "L0!uN8rA", "C9v@Zq1X", "B7a#fD3e", "K#z2J9xP", "E8@vA5mT", "T3v@R9fL", "S5z#H2oB", "Y7f#J1pB",
         "U3rZ#tT1", "D3t@X2yL", "M1c#L0vZ", "A9k#U2oB", "Q1n@W4eP", "B3r#C5fX", "S4x@L8yD", "V7z#N3pT", "J1t#H9vR", "E4u@Y6oL",
@@ -72,6 +72,7 @@ public static class Initialization
             35.5312, 35.2170, 35.0943, 34.7672, 35.0717, 35.0180, 34.9066, 34.7667, 34.9887, 34.9196,
             34.8093, 35.2890, 34.9519, 34.7913, 34.8120, 34.5715, 34.8708, 34.8433, 34.7454, 34.8240
         };
+        s_dal!.Volunteer!.Create(new Volunteer(345810543, "Aviva Rose", "0548551329", "bracharosenfeld@gmail.com", true, Role.Manager, 31.8139395, 35.216089, 10, EncryptPassword("Str0ng@Pass1")));
         for (int i = 0; i < FullNames.Length; i++)
         {
             s_dal!.Volunteer!.Create(new Volunteer(GenerateValidIsraeliId(s_rand), FullNames[i], phones[i], $"{phones[i]}@gmail.com", true, Role.Volunteer,
