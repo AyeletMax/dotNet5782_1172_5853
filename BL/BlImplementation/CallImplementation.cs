@@ -1,4 +1,5 @@
 ﻿using BO;
+using DalApi;
 using DO;
 using Helpers;
 
@@ -461,6 +462,7 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
+            DO.Assignment updatedAssignment;
             AdminManager.ThrowOnSimulatorIsRunning();//stage 7
             lock (AdminManager.BlMutex) //stage 7
             {
@@ -476,17 +478,17 @@ internal class CallImplementation : BlApi.ICall
                     throw new BO.BlInvalidOperationException("The assignment has already been completed or canceled.");
                 }
 
-                var updatedAssignment = assignment with
+                 updatedAssignment = assignment with
                 {
                     FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf,
                     ExitTime = AdminManager.Now
                 };
                     _dal.Assignment.Update(updatedAssignment);
-                CallManager.Observers.NotifyItemUpdated(updatedAssignment.CallId); // Stage 5
-                CallManager.Observers.NotifyListUpdated();
-                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
-                VolunteerManager.Observers.NotifyListUpdated(); // Stage 5
             }
+            CallManager.Observers.NotifyItemUpdated(updatedAssignment.CallId); // Stage 5
+            CallManager.Observers.NotifyListUpdated();
+            VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+            VolunteerManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BlUnauthorizedAccessException)
         {
@@ -514,10 +516,11 @@ internal class CallImplementation : BlApi.ICall
     {
         try
         {
+            DO.Assignment assignment;
             AdminManager.ThrowOnSimulatorIsRunning();//stage 7
             lock (AdminManager.BlMutex) //stage 7
             {
-                var assignment = _dal.Assignment.Read(assignmentId) ?? throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
+                assignment = _dal.Assignment.Read(assignmentId) ?? throw new KeyNotFoundException($"Assignment with ID {assignmentId} not found.");
                 var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
                 if (volunteer.MyRole != DO.Role.Manager && assignment.VolunteerId != volunteerId)
                 {
@@ -538,11 +541,12 @@ internal class CallImplementation : BlApi.ICall
                 };
                 CallManager.SendEmailToVolunteer(volunteer, assignment);
                     _dal.Assignment.Update(assignment);
-                CallManager.Observers.NotifyItemUpdated(assignment.CallId); // Stage 5
-                CallManager.Observers.NotifyListUpdated();
-                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
-                VolunteerManager.Observers.NotifyListUpdated();// Stage 5
+
             }
+            CallManager.Observers.NotifyItemUpdated(assignment.CallId); // Stage 5
+            CallManager.Observers.NotifyListUpdated();
+            VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+            VolunteerManager.Observers.NotifyListUpdated();// Stage 5
         }
         catch (KeyNotFoundException ex)
         {
@@ -591,9 +595,13 @@ internal class CallImplementation : BlApi.ICall
                     ExitTime: null,
                     FinishCallType: null
                 );
-                    _dal.Assignment.Create(newAssignment);
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+                          _dal.Assignment.Create(newAssignment);
+                // Stage 5 
             }
+            CallManager.Observers.NotifyListUpdated();
+            CallManager.Observers.NotifyItemUpdated(callId);
+            VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (BO.BlInvalidOperationException ex)
         {

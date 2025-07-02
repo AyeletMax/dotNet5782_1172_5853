@@ -113,7 +113,7 @@ namespace PL.Call
                 {
                     if (SelectedCall is null) return;
 
-                    s_bl.Call.UpdateCallCancellation(Volunteer.Id, call.CallId);
+                    s_bl.Call.UpdateCallCancellation(Volunteer.Id,( int)SelectedCall.Id!);
                     MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                     queryVolunteerList();
                 }
