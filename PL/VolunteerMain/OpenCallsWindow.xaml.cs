@@ -102,7 +102,7 @@ namespace PL.Call
             SortFields = Enum.GetValues(typeof(OpenCallInListFields)).Cast<OpenCallInListFields>();
 
             DataContext = this;
-            Loaded+=LoadPage;
+            Loaded += LoadPage;
             Closed += (s, e) =>
             {
                 bl.Call.RemoveObserver(LoadOpenCalls);
@@ -153,6 +153,7 @@ namespace PL.Call
                     bl.Call.SelectCallForTreatment(CurrentVolunteer.Id, call.Id);
                     LoadOpenCalls();
                     MessageBox.Show("Call successfully selected for treatment.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Close();
                 }
                 catch (Exception ex)
                 {
@@ -188,4 +189,3 @@ namespace PL.Call
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
-

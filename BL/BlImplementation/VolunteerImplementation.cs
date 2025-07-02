@@ -54,9 +54,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     BO.VolunteerSortField.TotalResponsesHandled => volunteerList.OrderByDescending(v => v.TotalResponsesHandled),
                     BO.VolunteerSortField.TotalResponsesCancelled => volunteerList.OrderByDescending(v => v.TotalResponsesCancelled),
                     BO.VolunteerSortField.TotalExpiredResponses => volunteerList.OrderByDescending(v => v.TotalExpiredResponses),
-                    //BO.VolunteerSortField.SumOfCalls => volunteerList.OrderBy(v => v.TotalResponsesHandled),
-                    //BO.VolunteerSortField.SumOfCancellation => volunteerList.OrderBy(v => v.TotalResponsesCancelled),
-                    //BO.VolunteerSortField.SumOfExpiredCalls => volunteerList.OrderBy(v => v.TotalExpiredResponses),
                     _ => volunteerList.OrderBy(v => v.Id)
                 } : volunteerList.OrderBy(v => v.Id);
 
@@ -137,66 +134,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
     }
 
-    // Update the details of an existing volunteer.
-    // Verifies input format, validates permissions, and updates the volunteer in the database.
-    //public void UpdateVolunteer(int requesterId, BO.Volunteer boVolunteer)
-    //{
-    //    try
-    //    {
-    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
-    //        lock (AdminManager.BlMutex) //stage 7
-    //        {
-    //            var existingVolunteer = _dal.Volunteer.Read(boVolunteer.Id) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist");
-    //            VolunteerManager.ValidateInputFormat(boVolunteer);
-    //            if (boVolunteer.Password == "")
-    //            {
-    //                boVolunteer.Password = existingVolunteer.Password;
-    //            }
-    //            else
-    //            {
-    //                VolunteerManager.CheckPassword(boVolunteer.Password);
-    //                boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password);
-    //            }
-    //            if (boVolunteer.Address != null)
-    //            {
-    //                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
-    //                boVolunteer.Latitude = latitude;
-    //                boVolunteer.Longitude = longitude;
-    //            }
-    //            else
-    //            {
-    //                boVolunteer.Address = existingVolunteer.Address;
-    //                boVolunteer.Latitude = existingVolunteer.Latitude;
-    //                boVolunteer.Longitude = existingVolunteer.Longitude;
-    //            }
-    //            VolunteerManager.ValidatePermissions(requesterId, boVolunteer);
-
-    //            var originalVolunteer = _dal.Volunteer.Read(boVolunteer.Id)!;
-    //            var changedFields = VolunteerManager.GetChangedFields(originalVolunteer, boVolunteer);
-    //            if (!VolunteerManager.CanUpdateFields(requesterId, changedFields, boVolunteer))
-    //                throw new BO.BlUnauthorizedAccessException("You do not have permission to update the Role field.");
-
-    //            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
-    //            _dal.Volunteer.Update(doVolunteer);
-
-    //            VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.Id); //stage 5
-    //        }
-    //            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
-
-    //    }
-    //    catch (BO.BlInvalidFormatException)
-    //    {
-    //        throw;
-    //    }
-    //    catch (DO.DalDoesNotExistException ex)
-    //    {
-    //        throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while updating the volunteer.", ex);
-    //    }
-    //}
     public void UpdateVolunteer(int requesterId, BO.Volunteer boVolunteer)
     {
         try
@@ -219,7 +156,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                     boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password);
                 }
 
-                // כתובת לא null → ננקה קואורדינטות ונטפל בהן בהמשך באסינכרון
                 if (boVolunteer.Address != null)
                 {
                     boVolunteer.Latitude = null;
@@ -246,7 +182,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
             VolunteerManager.Observers.NotifyItemUpdated(boVolunteer.Id);
             VolunteerManager.Observers.NotifyListUpdated();
 
-            // אסינכרונית - מבלי להמתין!
             if (boVolunteer.Address != null)
                 _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
         }
@@ -254,6 +189,10 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Volunteer with ID={boVolunteer.Id} does not exist.", ex);
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (Exception ex)
         {
@@ -278,9 +217,13 @@ internal class VolunteerImplementation : BlApi.IVolunteer
                 }
                 _dal.Volunteer.Delete(volunteerId);//stage 4
             }
-                VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
 
-            
+
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (BO.BlDeletionException)
         {
@@ -296,49 +239,6 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
 
     }
-    // Add a new volunteer to the system.
-    // Ensures the volunteer doesn't already exist and validates the input format before adding.
-    //public void AddVolunteer(BO.Volunteer boVolunteer)
-    //{
-    //    try
-    //    {
-    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
-    //        lock (AdminManager.BlMutex) //stage 7
-    //        {
-    //            var existingVolunteer = _dal.Volunteer.Read(v => v.Id == boVolunteer.Id);
-    //            if (existingVolunteer != null)
-    //            {
-    //                throw new DO.DalAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists.");
-    //            }
-    //            VolunteerManager.ValidateInputFormat(boVolunteer);
-    //            VolunteerManager.CheckPassword(boVolunteer.Password!);
-    //            var (latitude, longitude) = Tools.GetCoordinatesFromAddress(boVolunteer.Address!);
-
-    //            boVolunteer.Latitude = latitude;
-    //            boVolunteer.Longitude = longitude;
-    //            boVolunteer.Password = VolunteerManager.EncryptPassword(boVolunteer.Password!);
-
-    //            DO.Volunteer doVolunteer = VolunteerManager.CreateDoVolunteer(boVolunteer);
-    //            _dal.Volunteer.Create(doVolunteer);
-    //        }
-    //            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
-
-    //    }
-    //    catch (DO.DalAlreadyExistsException ex)
-    //    {
-    //        throw new BO.BlAlreadyExistsException($"Volunteer with ID={boVolunteer.Id} already exists", ex);
-    //    }
-    //    catch (BO.BlInvalidFormatException)
-    //    {
-    //        throw;
-    //    }
-
-    //    catch (Exception ex)
-    //    {
-    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while adding the volunteer.", ex);
-    //    }
-
-    //}
     public void AddVolunteer(BO.Volunteer boVolunteer)
     {
         try
@@ -365,12 +265,12 @@ internal class VolunteerImplementation : BlApi.IVolunteer
 
 
             }
-
-            //DO.Volunteer volunteer1 = _dal.Volunteer.Read(c => c.Id == doVolunteer.Id)!;
-
             if (boVolunteer.Address != "No Address")
                 _ = VolunteerManager.UpdateVolunteerCoordinatesAsync(doVolunteer);
-
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (DO.DalAlreadyExistsException ex)
         {

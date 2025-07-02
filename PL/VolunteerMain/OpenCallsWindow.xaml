@@ -8,8 +8,8 @@
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
-    
-    
+
+
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -72,4 +72,3 @@
         </Border>
     </Grid>
 </Window>
-

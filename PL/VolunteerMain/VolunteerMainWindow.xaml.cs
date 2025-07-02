@@ -19,7 +19,11 @@ namespace PL
         {
             InitializeComponent();
             _volunteerId = volunteerId;
-            LoadVolunteer(volunteerId);
+            Loaded += LoadPage;
+            Closed += (s, e) =>
+            {
+                s_bl.Volunteer.RemoveObserver(() => LoadVolunteer(_volunteerId));
+            };
         }
         public bool IsEditMode
         {
@@ -38,7 +42,7 @@ namespace PL
 
         public static readonly DependencyProperty PasswordProperty =
             DependencyProperty.Register(
-                nameof(Password),typeof(string),typeof(VolunteerMainWindow),new PropertyMetadata(string.Empty));
+                nameof(Password), typeof(string), typeof(VolunteerMainWindow), new PropertyMetadata(string.Empty));
         public BO.Volunteer Volunteer
         {
             get => (BO.Volunteer)GetValue(VolunteerProperty);
@@ -79,26 +83,24 @@ namespace PL
                         CurrentCall = null;
                 });
         }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void LoadPage(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
-            //    if (Volunteer?.Id != 0)
-            //    {
-            //        s_bl.Volunteer.AddObserver(Volunteer.Id, VolunteerObserver);
-            //        s_bl.Call.AddObserver(OpenCallListObserver);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    MessageBox.Show(
-            //        "An error occurred while setting up automatic updates. You may need to close and reopen the window.",
-            //        "Initialization Error",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
+            try
+            {
+                LoadVolunteer(_volunteerId);
+                s_bl.Volunteer.AddObserver(() => LoadVolunteer(_volunteerId));
+
+            }
+            catch (Exception ex)
+            {
+                BlExceptionHelper.ShowBlException(ex);
+            }
         }
+        //private void Window_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    //LoadVolunteer();
+        //    s_bl.Call.AddObserver(LoadVolunteer(Volunteer.Id));
+        //}
 
         private void CallHistory_Click(object sender, RoutedEventArgs e)
         {
@@ -108,8 +110,8 @@ namespace PL
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
             var openCallsWindow = new OpenCallsWindow(Volunteer.Id);
-           openCallsWindow.Show();
-           
+            openCallsWindow.Show();
+
         }
         private void ToggleEditMode_Click(object sender, RoutedEventArgs e)
         {
@@ -124,8 +126,8 @@ namespace PL
                         throw new Exception("Invalid email address.");
                     if (string.IsNullOrWhiteSpace(Volunteer.Address))
                         throw new Exception("Address cannot be empty.");
-                    
-                   
+
+
                     s_bl.Volunteer.UpdateVolunteer(Volunteer.Id, Volunteer);
 
                     MessageBox.Show("Volunteer details updated successfully.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -139,14 +141,14 @@ namespace PL
 
             IsEditMode = !IsEditMode;
         }
-       
+
         private void CancelTreatment_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (CurrentCall is null) return;
 
-                s_bl.Call.UpdateCallCancellation(Volunteer.Id,Volunteer.CurrentCallInProgress!.Id);
+                s_bl.Call.UpdateCallCancellation(Volunteer.Id, Volunteer.CurrentCallInProgress!.Id);
                 MessageBox.Show("Treatment has been canceled.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadVolunteer(Volunteer.Id);
             }
@@ -162,7 +164,7 @@ namespace PL
             {
                 if (CurrentCall is null) return;
 
-                s_bl.Call.UpdateCallCompletion(Volunteer.Id,Volunteer.CurrentCallInProgress!.Id);
+                s_bl.Call.UpdateCallCompletion(Volunteer.Id, Volunteer.CurrentCallInProgress!.Id);
                 MessageBox.Show("Call marked as finished.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadVolunteer(Volunteer.Id);
             }
@@ -173,7 +175,8 @@ namespace PL
         }
         protected override void OnClosed(EventArgs e)
         {
-            if (Volunteer.MyRole == BO.Role.Manager) {
+            if (Volunteer.MyRole == BO.Role.Manager)
+            {
                 base.OnClosed(e);
                 App.Current.Properties["IsManagerLoggedIn"] = false;
             }

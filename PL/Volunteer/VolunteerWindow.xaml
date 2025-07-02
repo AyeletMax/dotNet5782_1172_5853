@@ -9,7 +9,7 @@
         Title="VolunteerWindow" Height="450" Width="800">
 
     <Window.Resources>
-        
+
         <Style x:Key="LabelStyle" TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -52,7 +52,7 @@
 
         <!-- ID -->
         <Label Content="ID:" Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}"/>
-     
+
         <TextBox Grid.Row="0" Grid.Column="1"
          Text="{Binding CurrentVolunteer.Id, Mode=TwoWay}" 
          Style="{StaticResource TextBoxStyle}"
@@ -87,7 +87,9 @@
         <!--<Label Content="Latitude:" Grid.Row="7" Style="{StaticResource LabelStyle}"/>
         <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding CurrentVolunteer.Latitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
-        --><!-- Longitude --><!--
+        -->
+        <!-- Longitude -->
+        <!--
         <Label Content="Longitude:" Grid.Row="8" Style="{StaticResource LabelStyle}"/>
         <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding CurrentVolunteer.Longitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>-->
 
@@ -103,11 +105,6 @@
         <!-- Password -->
         <Label Content="Password:" Grid.Row="9" Grid.Column="0" Style="{StaticResource LabelStyle}" Visibility="{Binding ButtonText}"/>
         <PasswordBox x:Name="PasswordBox" Grid.Row="9" Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged" />
-        <!--<Label Content="Password:" Grid.Row="11" Style="{StaticResource LabelStyle}"/>
-        <PasswordBox x:Name="passwordBox" Grid.Row="11" Grid.Column="1" 
-             PasswordChanged="PasswordBox_PasswordChanged"
-            Visibility="{Binding ButtonText, Converter={StaticResource IdToVisibilityConverter}}"/>-->
-        <!-- Button -->
         <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ButtonText}"
                 Click="btnAddUpdate_Click" HorizontalAlignment="Center" Width="120" Height="30" Margin="10"/>
     </Grid>

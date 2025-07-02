@@ -121,7 +121,7 @@ internal static class Tools
         }
     }
 
-    private static string apiKey = "PK.83B935C225DF7E2F9B1ee90A6B46AD86";
+    private static string apiKey = "pk.4e30e1c038d6c66006ca266298c2a79d";
 
     private static readonly string apiUrl = "https://geocode.maps.co/search?q={0}&api_key={1}";
     /// <summary>

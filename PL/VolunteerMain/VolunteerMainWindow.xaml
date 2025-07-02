@@ -7,7 +7,6 @@
         xmlns:conv="clr-namespace:PL.Converters"
         mc:Ignorable="d"
         Title="VolunteerMainWindow" Height="650" Width="900"
-        Loaded="Window_Loaded"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
@@ -29,7 +28,7 @@
                 <ColumnDefinition Width="*"/>
 
             </Grid.ColumnDefinitions>
-           
+
             <StackPanel Grid.Column="0" Margin="10">
                 <Label Content="Volunteer Details" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
 
@@ -77,7 +76,7 @@
 
                 <TextBlock Text="Password:" FontWeight="Bold"/>
                 <PasswordBox x:Name="PasswordBox" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                
+
                 <!-- Update button toggles between Edit/Save -->
                 <Button Content="{Binding IsEditMode, Converter={StaticResource EditModeButtonTextConverter}}" Click="ToggleEditMode_Click" Margin="5"/>
             </StackPanel>

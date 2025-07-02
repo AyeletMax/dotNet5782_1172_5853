@@ -159,14 +159,14 @@ public partial class VolunteerWindow : Window
         if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
             _observerOperation = Dispatcher.BeginInvoke(() =>
             {
-                  if (CurrentVolunteer == null)
-                       return;
+                if (CurrentVolunteer == null)
+                    return;
 
-                  int id = CurrentVolunteer.Id;
-                  CurrentVolunteer = null;
-                  CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
+                int id = CurrentVolunteer.Id;
+                CurrentVolunteer = null;
+                CurrentVolunteer = _volunteerBl.Volunteer.GetVolunteerDetails(id);
             });
     }
-   
-  
+
+
 }

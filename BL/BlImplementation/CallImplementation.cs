@@ -144,48 +144,6 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while fetching call details.", ex);
         }
     }
-    /// <summary>
-    /// Updates the details of an existing call after validation.
-    /// </summary>
-    /// <param name="call">The updated call object.</param>
-    //public void UpdateCallDetails(BO.Call call)
-    //{
-    //    try
-    //    {
-    //        DO.Call callToUpdate;
-    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
-    //        lock (AdminManager.BlMutex) //stage 7
-    //        {
-    //            var existingCall = _dal.Call.Read(call.Id) ?? throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exist");
-    //            CallManager.ValidateCallDetails(call);
-    //            if (call.Address != "No Address")
-    //            {
-    //                var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address!);
-    //                call.Latitude = latitude;
-    //                call.Longitude = longitude;
-    //            }
-    //            else
-    //            {
-    //                call.Address = existingCall.Address;
-    //                call.Latitude = existingCall.Latitude;
-    //                call.Longitude = existingCall.Longitude;
-    //            }
-    //            callToUpdate = CallManager.ConvertBoCallToDoCall(call);
-    //            _dal.Call.Update(callToUpdate);
-    //        }
-    //        CallManager.NotifyVolunteers(call);
-    //        CallManager.Observers.NotifyItemUpdated(callToUpdate.Id); // Stage 5
-    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
-    //    }
-    //    catch (DO.DalDoesNotExistException ex)
-    //    {
-    //        throw new BO.BlDoesNotExistException($"Call with ID={call.Id} does not exists", ex);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while update.", ex);
-    //    }
-    //}
     public void UpdateCallDetails(BO.Call call)
     {
         try
@@ -247,9 +205,9 @@ internal class CallImplementation : BlApi.ICall
                 {
                     throw new BO.BlDeletionException($"The call with ID:{callId} cannot be deleted.");
                 }
-                _dal.Call.Delete(callId); 
+                _dal.Call.Delete(callId);
             }
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+            CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
         catch (BlDeletionException)
         {
@@ -260,38 +218,6 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An unexpected error occurred while deleting.", ex);
         }
     }
-    /// <summary>
-    /// Adds a new call to the system after validating its details.
-    /// </summary>
-    /// <param name="call">The call object to add.</param>
-    //public void AddCall(BO.Call call)
-    //{
-    //    try
-    //    {
-    //        AdminManager.ThrowOnSimulatorIsRunning();//stage 7
-    //        CallManager.ValidateCallDetails(call);
-    //        var (latitude, longitude) = Tools.GetCoordinatesFromAddress(call.Address);
-    //        call.Latitude = latitude;
-    //        call.Longitude = longitude;
-    //        DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
-    //        lock (AdminManager.BlMutex) //stage 7
-    //            _dal.Call.Create(dataCall);
-    //        CallManager.NotifyVolunteers(call);
-    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
-    //    }
-    //    catch (BlInvalidFormatException)
-    //    {
-    //        throw;
-    //    }
-    //    catch (DO.DalAlreadyExistsException)
-    //    {
-    //        throw new BO.BlAlreadyExistsException("Failed to add the call to the system.");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new BO.BlGeneralDatabaseException("An unexpected error occurred while add.", ex);
-    //    }
-    //}
     public void AddCall(BO.Call call)
     {
         try
@@ -305,7 +231,7 @@ internal class CallImplementation : BlApi.ICall
             DO.Call dataCall = CallManager.ConvertBoCallToDoCall(call);
             lock (AdminManager.BlMutex) //stage 7
                 _dal.Call.Create(dataCall);
-            
+
             CallManager.Observers.NotifyListUpdated();
             DO.Call call1 = _dal.Call.Read(c => (dataCall.Address == c.Address &&
             dataCall.VerbalDescription == c.VerbalDescription &&
@@ -316,7 +242,7 @@ internal class CallImplementation : BlApi.ICall
             CallManager.NotifyVolunteers(call);
             if (call1.Address != "No Address")
                 _ = CallManager.UpdateCallCoordinatesAsync(call1);
-         
+
 
         }
         catch (BlInvalidFormatException)
@@ -326,6 +252,10 @@ internal class CallImplementation : BlApi.ICall
         catch (DO.DalAlreadyExistsException)
         {
             throw new BO.BlAlreadyExistsException("Failed to add the call to the system.");
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (Exception ex)
         {
@@ -373,42 +303,6 @@ internal class CallImplementation : BlApi.ICall
             throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the closed calls list.", ex);
         }
     }
-    /// <summary>
-    /// Retrieves a list of open calls assigned to a specific volunteer, with optional filters and sorting.
-    /// </summary>
-    /// <param name="volunteerId">The ID of the volunteer.</param>
-    /// <param name="callType">Optional filter to return only specific call types.</param>
-    /// <param name="sortField">Optional field to sort the list of open calls.</param>
-    /// <returns>A sorted list of open calls assigned to the volunteer.</returns>
-    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer does not exist.</exception>
-    /// <exception cref="BO.BlGeneralDatabaseException">Thrown if an error occurs while retrieving the list.</exception>
-    //public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
-    //{
-    //    try
-    //    {
-    //        var volunteer = _dal.Volunteer.Read(volunteerId) ?? throw new BO.BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
-    //        var openCalls = _dal.Call.ReadAll()
-    //            .Where(c => (CallManager.GetCallStatus(c.Id) == BO.Status.Opened || CallManager.GetCallStatus(c.Id) == BO.Status.AtRisk))
-    //            .Select(c => new BO.OpenCallInList
-    //            {
-    //                Id = c.Id,
-    //                MyCallType = (BO.CallType)c.MyCallType,
-    //                VerbalDescription = c.VerbalDescription,
-    //                Address = c.Address,
-    //                OpenTime = c.OpenTime,
-    //                MaxFinishTime = c.MaxFinishTime,
-    //                distanceFromVolunteerToCall = Tools.CalculateDistance((BO.DistanceType)volunteer.MyDistanceType, volunteer.Latitude ?? double.MaxValue, volunteer.Longitude ?? double.MaxValue, c.Latitude, c.Longitude),
-    //            });
-    //        return sortField.HasValue
-    //        ? openCalls.OrderBy(c => c.GetType().GetProperty(sortField.ToString())?.GetValue(c))
-    //        : openCalls.OrderBy(c => c.Id);
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new BO.BlGeneralDatabaseException("An error occurred while retrieving the open calls list.", ex);
-    //    }
-    //}
     public IEnumerable<BO.OpenCallInList> GetOpenCallsForVolunteer(int volunteerId, BO.CallType? callType = null, BO.OpenCallInListFields? sortField = null)
     {
         try
@@ -478,12 +372,12 @@ internal class CallImplementation : BlApi.ICall
                     throw new BO.BlInvalidOperationException("The assignment has already been completed or canceled.");
                 }
 
-                 updatedAssignment = assignment with
+                updatedAssignment = assignment with
                 {
                     FinishCallType = (DO.FinishCallType?)BO.FinishCallType.TakenCareOf,
                     ExitTime = AdminManager.Now
                 };
-                    _dal.Assignment.Update(updatedAssignment);
+                _dal.Assignment.Update(updatedAssignment);
             }
             CallManager.Observers.NotifyItemUpdated(updatedAssignment.CallId); // Stage 5
             CallManager.Observers.NotifyListUpdated();
@@ -497,6 +391,10 @@ internal class CallImplementation : BlApi.ICall
         catch (BlInvalidOperationException)
         {
             throw;
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (Exception ex)
         {
@@ -540,13 +438,17 @@ internal class CallImplementation : BlApi.ICall
                     FinishCallType = (assignment.VolunteerId == volunteerId) ? DO.FinishCallType.CanceledByVolunteer : DO.FinishCallType.CanceledByManager
                 };
                 CallManager.SendEmailToVolunteer(volunteer, assignment);
-                    _dal.Assignment.Update(assignment);
+                _dal.Assignment.Update(assignment);
 
             }
             CallManager.Observers.NotifyItemUpdated(assignment.CallId); // Stage 5
             CallManager.Observers.NotifyListUpdated();
             VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
             VolunteerManager.Observers.NotifyListUpdated();// Stage 5
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (KeyNotFoundException ex)
         {
@@ -595,13 +497,17 @@ internal class CallImplementation : BlApi.ICall
                     ExitTime: null,
                     FinishCallType: null
                 );
-                          _dal.Assignment.Create(newAssignment);
+                _dal.Assignment.Create(newAssignment);
                 // Stage 5 
             }
             CallManager.Observers.NotifyListUpdated();
             CallManager.Observers.NotifyItemUpdated(callId);
             VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
             VolunteerManager.Observers.NotifyListUpdated();
+        }
+        catch (BLTemporaryNotAvailableException ex)
+        {
+            throw new BO.BLTemporaryNotAvailableException(ex.Message);
         }
         catch (BO.BlInvalidOperationException ex)
         {
