@@ -51,16 +51,6 @@
     <Id>5</Id>
   </Call>
   <Call>
-    <MyCallType>MusicPerformance</MyCallType>
-    <Address>Tel Aviv, Israel</Address>
-    <Latitude>32.0805</Latitude>
-    <Longitude>34.7775</Longitude>
-    <OpenTime>2025-06-29T01:49:00</OpenTime>
-    <MaxFinishTime>2025-06-29T03:10:00</MaxFinishTime>
-    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
-    <Id>6</Id>
-  </Call>
-  <Call>
     <MyCallType>PersonalizedMusicCare</MyCallType>
     <Address>Rishon Lezion, Israel</Address>
     <Latitude>32.1027</Latitude>
@@ -539,5 +529,55 @@
     <MaxFinishTime>2025-07-10T00:00:00</MaxFinishTime>
     <VerbalDescription>dfsg</VerbalDescription>
     <Id>54</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicPerformance</MyCallType>
+    <Address>Tel Aviv, Israel</Address>
+    <Latitude>32.0852997</Latitude>
+    <Longitude>34.7818064</Longitude>
+    <OpenTime>2025-06-29T01:49:00</OpenTime>
+    <MaxFinishTime>2025-06-29T03:12:00</MaxFinishTime>
+    <VerbalDescription>Live performance for patients in the day care department</VerbalDescription>
+    <Id>6</Id>
+  </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-29T06:38:15</OpenTime>
+    <MaxFinishTime>2025-06-29T06:39:00</MaxFinishTime>
+    <VerbalDescription>gfdgt</VerbalDescription>
+    <Id>55</Id>
+  </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 4 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T06:43:15</OpenTime>
+    <MaxFinishTime>2025-06-29T06:44:00</MaxFinishTime>
+    <VerbalDescription>dggf</VerbalDescription>
+    <Id>56</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-29T07:03:15</OpenTime>
+    <MaxFinishTime>2025-06-29T07:04:00</MaxFinishTime>
+    <VerbalDescription>rgehtr</VerbalDescription>
+    <Id>57</Id>
+  </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-29T07:33:15</OpenTime>
+    <MaxFinishTime>2025-06-29T07:34:00</MaxFinishTime>
+    <VerbalDescription>dgdgdsg</VerbalDescription>
+    <Id>58</Id>
   </Call>
 </ArrayOfCall>
