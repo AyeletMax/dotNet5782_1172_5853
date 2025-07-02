@@ -93,28 +93,28 @@
                     Margin="0,15,0,0"
                         Click="Login_Click"
                     HorizontalAlignment="Stretch"/>
-
-                <TextBlock Text="{Binding ErrorMessage}"
-                       Foreground="DarkBlue"
-                       TextWrapping="Wrap"
-                       Margin="0,10,0,0"/>
+            
             </StackPanel>
 
         </Border>
 
-        <StackPanel Visibility="{Binding IsManagerOptionsVisible, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" Grid.Row="2">
-            <TextBlock Text="Where do you want to go?"
-          FontSize="16" FontWeight="Bold"
-          HorizontalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Volunteer Panel"
-                    Click="VolunteerPanel_Click"
-                    Margin="10"/>
-                <Button Content="Manager Panel"
-                   Click=" ManagerPanel_Click"
-                    Margin="10"/>
-            </StackPanel>
-        </StackPanel>
+      <StackPanel Visibility="{Binding IsManagerOptionsVisible, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" Grid.Row="2">
+    <TextBlock Text="Where do you want to go?"
+      FontSize="16" FontWeight="Bold"
+      HorizontalAlignment="Center"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" RenderTransformOrigin="0.35,2.613">
+        <Button Content="Volunteer Panel"
+            Click="VolunteerPanel_Click"
+            Margin="10"/>
+        <Button Content="Manager Panel"
+           Click=" ManagerPanel_Click"
+            Margin="10"/>
+    </StackPanel>
+    <TextBlock Text="{Binding ErrorMessage}"
+       Foreground="DarkBlue"
+       TextWrapping="Wrap"
+       Margin="0,10,0,0"/>
+</StackPanel>
         <!--Command="{Binding GoToManagerPanelCommand}"-->
     </Grid>
 </Window>

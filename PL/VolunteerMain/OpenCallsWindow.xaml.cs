@@ -103,6 +103,10 @@ namespace PL.Call
 
             DataContext = this;
             Loaded+=LoadPage;
+            Closed += (s, e) =>
+            {
+                bl.Call.RemoveObserver(LoadOpenCalls);
+            };
         }
         private void LoadPage(object sender, RoutedEventArgs e)
         {

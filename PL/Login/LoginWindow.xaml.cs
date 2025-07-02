@@ -87,11 +87,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
 
                     if (role == Role.Manager)
                     {
-                        if (App.Current.Properties["IsManagerLoggedIn"] is true)
-                        {
-                            ErrorMessage = "A Manager is already logged in to the system.";
-                            return;
-                        }
+                      
 
                         _currentLoggedInManagerId = id;
                         IsLoginPanelVisible = false;
@@ -135,6 +131,11 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
     }
     private void ManagerPanel_Click(object sender, RoutedEventArgs e)
     {
+        if (App.Current.Properties["IsManagerLoggedIn"] is true)
+        {
+            ErrorMessage = "A Manager is already logged in to the system.";
+            return;
+        }
         App.Current.Properties["IsManagerLoggedIn"] = true;
 
         new MainWindow(_currentLoggedInManagerId).Show();
