@@ -84,15 +84,15 @@ internal static class Tools
         {
             TimeSpan remainingTime = call.MaxFinishTime.Value - AdminManager.Now;
             if (remainingTime < TimeSpan.Zero)
-                return BO.Status.Expired;
+                return Status.Expired;
             if (remainingTime <= riskRange)
-                return BO.Status.InProgressAtRisk;
+                return Status.InProgressAtRisk;
             else
-                return BO.Status.InProgress;
+                return Status.InProgress;
         }
         else
         {
-            return BO.Status.InProgress;
+            return Status.InProgress;
         }
     }
 

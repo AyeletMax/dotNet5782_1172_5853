@@ -483,7 +483,9 @@ internal class CallImplementation : BlApi.ICall
                 };
                     _dal.Assignment.Update(updatedAssignment);
                 CallManager.Observers.NotifyItemUpdated(updatedAssignment.CallId); // Stage 5
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+                CallManager.Observers.NotifyListUpdated();
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyListUpdated(); // Stage 5
             }
         }
         catch (BlUnauthorizedAccessException)
@@ -537,7 +539,9 @@ internal class CallImplementation : BlApi.ICall
                 CallManager.SendEmailToVolunteer(volunteer, assignment);
                     _dal.Assignment.Update(assignment);
                 CallManager.Observers.NotifyItemUpdated(assignment.CallId); // Stage 5
-                CallManager.Observers.NotifyListUpdated(); // Stage 5
+                CallManager.Observers.NotifyListUpdated();
+                VolunteerManager.Observers.NotifyItemUpdated(volunteerId);
+                VolunteerManager.Observers.NotifyListUpdated();// Stage 5
             }
         }
         catch (KeyNotFoundException ex)

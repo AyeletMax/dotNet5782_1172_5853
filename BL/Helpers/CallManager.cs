@@ -57,6 +57,47 @@ internal static class CallManager
 
     //    //return Status.InProgress;
     //}
+    //internal static Status GetCallStatus(int callId)
+    //{
+    //    try
+    //    {
+    //        DO.Call? call;
+    //        IEnumerable<DO.Assignment> assignments;
+    //        lock (AdminManager.BlMutex)
+    //        {
+
+    //            call = s_dal.Call.Read(callId);
+    //            assignments = s_dal.Assignment.ReadAll(a => a.CallId == callId);
+    //        }
+
+    //        if (!assignments.Any() ||
+    //            assignments.Any(a => (a.ExitTime.HasValue
+    //            && (a.FinishCallType == DO.FinishCallType.CanceledByManager || a.FinishCallType == DO.FinishCallType.CanceledByVolunteer)
+    //             && !assignments.Any(a => (!a.ExitTime.HasValue && a.FinishCallType == null || a.FinishCallType == DO.FinishCallType.TakenCareOf)))))
+    //        {
+    //            BO.Status myStatus = Tools.CalculateStatus(call!);
+    //            if (myStatus == BO.Status.InProgress)
+    //                return BO.Status.Opened;
+    //            else if (myStatus == BO.Status.Expired)
+    //                return BO.Status.Expired;
+    //            else
+    //                return BO.Status.InProgressAtRisk;
+    //        }
+
+    //        if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType != DO.FinishCallType.CanceledByVolunteer
+    //        && a.FinishCallType != DO.FinishCallType.CanceledByManager))
+    //            return BO.Status.Closed;
+
+    //        if (call!.MaxFinishTime.HasValue && call.MaxFinishTime.Value < AdminManager.Now)
+    //            return BO.Status.Expired;
+
+    //        return Tools.CalculateStatus(call);
+    //    }
+    //    catch (DO.DalDoesNotExistException ex)
+    //    {
+    //        throw new BO.BlDoesNotExistException($"Call with ID={callId} does not exist", ex);
+    //    }
+    //}
     internal static Status GetCallStatus(int callId)
     {
         try
@@ -75,21 +116,20 @@ internal static class CallManager
                 && (a.FinishCallType == DO.FinishCallType.CanceledByManager || a.FinishCallType == DO.FinishCallType.CanceledByVolunteer)
                  && !assignments.Any(a => (!a.ExitTime.HasValue && a.FinishCallType == null || a.FinishCallType == DO.FinishCallType.TakenCareOf)))))
             {
-                BO.Status myStatus = Tools.CalculateStatus(call!);
-                if (myStatus == BO.Status.InProgress)
-                    return BO.Status.Opened;
-                else if (myStatus == BO.Status.Expired)
-                    return BO.Status.Expired;
+              Status myStatus = Tools.CalculateStatus(call!);
+                if (myStatus == Status.InProgress)
+                    return Status.Opened;
+                else if (myStatus == Status.Expired)
+                    return Status.Expired;
                 else
-                    return BO.Status.InProgressAtRisk;
+                    return Status.InProgressAtRisk;
             }
 
-            if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType != DO.FinishCallType.CanceledByVolunteer
-            && a.FinishCallType != DO.FinishCallType.CanceledByManager))
-                return BO.Status.Closed;
+            if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType == DO.FinishCallType.TakenCareOf))
+                return Status.Closed;
 
             if (call!.MaxFinishTime.HasValue && call.MaxFinishTime.Value < AdminManager.Now)
-                return BO.Status.Expired;
+                return Status.Expired;
 
             return Tools.CalculateStatus(call);
         }
@@ -160,49 +200,139 @@ internal static class CallManager
     /// <param name="newClock">The new clock time.</param>
     private static int s_periodicCounter = 0;
 
+    //internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
+    //{
+    //    Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+    //    List<DO.Call> expiredCalls;
+    //    List<DO.Assignment> assignments;
+    //    List<DO.Assignment> assignmentsWithNull;
+    //    lock (AdminManager.BlMutex) //stage 7
+    //           expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
+    //        expiredCalls.ForEach(call =>
+    //        {
+    //            lock (AdminManager.BlMutex)
+    //            {//stage 7
+    //                assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
+    //                if (!assignments.Any())
+    //                {
+    //                    s_dal.Assignment.Create(new DO.Assignment(
+    //                    CallId: call.Id,
+    //                    VolunteerId: 0,
+    //                    EntranceTime: AdminManager.Now,
+    //                    ExitTime: AdminManager.Now,
+    //                    FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
+    //                ));
+    //                }
+    //            }
+    //            Observers.NotifyItemUpdated(call.Id);
+
+
+    //            lock (AdminManager.BlMutex) //stage 7
+    //                assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
+    //                if (assignmentsWithNull.Any())
+    //                {
+    //                    lock (AdminManager.BlMutex) //stage 7
+    //                           assignments.ForEach(assignment =>
+    //                           s_dal.Assignment.Update(assignment with
+    //                           {
+    //                               ExitTime = AdminManager.Now,
+    //                               FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
+    //                           }));
+    //                    Observers.NotifyItemUpdated(call.Id);
+    //                CallManager.Observers.NotifyListUpdated(); // Stage 5
+
+    //                }
+
+    //        });
+
+    //}
+
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
-        Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+        bool callUpdated = false; //stage 5
+
+        // Check for expired calls
         List<DO.Call> expiredCalls;
-        List<DO.Assignment> assignments;
-        List<DO.Assignment> assignmentsWithNull;
-        lock (AdminManager.BlMutex) //stage 7
-               expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
-            expiredCalls.ForEach(call =>
+        lock (AdminManager.BlMutex)
+            expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime < newClock).ToList();
+
+        if (expiredCalls.Count > 0)
+            callUpdated = true;
+
+        expiredCalls.ForEach(call =>
+        {
+            List<DO.Assignment> assignments;
+            lock (AdminManager.BlMutex)
+                assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
+
+            if (!assignments.Any())
             {
                 lock (AdminManager.BlMutex)
-                {//stage 7
-                    assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
-                    if (!assignments.Any())
-                    {
-                        s_dal.Assignment.Create(new DO.Assignment(
-                        CallId: call.Id,
-                        VolunteerId: 0,
-                        EntranceTime: AdminManager.Now,
-                        ExitTime: AdminManager.Now,
-                        FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
-                    ));
-                    }
-                }
-                Observers.NotifyItemUpdated(call.Id);
+                    s_dal.Assignment.Create(new DO.Assignment(
+                    CallId: call.Id,
+                    VolunteerId: 0,
+                    EntranceTime: AdminManager.Now,
+                    ExitTime: AdminManager.Now,
+                    FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
+                ));
+            }
+            List<DO.Assignment> assignmentsWithNull;
+            lock (AdminManager.BlMutex)
+                assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
+            if (assignmentsWithNull.Any())
+            {
+                assignments.ForEach(assignment =>
+                {
+                    lock (AdminManager.BlMutex)
+                        s_dal.Assignment.Update(assignment with
+                        {
+                            ExitTime = AdminManager.Now,
+                            FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
+                        });
+                    Observers.NotifyItemUpdated(assignment.Id);
+                    VolunteerManager.Observers.NotifyItemUpdated(assignment.VolunteerId);
 
-                
-                lock (AdminManager.BlMutex) //stage 7
-                    assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
-                    if (assignmentsWithNull.Any())
-                    {
-                        lock (AdminManager.BlMutex) //stage 7
-                               assignments.ForEach(assignment =>
-                               s_dal.Assignment.Update(assignment with
-                               {
-                                   ExitTime = AdminManager.Now,
-                                   FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
-                               }));
-                        Observers.NotifyItemUpdated(call.Id);
-                    }
-               
-            });
-        
+                }
+                    );
+            }
+        });
+
+        // Check for calls that have become at risk (entered risk time range)
+        TimeSpan riskRange = s_dal.Config.RiskRange;
+        List<DO.Call> atRiskCalls;
+        lock (AdminManager.BlMutex)
+            atRiskCalls = s_dal.Call.ReadAll(c =>
+                c.MaxFinishTime.HasValue &&
+                c.MaxFinishTime.Value > newClock &&
+                c.MaxFinishTime.Value - newClock <= riskRange).ToList();
+
+        if (atRiskCalls.Count > 0)
+            callUpdated = true;
+        List<DO.Assignment>? CallWithRiskAsignments;
+        var atRiskCallIds = atRiskCalls.Select(c => c.Id).ToList();
+        lock (AdminManager.BlMutex)
+            CallWithRiskAsignments = s_dal.Assignment.ReadAll(a =>
+                atRiskCallIds.Any(id => id == a.CallId)
+            ).ToList();
+        CallWithRiskAsignments.ForEach(ass =>
+        {
+            VolunteerManager.Observers.NotifyItemUpdated(ass.VolunteerId);
+        });
+
+
+        // Notify observers for calls that have become at risk
+        atRiskCalls.ForEach(call =>
+        {
+            Observers.NotifyItemUpdated(call.Id);
+        });
+
+        bool yearChanged = oldClock.Year != newClock.Year; //stage 5
+        if (yearChanged || callUpdated)
+        { //stage 5
+            Observers.NotifyListUpdated();
+            VolunteerManager.Observers.NotifyListUpdated();
+
+        }//stage 5
     }
     public static async Task UpdateCallCoordinatesAsync(DO.Call call)
     {
