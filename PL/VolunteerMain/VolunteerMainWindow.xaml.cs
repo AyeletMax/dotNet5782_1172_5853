@@ -108,10 +108,8 @@ namespace PL
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
             var openCallsWindow = new OpenCallsWindow(Volunteer.Id);
-            bool? result = openCallsWindow.ShowDialog();
-            if (result == true) {
-                LoadVolunteer(Volunteer.Id);
-            }
+           openCallsWindow.Show();
+           
         }
         private void ToggleEditMode_Click(object sender, RoutedEventArgs e)
         {
