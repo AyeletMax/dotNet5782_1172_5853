@@ -111,7 +111,7 @@ namespace PL.Call
                 if (result != MessageBoxResult.Yes) return;
                 try
                 {
-                    if (SelectedCall is null) return;
+                    if (SelectedCall is null||!SelectedCall.Id.HasValue) return;
 
                     s_bl.Call.UpdateCallCancellation(Volunteer.Id,( int)SelectedCall.Id!);
                     MessageBox.Show("Call has been unassigned.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);

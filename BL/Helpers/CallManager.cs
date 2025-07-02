@@ -122,7 +122,7 @@ internal static class CallManager
                 else if (myStatus == Status.Expired)
                     return Status.Expired;
                 else
-                    return Status.InProgressAtRisk;
+                    return Status.AtRisk;
             }
 
             if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType == DO.FinishCallType.TakenCareOf))
@@ -278,7 +278,7 @@ internal static class CallManager
             }
             List<DO.Assignment> assignmentsWithNull;
             lock (AdminManager.BlMutex)
-                assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
+                assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.ExitTime is null).ToList();
             if (assignmentsWithNull.Any())
             {
                 assignments.ForEach(assignment =>
