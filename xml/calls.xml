@@ -510,4 +510,34 @@
     <VerbalDescription>Tea break and singing with patients in the rehabilitation department</VerbalDescription>
     <Id>11</Id>
   </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 3 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8109918</Latitude>
+    <Longitude>35.2133241</Longitude>
+    <OpenTime>2025-06-29T02:29:15</OpenTime>
+    <MaxFinishTime>2025-07-04T00:02:00</MaxFinishTime>
+    <VerbalDescription>gefgte</VerbalDescription>
+    <Id>52</Id>
+  </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>druk 8 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T02:29:15</OpenTime>
+    <MaxFinishTime>2025-07-06T00:00:00</MaxFinishTime>
+    <VerbalDescription>fdgdfdg</VerbalDescription>
+    <Id>53</Id>
+  </Call>
+  <Call>
+    <MyCallType>MusicTherapy</MyCallType>
+    <Address>druk 4 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T02:29:15</OpenTime>
+    <MaxFinishTime>2025-07-10T00:00:00</MaxFinishTime>
+    <VerbalDescription>dfsg</VerbalDescription>
+    <Id>54</Id>
+  </Call>
 </ArrayOfCall>

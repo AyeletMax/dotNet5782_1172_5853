@@ -102,9 +102,21 @@ namespace PL.Call
             SortFields = Enum.GetValues(typeof(OpenCallInListFields)).Cast<OpenCallInListFields>();
 
             DataContext = this;
-            LoadOpenCalls();
+            Loaded+=LoadPage;
         }
+        private void LoadPage(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LoadOpenCalls();
+                bl.Call.AddObserver(LoadOpenCalls);
 
+            }
+            catch (Exception ex)
+            {
+                BlExceptionHelper.ShowBlException(ex);
+            }
+        }
         private void LoadOpenCalls()
         {
             if (_loadOpenCallsOperation == null || _loadOpenCallsOperation.Status == DispatcherOperationStatus.Completed)
