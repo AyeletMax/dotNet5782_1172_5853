@@ -580,4 +580,34 @@
     <VerbalDescription>dgdgdsg</VerbalDescription>
     <Id>58</Id>
   </Call>
+  <Call>
+    <MyCallType>SingingAndEmotionalSupport</MyCallType>
+    <Address>druk 2 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T07:33:15</OpenTime>
+    <MaxFinishTime>2025-06-29T07:34:00</MaxFinishTime>
+    <VerbalDescription>VSFGFDG</VerbalDescription>
+    <Id>59</Id>
+  </Call>
+  <Call>
+    <MyCallType>PersonalizedMusicCare</MyCallType>
+    <Address>druk 2 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T07:33:15</OpenTime>
+    <MaxFinishTime>2025-06-29T07:34:00</MaxFinishTime>
+    <VerbalDescription>FSDHGH</VerbalDescription>
+    <Id>60</Id>
+  </Call>
+  <Call>
+    <MyCallType>GroupActivities</MyCallType>
+    <Address>druk 2 ramat shlomo jerusalem israel</Address>
+    <Latitude>31.8096575</Latitude>
+    <Longitude>35.2136454</Longitude>
+    <OpenTime>2025-06-29T07:42:15</OpenTime>
+    <MaxFinishTime>2025-06-29T07:43:00</MaxFinishTime>
+    <VerbalDescription>FDSFDFD</VerbalDescription>
+    <Id>61</Id>
+  </Call>
 </ArrayOfCall>
