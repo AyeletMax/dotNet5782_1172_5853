@@ -281,7 +281,6 @@ internal static class VolunteerManager
                                 var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
                                 if (selectedCall != null)
                                 {
-                                  
                                     try
                                     {
                                         callBl.SelectCallForTreatment(doVolunteer.Id, selectedCall.Id);
@@ -312,11 +311,9 @@ internal static class VolunteerManager
                       
                         double travelTimePerKm = 1 + s_rand.NextDouble(); 
                         double travelMinutes = (currentCall.VolunteerResponseDistance ?? 0) * travelTimePerKm;
-
                   
                         TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
 
-                     
                         TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
                         requiredTime = requiredTime.Add(randomVariation);
 
