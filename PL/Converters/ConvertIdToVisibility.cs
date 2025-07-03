@@ -11,7 +11,7 @@ public class ConvertIdToVisibility : IValueConverter
     {
         if (value is int id && id != 0)
             return Visibility.Visible;
-        return Visibility.Collapsed; // הסתרה במצב הוספה
+        return Visibility.Collapsed; 
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

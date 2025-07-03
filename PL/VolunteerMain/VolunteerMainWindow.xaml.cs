@@ -96,11 +96,7 @@ namespace PL
                 BlExceptionHelper.ShowBlException(ex);
             }
         }
-        //private void Window_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    //LoadVolunteer();
-        //    s_bl.Call.AddObserver(LoadVolunteer(Volunteer.Id));
-        //}
+      
 
         private void CallHistory_Click(object sender, RoutedEventArgs e)
         {

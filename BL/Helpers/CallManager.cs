@@ -14,90 +14,6 @@ internal static class CallManager
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
     internal static ObserverManager Observers = new(); //stage 5 
 
-    /// <summary>
-    /// Calculates the status of a call.
-    /// </summary>
-    /// <param name="callId">The ID of the call.</param>
-    /// <returns>The current status of the call.</returns>
-    //public static Status GetCallStatus(int callId)
-    //{
-
-    //    var call = s_dal.Call.Read(callId) ?? throw new BO.BlDoesNotExistException($"Call with ID {callId} not found.");
-    //    //    var activeAssignments = s_dal.Assignment.ReadAll()
-    //    //.Where(a => a.CallId == callId && a.ExitTime == null)
-    //    //.ToList();
-    //    var assignment = s_dal.Assignment.ReadAll().FirstOrDefault(a => a.CallId == callId);
-    //    TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
-
-    //    if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
-    //        return Status.Expired;
-    //    if (assignment != null && timeLeft <= s_dal.Config.RiskRange)
-    //        return Status.InProgressAtRisk;
-    //    if (assignment != null)
-    //        return Status.InProgress;
-    //    if (timeLeft <= s_dal.Config.RiskRange)
-    //        return Status.AtRisk;
-
-    //    return Status.Opened;
-    //    //TimeSpan? timeLeft = call.MaxFinishTime - AdminManager.Now;
-
-    //    //if (call.MaxFinishTime.HasValue && timeLeft < TimeSpan.Zero)
-    //    //    return Status.Expired;
-
-    //    //if (!activeAssignments.Any())
-    //    //{
-    //    //    if (timeLeft <= s_dal.Config.RiskRange)
-    //    //        return Status.AtRisk;
-
-    //    //    return Status.Opened;
-    //    //}
-
-    //    //if (timeLeft <= s_dal.Config.RiskRange)
-    //    //    return Status.InProgressAtRisk;
-
-    //    //return Status.InProgress;
-    //}
-    //internal static Status GetCallStatus(int callId)
-    //{
-    //    try
-    //    {
-    //        DO.Call? call;
-    //        IEnumerable<DO.Assignment> assignments;
-    //        lock (AdminManager.BlMutex)
-    //        {
-
-    //            call = s_dal.Call.Read(callId);
-    //            assignments = s_dal.Assignment.ReadAll(a => a.CallId == callId);
-    //        }
-
-    //        if (!assignments.Any() ||
-    //            assignments.Any(a => (a.ExitTime.HasValue
-    //            && (a.FinishCallType == DO.FinishCallType.CanceledByManager || a.FinishCallType == DO.FinishCallType.CanceledByVolunteer)
-    //             && !assignments.Any(a => (!a.ExitTime.HasValue && a.FinishCallType == null || a.FinishCallType == DO.FinishCallType.TakenCareOf)))))
-    //        {
-    //            BO.Status myStatus = Tools.CalculateStatus(call!);
-    //            if (myStatus == BO.Status.InProgress)
-    //                return BO.Status.Opened;
-    //            else if (myStatus == BO.Status.Expired)
-    //                return BO.Status.Expired;
-    //            else
-    //                return BO.Status.InProgressAtRisk;
-    //        }
-
-    //        if (assignments.Any(a => a.ExitTime.HasValue && a.FinishCallType != DO.FinishCallType.CanceledByVolunteer
-    //        && a.FinishCallType != DO.FinishCallType.CanceledByManager))
-    //            return BO.Status.Closed;
-
-    //        if (call!.MaxFinishTime.HasValue && call.MaxFinishTime.Value < AdminManager.Now)
-    //            return BO.Status.Expired;
-
-    //        return Tools.CalculateStatus(call);
-    //    }
-    //    catch (DO.DalDoesNotExistException ex)
-    //    {
-    //        throw new BO.BlDoesNotExistException($"Call with ID={callId} does not exist", ex);
-    //    }
-    //}
     internal static Status GetCallStatus(int callId)
     {
         try
@@ -165,12 +81,7 @@ internal static class CallManager
     /// <exception cref="BlInvalidFormatException">Thrown when call details are invalid.</exception>
     internal static void ValidateCallDetails(BO.Call call)
     {
-        //if (string.IsNullOrWhiteSpace(call.Address) ||
-        //    !(call.Latitude >= -90 && call.Latitude <= 90 &&
-        //      call.Longitude >= -180 && call.Longitude <= 180))
-        //{
-        //    throw new BlInvalidFormatException("The address must be valid with latitude and longitude.");
-        //}
+       
         if (!Enum.IsDefined(typeof(BO.CallType), call.MyCallType))
         {
             throw new BlInvalidFormatException("Invalid call type.");
@@ -183,10 +94,7 @@ internal static class CallManager
         {
             throw new BlInvalidFormatException("Assignments cannot start before the call's open time.");
         }
-        //if (call.OpenTime > DateTime.Now)
-        //{
-        //    throw new BlInvalidFormatException("The open time cannot be in the future.");
-        //}
+        
         if (call.MaxFinishTime.HasValue && call.MaxFinishTime.Value <= call.OpenTime)
         {
             throw new BO.BlInvalidOperationException("The MaxEndTime must be greater than the OpenTime.");
@@ -200,52 +108,7 @@ internal static class CallManager
     /// <param name="newClock">The new clock time.</param>
     private static int s_periodicCounter = 0;
 
-    //internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
-    //{
-    //    Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
-    //    List<DO.Call> expiredCalls;
-    //    List<DO.Assignment> assignments;
-    //    List<DO.Assignment> assignmentsWithNull;
-    //    lock (AdminManager.BlMutex) //stage 7
-    //           expiredCalls = s_dal.Call.ReadAll(c => c.MaxFinishTime > newClock).ToList();
-    //        expiredCalls.ForEach(call =>
-    //        {
-    //            lock (AdminManager.BlMutex)
-    //            {//stage 7
-    //                assignments = s_dal.Assignment.ReadAll(a => a.CallId == call.Id).ToList();
-    //                if (!assignments.Any())
-    //                {
-    //                    s_dal.Assignment.Create(new DO.Assignment(
-    //                    CallId: call.Id,
-    //                    VolunteerId: 0,
-    //                    EntranceTime: AdminManager.Now,
-    //                    ExitTime: AdminManager.Now,
-    //                    FinishCallType: (DO.FinishCallType)BO.FinishCallType.Expired
-    //                ));
-    //                }
-    //            }
-    //            Observers.NotifyItemUpdated(call.Id);
-
-
-    //            lock (AdminManager.BlMutex) //stage 7
-    //                assignmentsWithNull = s_dal.Assignment.ReadAll(a => a.CallId == call.Id && a.FinishCallType is null).ToList();
-    //                if (assignmentsWithNull.Any())
-    //                {
-    //                    lock (AdminManager.BlMutex) //stage 7
-    //                           assignments.ForEach(assignment =>
-    //                           s_dal.Assignment.Update(assignment with
-    //                           {
-    //                               ExitTime = AdminManager.Now,
-    //                               FinishCallType = (DO.FinishCallType)BO.FinishCallType.Expired
-    //                           }));
-    //                    Observers.NotifyItemUpdated(call.Id);
-    //                CallManager.Observers.NotifyListUpdated(); // Stage 5
-
-    //                }
-
-    //        });
-
-    //}
+   
 
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {

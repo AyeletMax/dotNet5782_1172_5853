@@ -115,6 +115,6 @@
        TextWrapping="Wrap"
        Margin="0,10,0,0"/>
 </StackPanel>
-        <!--Command="{Binding GoToManagerPanelCommand}"-->
+      
     </Grid>
 </Window>

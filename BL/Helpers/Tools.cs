@@ -50,33 +50,7 @@ internal static class Tools
 
         return result.ToString().TrimEnd(',', ' ');
     }
-    /// <summary>
-    /// Calculates the status of an assignment based on its timing and risk threshold.
-    /// </summary>
-    //public static Status CalculateStatus(DO.Assignment assignment, DO.Call call, int riskThreshold = 30)
-    //{
-    //    if (assignment.ExitTime == null)
-    //    {
-    //        if (call.MaxFinishTime.HasValue)
-    //        {
-    //            var remainingTime = call.MaxFinishTime.Value - DateTime.Now;
-
-    //            if (remainingTime.TotalMinutes <= riskThreshold)
-    //            {
-    //                return Status.InProgressAtRisk;
-    //            }
-    //            else
-    //            {
-    //                return Status.InProgress;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            return Status.InProgress;
-    //        }
-    //    }
-    //    return Status.Closed;
-    //}
+    
     public static BO.Status CalculateStatus(DO.Call call)
     {
         TimeSpan riskRange = _dal.Config.RiskRange;

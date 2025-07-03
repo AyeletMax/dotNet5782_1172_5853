@@ -109,11 +109,7 @@ namespace PL
         private void AdvanceHour_Click(object sender, RoutedEventArgs e) =>
             s_bl.Admin.AdvanceClock(BO.TimeUnit.HOUR);
 
-        //private void UpdateConfig_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MessageBox.Show($"RiskRange was updated to: {RiskRange.TotalMinutes} minutes.");
-        //}
-
+       
         private void btnUpdateRiskRange_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -128,11 +124,7 @@ namespace PL
             }
         }
 
-        //private void ClockObserver()
-        //{
-        //    if (_clockObserverOperation == null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
-        //        _clockObserverOperation = Dispatcher.BeginInvoke(() => CurrentTime = s_bl.Admin.GetClock());
-        //}
+       
         private volatile DispatcherOperation? _observerOperation = null; //stage 7
 
         private void ClockObserver()
@@ -234,10 +226,7 @@ namespace PL
                 MessageBox.Show("Error during window closure: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            //s_bl.Admin.RemoveClockObserver(ClockObserver);
-            //s_bl.Admin.RemoveConfigObserver(ConfigObserver);
-            //App.Current.Properties["IsManagerLoggedIn"] = false;
-            //s_bl.Admin.StopSimulator();
+            
         }
         private void InitializeDB_Click(object sender, RoutedEventArgs e)
         {

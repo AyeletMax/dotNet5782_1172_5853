@@ -200,8 +200,7 @@ internal class VolunteerImplementation : BlApi.IVolunteer
         }
     }
 
-    // Delete a volunteer from the system.
-    // Ensures the volunteer is not currently assigned to any tasks before deletion.
+  
     public void DeleteVolunteer(int volunteerId)
     {
         try

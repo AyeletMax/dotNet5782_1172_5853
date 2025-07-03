@@ -267,7 +267,7 @@ internal static class VolunteerManager
                 {
                     var BoVol = volunteerBl.GetVolunteerDetails(doVolunteer.Id);
                     if (BoVol == null)
-                        continue; // שינוי מ-return ל-continue כדי לא לעצור את כל הלולאה
+                        continue; 
 
                     if (BoVol.CurrentCallInProgress == null)
                     {
@@ -281,7 +281,7 @@ internal static class VolunteerManager
                                 var selectedCall = openCalls.ElementAt(s_rand.Next(openCalls.Count()));
                                 if (selectedCall != null)
                                 {
-                                    // תיקון: להוסיף את ה-CallId רק אחרי שהפעולה הצליחה
+                                  
                                     try
                                     {
                                         callBl.SelectCallForTreatment(doVolunteer.Id, selectedCall.Id);
@@ -289,7 +289,7 @@ internal static class VolunteerManager
                                     }
                                     catch (BO.BlInvalidOperationException)
                                     {
-                                        // הקריאה כבר נלקחה על ידי מתנדב אחר - זה תקין במצב של מספר threads
+                                       
                                         continue;
                                     }
                                 }
@@ -300,53 +300,52 @@ internal static class VolunteerManager
                     {
                         var currentCall = BoVol.CurrentCallInProgress;
 
-                        // וידוא שהערכים קיימים
+                        
                         if (currentCall.EntranceTime == null)
                             continue;
 
                         TimeSpan timeInTreatment = AdminManager.Now - currentCall.EntranceTime.Value;
 
-                        // Calculate base treatment time (5-15 minutes)
-                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 2); // 5-15 minutes
+                      
+                        double baseTreatmentMinutes = 5 + (s_rand.NextDouble() * 2); 
 
-                        // Calculate travel time (1-2 minutes per km)
-                        double travelTimePerKm = 1 + s_rand.NextDouble(); // 1-2 minutes per km
+                      
+                        double travelTimePerKm = 1 + s_rand.NextDouble(); 
                         double travelMinutes = (currentCall.VolunteerResponseDistance ?? 0) * travelTimePerKm;
 
-                        // Total required time is base treatment time + travel time
+                  
                         TimeSpan requiredTime = TimeSpan.FromMinutes(baseTreatmentMinutes + travelMinutes);
 
-                        // Add some random variation (0-5 minutes)
+                     
                         TimeSpan randomVariation = TimeSpan.FromMinutes(s_rand.NextDouble() * 5);
                         requiredTime = requiredTime.Add(randomVariation);
 
                         if (timeInTreatment >= requiredTime)
                         {
-                            // תיקון: לנסות לעדכן ורק במקרה של הצלחה להוסיף לרשימת העדכונים
+                          
                             try
                             {
                                 callBl.UpdateCallCompletion(doVolunteer.Id, currentCall.Id);
-                                callsToUpdate.AddLast(currentCall.CallId); // תיקון: CallId במקום assignmentId
+                                callsToUpdate.AddLast(currentCall.CallId); 
                             }
                             catch (BO.BlInvalidOperationException)
                             {
-                                // הטיפול כבר הושלם או בוטל - זה תקין במצב של מספר threads
+                                
                                 continue;
                             }
                         }
                         else
                         {
-                            // 10% chance to cancel the treatment
                             if (s_rand.Next(1, 101) <= 10)
                             {
                                 try
                                 {
                                     callBl.UpdateCallCancellation(doVolunteer.Id, currentCall.Id);
-                                    callsToUpdate.AddLast(currentCall.CallId); // תיקון: CallId במקום assignmentId
+                                    callsToUpdate.AddLast(currentCall.CallId); 
                                 }
                                 catch (BO.BlInvalidOperationException)
                                 {
-                                    // הטיפול כבר הושלם או בוטל - זה תקין במצב של מספר threads
+                                    
                                     continue;
                                 }
                             }
@@ -355,7 +354,7 @@ internal static class VolunteerManager
                 }
             }
 
-            // עדכון ההתראות מחוץ ל-lock כדי למנוע deadlocks
+            
             foreach (int id in callsToUpdate)
                 Observers.NotifyItemUpdated(id);
         }

@@ -102,14 +102,7 @@ public partial class LoginWindow : Window, INotifyPropertyChanged
 
                     Close();
                 }
-                //catch (BlDoesNotExistException ex)
-                //{
-                //    ErrorMessage = ex.Message;
-                //}
-                //catch (Exception ex)
-                //{
-                //    ErrorMessage = "General Eroor: " + ex.Message;
-                //}
+            
                 catch (Exception ex)
                 {
                     if (ex is BlDoesNotExistException or BlUnauthorizedAccessException)

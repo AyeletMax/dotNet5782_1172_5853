@@ -28,7 +28,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Call ID - Only visible in edit mode -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10"
                         Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TextBlock Text="Call ID:" Width="150" FontWeight="SemiBold" VerticalAlignment="Center"/>

@@ -83,16 +83,6 @@
         <Label Content="Address:" Grid.Row="6" Style="{StaticResource LabelStyle}"/>
         <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
 
-        <!-- Latitude -->
-        <!--<Label Content="Latitude:" Grid.Row="7" Style="{StaticResource LabelStyle}"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding CurrentVolunteer.Latitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>
-
-        -->
-        <!-- Longitude -->
-        <!--
-        <Label Content="Longitude:" Grid.Row="8" Style="{StaticResource LabelStyle}"/>
-        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding CurrentVolunteer.Longitude, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>-->
-
         <!-- LargestDistance -->
         <Label Content="LargestDistance:" Grid.Row="7" Style="{StaticResource LabelStyle}"/>
         <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding CurrentVolunteer.LargestDistance, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Style="{StaticResource TextBoxStyle}"/>

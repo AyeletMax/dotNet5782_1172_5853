@@ -115,7 +115,6 @@ namespace PL.Call
 
         public bool CannotEditMaxFinishTime => !CanEditMaxFinishTime;
 
-        // Properties for separate date and time handling
         public DateTime? MaxFinishDate
         {
             get => CurrentCall?.MaxFinishTime?.Date;
@@ -158,53 +157,7 @@ namespace PL.Call
             }
         }
 
-        //private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (CurrentCall?.MaxFinishTime == null)
-        //            throw new Exception("Please select a maximum finish time.");
-
-        //        if (CurrentCall.MaxFinishTime <= CurrentCall.OpenTime)
-        //            throw new Exception("End time must be after opening time.");
-
-        //        // Prevent updating closed or expired call details
-        //        if (CurrentCall.MyStatus is BO.Status.Closed or BO.Status.Expired)
-        //            throw new Exception("Cannot update a call that is closed or expired.");
-
-        //        if (CurrentCall.MyStatus is BO.Status.InProgress or BO.Status.InProgressAtRisk)
-        //        {
-        //            s_bl.Call.UpdateCallDetails(CurrentCall);
-        //            MessageBox.Show("Maximum time updated successfully!");
-        //            Close();
-        //            return;
-        //        }
-
-        //        // Full update if open
-        //        if (string.IsNullOrWhiteSpace(CurrentCall?.Address))
-        //            throw new Exception("Please enter an address.");
-
-        //        if (CurrentCall.MyCallType == CallType.None)
-        //            throw new Exception("Please select a call type.");
-
-        //        if (ButtonText == "Add")
-        //        {
-        //            s_bl.Call.AddCall(CurrentCall!);
-        //            MessageBox.Show("Call added successfully!");
-        //        }
-        //        else
-        //        {
-        //            s_bl.Call.UpdateCallDetails(CurrentCall!);
-        //            MessageBox.Show("Call updated successfully!");
-        //        }
-
-        //        Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message);
-        //    }
-        //}
+    
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try

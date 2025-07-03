@@ -89,9 +89,7 @@ namespace PL.Volunteer
                 "Total Responses Handled" => BO.VolunteerSortField.TotalResponsesHandled,
                 "Total Responses Cancelled" => BO.VolunteerSortField.TotalResponsesCancelled,
                 "Total Expired Responses" => BO.VolunteerSortField.TotalExpiredResponses,
-                //"Sum of Calls" => BO.VolunteerSortField.SumOfCalls,
-                //"Sum of Cancellation" => BO.VolunteerSortField.SumOfCancellation,
-                //"Sum of Expired Calls" => BO.VolunteerSortField.SumOfExpiredCalls,
+               
                 _ => BO.VolunteerSortField.None,
             };
         }

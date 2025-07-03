@@ -72,7 +72,6 @@ public static class Initialization
             35.5312, 35.2170, 35.0943, 34.7672, 35.0717, 35.0180, 34.9066, 34.7667, 34.9887, 34.9196,
             34.8093, 35.2890, 34.9519, 34.7913, 34.8120, 34.5715, 34.8708, 34.8433, 34.7454, 34.8240
         };
-        //s_dal!.Volunteer!.Create(new Volunteer(345810543, "Aviva Rose", "0548551329", "bracharosenfeld@gmail.com", true, Role.Manager, 31.8139395, 35.216089, 10, EncryptPassword("Str0ng@Pass1")));
         s_dal!.Volunteer!.Create(new Volunteer(345810543, "Aviva Rose", "0548551329", "bracharosenfeld@gmail.com", true, Role.Manager, 31.8139395, 35.216089, 10, EncryptPassword("Str0ng@Pass1"), "druk 58 ramat shlomo jerusalem israel"));
         s_dal!.Volunteer!.Create(new Volunteer(347379810, "Odel Shemesh", "0548482197", "odel@gmail.com", true, Role.Volunteer, 31.8139395, 35.216089, 10, EncryptPassword("Aa123456!"), "druk 58 ramat shlomo jerusalem israel"));
         for (int i = 0; i < FullNames.Length; i++)
