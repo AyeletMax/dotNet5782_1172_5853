@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F22FA15-77B8-455F-8B62-68ED1A8997F3}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		ברכה רוזנפלד34771172 אילת מקסימוב327605853 סיכום סופי.docx = ברכה רוזנפלד34771172 אילת מקסימוב327605853 סיכום סופי.docx
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalFacade", "DalFacade\DalFacade.csproj", "{5D42998A-6474-4376-AF1A-69AA5AB9118B}"
@@ -31,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{6416
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BITest", "BITest\BITest.csproj", "{076CF58B-D7C7-4DFC-B69C-5F4A3C7674E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL", "PL\PL.csproj", "{C6D7AD2F-336E-4471-B8D6-8B74490E6723}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PL", "PL\PL.csproj", "{C6D7AD2F-336E-4471-B8D6-8B74490E6723}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
